@@ -92,12 +92,15 @@ public class EnchantmentRegistry implements IRegistry<Identifier, Enchantment, E
 
     @Override
     public void register(Identifier id, Enchantment enchantment) {
-        if (IDENTIFIER_TO_ENCHANTMENT.put(id, enchantment) == null) {
-            if (enchantment.getId() != EnchantmentID.CUSTOM_ENCHANTMENT_ID) {
-                ID_TO_ENCHANTMENT.put(enchantment.getId(), enchantment);
+        Enchantment oldEnchantment = IDENTIFIER_TO_ENCHANTMENT.put(id, enchantment);
+        if (oldEnchantment != null) {
+            if (oldEnchantment.getId() != EnchantmentID.CUSTOM_ENCHANTMENT_ID) {
+                ID_TO_ENCHANTMENT.remove(oldEnchantment.getId());
             }
-        } else {
-            throw new RegisterException("Duplicate enchantment id " + id);
+        }
+
+        if (enchantment.getId() != EnchantmentID.CUSTOM_ENCHANTMENT_ID) {
+            ID_TO_ENCHANTMENT.put(enchantment.getId(), enchantment);
         }
     }
 
