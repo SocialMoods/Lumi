@@ -390,19 +390,29 @@ public class EncryptionUtils {
         }
     }
 
-    public static ChainValidationResult validateToken(AuthType type, String token) throws InvalidJwtException, JoseException {
+    public static ChainValidationResult validateToken(AuthType type, String token)
+            throws InvalidJwtException, JoseException {
+
         JwtContext context;
-        if (type != AuthType.FULL && type != AuthType.GUEST) {
-            if (type == AuthType.SELF_SIGNED) {
+
+        if (type == AuthType.SELF_SIGNED) {
+            context = OFFLINE_CONSUMER.process(token);
+            return new ChainValidationResult(false, context);
+        }
+
+        if (type == AuthType.FULL || type == AuthType.GUEST) {
+            try {
+                context = JwtConsumerHolder.getMojangConsumer().process(token);
+                return new ChainValidationResult(true, context);
+            } catch (InvalidJwtException e) {
+                // mojang moment
+                log.warn("Invalid JWT Token: {}", e.getMessage());
                 context = OFFLINE_CONSUMER.process(token);
                 return new ChainValidationResult(false, context);
-            } else {
-                throw new JoseException("Unsupported AuthType: " + type);
             }
-        } else {
-            context = JwtConsumerHolder.getMojangConsumer().process(token);
-            return new ChainValidationResult(true, context);
         }
+
+        throw new JoseException("Unsupported AuthType: " + type);
     }
 
     /**
