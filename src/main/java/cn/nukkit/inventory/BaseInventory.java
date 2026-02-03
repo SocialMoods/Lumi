@@ -10,6 +10,8 @@ import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryOpenEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
+import cn.nukkit.item.ItemPotion;
+import cn.nukkit.item.ItemPotionSplash;
 import cn.nukkit.network.protocol.InventoryContentPacket;
 import cn.nukkit.network.protocol.InventorySlotPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
@@ -254,7 +256,7 @@ public abstract class BaseInventory implements Inventory {
             this.setItem(slot, item);
         }
     }
-    
+
     @Override
     public boolean canAddItem(Item item) {
         int count = item.getCount();
@@ -263,14 +265,21 @@ public abstract class BaseInventory implements Inventory {
         int i1 = this.getSize();
         for (int i = 0; i < i1; ++i) {
             Item slot = this.getItemFast(i);
-            int maxStackSize = Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+
+            boolean isPotionSlot = (slot instanceof ItemPotion || slot instanceof ItemPotionSplash)
+                    && holder instanceof Player && ((Player) holder).protocol < ProtocolInfo.v1_21_60;
+            int maxStackSize = isPotionSlot ? 1 : Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+
             if (item.equals(slot, checkDamage, checkTag)) {
                 int diff;
                 if ((diff = maxStackSize - slot.getCount()) > 0) {
                     count -= diff;
                 }
             } else if (slot.getId() == Item.AIR) {
-                count -= maxStackSize;
+                boolean isPotionItem = (item instanceof ItemPotion || item instanceof ItemPotionSplash)
+                        && holder instanceof Player && ((Player) holder).protocol < ProtocolInfo.v1_21_60;
+                int slotMaxStackSize = isPotionItem ? 1 : Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+                count -= slotMaxStackSize;
             }
 
             if (count <= 0) {
@@ -280,6 +289,7 @@ public abstract class BaseInventory implements Inventory {
 
         return false;
     }
+
 
     @Override
     public boolean allowedToAdd(Item item) {
@@ -306,7 +316,11 @@ public abstract class BaseInventory implements Inventory {
             for (Iterator<Item> iterator = itemSlots.iterator(); iterator.hasNext();) {
                 Item slot = iterator.next();
                 if (slot.equals(item)) {
-                    int maxStackSize = Math.min(item.getMaxStackSize(), this.getMaxStackSize());
+                    boolean needsSplit = (slot instanceof ItemPotion || slot instanceof ItemPotionSplash
+                            || item instanceof ItemPotion || item instanceof ItemPotionSplash)
+                            && holder instanceof Player && ((Player) holder).protocol < ProtocolInfo.v1_21_60;
+                    int maxStackSize = needsSplit ? 1 : Math.min(item.getMaxStackSize(), this.getMaxStackSize());
+
                     if (item.getCount() < maxStackSize) {
                         int amount = Math.min(maxStackSize - item.getCount(), slot.getCount());
                         if (amount > 0) {
@@ -328,8 +342,12 @@ public abstract class BaseInventory implements Inventory {
         if (!itemSlots.isEmpty() && !emptySlots.isEmpty()) {
             for (int slotIndex : emptySlots) {
                 if (!itemSlots.isEmpty()) {
-                    Item slot = itemSlots.get(0);
-                    int amount = Math.min(Math.min(slot.getMaxStackSize(), this.getMaxStackSize()), slot.getCount());
+                    Item slot = itemSlots.getFirst();
+                    boolean isPotionForOldClient = (slot instanceof ItemPotion || slot instanceof ItemPotionSplash)
+                            && holder instanceof Player && ((Player) holder).protocol < ProtocolInfo.v1_21_60;
+                    int maxStackSize = isPotionForOldClient ? 1 : Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+
+                    int amount = Math.min(maxStackSize, slot.getCount());
                     slot.setCount(slot.getCount() - amount);
                     Item item = slot.clone();
                     item.setCount(amount);

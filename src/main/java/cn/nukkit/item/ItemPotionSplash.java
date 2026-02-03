@@ -20,11 +20,6 @@ public class ItemPotionSplash extends ItemProjectile {
     }
 
     @Override
-    public int getMaxStackSize() {
-        return 1;
-    }
-
-    @Override
     public boolean canBeActivated() {
         return true;
     }

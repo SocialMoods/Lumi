@@ -73,11 +73,6 @@ public class ItemPotion extends Item {
     }
 
     @Override
-    public int getMaxStackSize() {
-        return 1;
-    }
-
-    @Override
     public boolean onClickAir(Player player, Vector3 directionVector) {
         return true;
     }
