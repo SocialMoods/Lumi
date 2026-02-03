@@ -49,7 +49,7 @@ public class InventoryTransactionProcessor extends DataPacketProcessor<Inventory
         var server = player.getServer();
         var level = player.getLevel();
         var inventory = player.getInventory();
-        
+
         if (!handle.isSpawned() || !handle.isAlive()) {
             log.debug("Player {} sent inventory transaction packet while not spawned or not alive", player.getName());
             return;
