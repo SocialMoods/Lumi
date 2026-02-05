@@ -5210,11 +5210,16 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 entity.close();
                 return true;
             }
-            if (entity instanceof EntityThrownTrident) {
+            if (entity instanceof EntityThrownTrident trident) {
+
+                if (trident.shootingEntity != this) {
+                    return false;
+                }
+
                 // Check Trident is returning to shooter
-                if (!((EntityThrownTrident) entity).hadCollision) {
-                    if (entity.isNoClip()) {
-                        if (!((EntityProjectile) entity).shootingEntity.equals(this)) {
+                if (!trident.hadCollision) {
+                    if (trident.isNoClip()) {
+                        if (!trident.shootingEntity.equals(this)) {
                             return false;
                         }
                     } else {
@@ -5222,18 +5227,18 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     }
                 }
 
-                if (!((EntityThrownTrident) entity).isPlayer()) {
+                if (!trident.isPlayer()) {
                     return false;
                 }
 
-                Item item = ((EntityThrownTrident) entity).getItem();
+                Item item = trident.getItem();
                 if (!this.isCreative() && !this.inventory.canAddItem(item)) {
                     return false;
                 }
 
-                InventoryPickupTridentEvent ev = new InventoryPickupTridentEvent(this.inventory, (EntityThrownTrident) entity);
+                InventoryPickupTridentEvent ev = new InventoryPickupTridentEvent(this.inventory, trident);
 
-                int pickupMode = ((EntityThrownTrident) entity).getPickupMode();
+                int pickupMode = trident.getPickupMode();
                 if (pickupMode == EntityThrownTrident.PICKUP_NONE || (pickupMode == EntityThrownTrident.PICKUP_CREATIVE && !this.isCreative())) {
                     ev.setCancelled();
                 }
@@ -5249,9 +5254,9 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 Server.broadcastPacket(entity.getViewers().values(), pk);
                 this.dataPacket(pk);
 
-                if (!((EntityThrownTrident) entity).isCreative()) {
-                    if (inventory.getItem(((EntityThrownTrident) entity).getFavoredSlot()).getId() == Item.AIR) {
-                        inventory.setItem(((EntityThrownTrident) entity).getFavoredSlot(), item.clone());
+                if (!trident.isCreative()) {
+                    if (inventory.getItem(trident.getFavoredSlot()).getId() == Item.AIR) {
+                        inventory.setItem(trident.getFavoredSlot(), item.clone());
                     } else {
                         inventory.addItem(item.clone());
                     }
