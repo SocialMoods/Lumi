@@ -5267,28 +5267,65 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             if (entity instanceof EntityItem) {
                 if (((EntityItem) entity).getPickupDelay() <= 0) {
                     Item item = ((EntityItem) entity).getItem();
-
-                    if (item != null) {
-                        if (!this.isCreative() && !this.inventory.canAddItem(item)) {
-                            return false;
-                        }
-
-                        InventoryPickupItemEvent ev;
-                        this.server.getPluginManager().callEvent(ev = new InventoryPickupItemEvent(this.inventory, (EntityItem) entity));
-                        if (ev.isCancelled()) {
-                            return false;
-                        }
-
-                        TakeItemEntityPacket pk = new TakeItemEntityPacket();
-                        pk.entityId = this.getId();
-                        pk.target = entity.getId();
-                        Server.broadcastPacket(entity.getViewers().values(), pk);
-                        this.dataPacket(pk);
-
-                        this.inventory.addItem(item.clone());
-                        entity.close();
-                        return true;
+                    if (item == null) {
+                        return false;
                     }
+
+                    InventoryPickupItemEvent ev;
+                    this.server.getPluginManager().callEvent(
+                            ev = new InventoryPickupItemEvent(this.inventory, (EntityItem) entity)
+                    );
+                    if (ev.isCancelled()) {
+                        return false;
+                    }
+
+                    int totalCount = item.getCount();
+                    int maxStack = item.getMaxStackSize();
+
+                    int toPickup = Math.min(totalCount, EntityItem.MAX_PICKUP_PER_TICK);
+
+                    int canPickup = 0;
+                    int left = toPickup;
+
+                    while (left > 0) {
+                        Item stack = item.clone();
+                        stack.setCount(Math.min(maxStack, left));
+
+                        if (!this.isCreative() && !this.inventory.canAddItem(stack)) {
+                            break;
+                        }
+
+                        canPickup += stack.getCount();
+                        left -= stack.getCount();
+                    }
+
+                    if (canPickup <= 0 && !this.isCreative()) {
+                        return false;
+                    }
+
+                    TakeItemEntityPacket pk = new TakeItemEntityPacket();
+                    pk.entityId = this.getId();
+                    pk.target = entity.getId();
+                    Server.broadcastPacket(entity.getViewers().values(), pk);
+                    this.dataPacket(pk);
+
+                    int addLeft = canPickup;
+                    while (addLeft > 0) {
+                        Item stack = item.clone();
+                        stack.setCount(Math.min(maxStack, addLeft));
+                        this.inventory.addItem(stack);
+                        addLeft -= stack.getCount();
+                    }
+
+                    int remain = totalCount - canPickup;
+                    if (remain <= 0) {
+                        entity.close();
+                    } else {
+                        item.setCount(remain);
+                    }
+
+                    return true;
+
                 }
             }
         }

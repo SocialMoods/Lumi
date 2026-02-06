@@ -25,6 +25,7 @@ import lombok.Setter;
 public class EntityItem extends Entity {
 
     public static final int NETWORK_ID = 64;
+    public static final int MAX_PICKUP_PER_TICK = 80;
 
     @Setter
     @Getter
@@ -209,10 +210,10 @@ public class EntityItem extends Entity {
                 }
             }
 
-            if (this.age % 200 == 0 && this.onGround && this.item != null) {
+            if (this.age % 20 == 0 && this.onGround && this.item != null) {
                 if (this.item.getCount() < this.item.getMaxStackSize()) {
                     //if (e == null) {
-                    Entity[] e = this.getLevel().getNearbyEntities(getBoundingBox().grow(1, 1, 1), this, false);
+                    Entity[] e = this.getLevel().getNearbyEntities(getBoundingBox().grow(3, 3, 3), this, false);
                     //}
 
                     for (Entity entity : e) {
@@ -228,9 +229,6 @@ public class EntityItem extends Entity {
                                 continue;
                             }
                             int newAmount = this.item.getCount() + closeItem.getCount();
-                            if (newAmount > this.item.getMaxStackSize()) {
-                                continue;
-                            }
                             closeItem.setCount(0);
                             entity.close();
                             this.item.setCount(newAmount);
