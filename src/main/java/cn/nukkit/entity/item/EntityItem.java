@@ -25,7 +25,6 @@ import lombok.Setter;
 public class EntityItem extends Entity {
 
     public static final int NETWORK_ID = 64;
-    public static final int MAX_PICKUP_PER_TICK = 80;
 
     @Setter
     @Getter

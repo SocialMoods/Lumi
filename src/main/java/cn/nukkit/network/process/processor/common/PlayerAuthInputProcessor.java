@@ -290,63 +290,65 @@ public class PlayerAuthInputProcessor extends DataPacketProcessor<PlayerAuthInpu
                             .getItemInHandFast()
                             .getEnchantment(Enchantment.ID_TRIDENT_RIPTIDE);
 
-                    if (riptide != null) {
-                        PlayerToggleSpinAttackEvent e =
-                                new PlayerToggleSpinAttackEvent(player, true);
-
-                        if (riptide.getLevel() < 1) {
-                            e.setCancelled(true);
-                        } else {
-                            boolean inWater = false;
-
-                            for (Block block : player.getCollisionBlocks()) {
-                                if (block instanceof BlockWater
-                                        || block.level.isBlockWaterloggedAt(
-                                        player.getChunk(),
-                                        (int) block.x,
-                                        (int) block.y,
-                                        (int) block.z)) {
-                                    inWater = true;
-                                    break;
-                                }
-                            }
-
-                            if (!(inWater || (player.getLevel().isRaining() && player.canSeeSky()))) {
-                                e.setCancelled(true);
-                            }
-                        }
-
-                        if (!e.call()) {
-                            handle.setNeedSendData(true);
-                        } else {
-                            handle.onSpinAttack(riptide.getLevel());
-                            player.setSpinAttack(true);
-                            player.setUsingItem(false);
-                            player.resetFallDistance();
-
-                            int sound;
-                            if (riptide.getLevel() >= 3) {
-                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_3;
-                            } else if (riptide.getLevel() == 2) {
-                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_2;
-                            } else {
-                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_1;
-                            }
-
-                            player.getLevel().addLevelSoundEvent(player, sound);
-                        }
-                    }
+                    handle.setNeedSendData(true);
+//                    if (riptide != null) {
+//                        PlayerToggleSpinAttackEvent e =
+//                                new PlayerToggleSpinAttackEvent(player, true);
+//
+//                        if (riptide.getLevel() < 1) {
+//                            e.setCancelled(true);
+//                        } else {
+//                            boolean inWater = false;
+//
+//                            for (Block block : player.getCollisionBlocks()) {
+//                                if (block instanceof BlockWater
+//                                        || block.level.isBlockWaterloggedAt(
+//                                        player.getChunk(),
+//                                        (int) block.x,
+//                                        (int) block.y,
+//                                        (int) block.z)) {
+//                                    inWater = true;
+//                                    break;
+//                                }
+//                            }
+//
+//                            if (!(inWater || (player.getLevel().isRaining() && player.canSeeSky()))) {
+//                                e.setCancelled(true);
+//                            }
+//                        }
+//
+//                        if (!e.call()) {
+//                            handle.setNeedSendData(true);
+//                        } else {
+//                            handle.onSpinAttack(riptide.getLevel());
+//                            player.setSpinAttack(true);
+//                            player.setUsingItem(false);
+//                            player.resetFallDistance();
+//
+//                            int sound;
+//                            if (riptide.getLevel() >= 3) {
+//                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_3;
+//                            } else if (riptide.getLevel() == 2) {
+//                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_2;
+//                            } else {
+//                                sound = LevelSoundEventPacket.SOUND_ITEM_TRIDENT_RIPTIDE_1;
+//                            }
+//
+//                            player.getLevel().addLevelSoundEvent(player, sound);
+//                        }
+//                    }
                 }
 
                 if (packet.getInputData().contains(AuthInputAction.STOP_SPIN_ATTACK)) {
-                    PlayerToggleSpinAttackEvent e =
-                            new PlayerToggleSpinAttackEvent(player, false);
-
-                    if (!e.call()) {
-                        handle.setNeedSendData(true);
-                    } else {
-                        player.setSpinAttack(false);
-                    }
+                    handle.setNeedSendData(true);
+//                    PlayerToggleSpinAttackEvent e =
+//                            new PlayerToggleSpinAttackEvent(player, false);
+//
+//                    if (!e.call()) {
+//                        handle.setNeedSendData(true);
+//                    } else {
+//                        player.setSpinAttack(false);
+//                    }
                 }
             }
 
