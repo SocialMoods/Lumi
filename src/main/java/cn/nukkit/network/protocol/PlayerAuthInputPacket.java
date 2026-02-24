@@ -82,9 +82,27 @@ public class PlayerAuthInputPacket extends DataPacket {
             }
         }
 
-        this.inputMode = InputMode.fromOrdinal((int) this.getUnsignedVarInt());
-        this.playMode = ClientPlayMode.fromOrdinal((int) this.getUnsignedVarInt());
-        this.interactionModel = AuthInteractionModel.fromOrdinal((int) this.getUnsignedVarInt());
+        // some cheat clients can mess this data and crash movement
+        int inputModeOrdinal = (int) this.getUnsignedVarInt();
+        if (inputModeOrdinal >= 0 && inputModeOrdinal < InputMode.values().length) {
+            this.inputMode = InputMode.values()[inputModeOrdinal];
+        } else {
+            this.inputMode = InputMode.UNDEFINED;
+        }
+
+        int playModeOrdinal = (int) this.getUnsignedVarInt();
+        this.playMode = ClientPlayMode.values()[
+                (playModeOrdinal >= 0 && playModeOrdinal < ClientPlayMode.values().length)
+                        ? playModeOrdinal : 0
+                ];
+
+        int interactionModelOrdinal = (int) this.getUnsignedVarInt();
+        if (interactionModelOrdinal >= 0 && interactionModelOrdinal < AuthInteractionModel.values().length) {
+            this.interactionModel = AuthInteractionModel.values()[interactionModelOrdinal];
+        } else {
+            this.interactionModel = AuthInteractionModel.TOUCH;
+        }
+
         if (protocol >= ProtocolInfo.v1_21_40) {
             this.interactRotation = this.getVector2f();
         } else {
@@ -96,18 +114,20 @@ public class PlayerAuthInputPacket extends DataPacket {
         this.tick = this.getUnsignedVarLong();
         this.delta = this.getVector3f();
 
-        if (this.inputData.contains(AuthInputAction.PERFORM_ITEM_STACK_REQUEST)) {
-            // TODO: this.itemStackRequest = readItemStackRequest(buf, protocolVersion);
-            // We are safe to leave this for later, since it is only sent with ServerAuthInventories
-        }
-
         if (this.inputData.contains(AuthInputAction.PERFORM_BLOCK_ACTIONS)) {
             int arraySize = this.getVarInt();
-            if (arraySize > 256) {
-                throw new IllegalArgumentException("PlayerAuthInputPacket PERFORM_BLOCK_ACTIONS is too long: " + arraySize);
+            if (arraySize > 256 || arraySize < 0) {
+                throw new IllegalArgumentException("Invalid block actions size: " + arraySize);
             }
             for (int i = 0; i < arraySize; i++) {
-                PlayerActionType type = PlayerActionType.from(this.getVarInt());
+                int actionTypeOrdinal = this.getVarInt();
+                PlayerActionType type;
+                if (actionTypeOrdinal >= 0 && actionTypeOrdinal < PlayerActionType.values().length) {
+                    type = PlayerActionType.values()[actionTypeOrdinal];
+                } else {
+                    continue;
+                }
+
                 switch (type) {
                     case START_DESTROY_BLOCK:
                     case ABORT_DESTROY_BLOCK:

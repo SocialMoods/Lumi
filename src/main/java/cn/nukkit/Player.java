@@ -2181,7 +2181,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         this.newPosition = null;
     }
 
-    protected void revertClientMotion(Location originalPos) {
+    public void revertClientMotion(Location originalPos) {
         this.setLastLocation(originalPos);
 
         Vector3 syncPos = originalPos.add(0, 0.00001, 0);
