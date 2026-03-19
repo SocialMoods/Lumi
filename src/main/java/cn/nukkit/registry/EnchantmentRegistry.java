@@ -52,7 +52,6 @@ public class EnchantmentRegistry implements IRegistry<Identifier, Enchantment, E
         register(new EnchantmentProtectionFall());
         register(new EnchantmentProtectionExplosion());
         register(new EnchantmentProtectionProjectile());
-        register(new EnchantmentThorns());
         register(new EnchantmentWaterBreath());
         register(new EnchantmentWaterWorker());
         register(new EnchantmentWaterWalker());
@@ -78,7 +77,6 @@ public class EnchantmentRegistry implements IRegistry<Identifier, Enchantment, E
         register(new EnchantmentVanishingCurse());
         register(new EnchantmentTridentImpaling());
         register(new EnchantmentTridentLoyalty());
-        register(new EnchantmentTridentRiptide());
         register(new EnchantmentTridentChanneling());
         register(new EnchantmentCrossbowMultishot());
         register(new EnchantmentCrossbowPiercing());

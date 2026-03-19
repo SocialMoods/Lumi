@@ -28,7 +28,7 @@ public class VersionCommand extends VanillaCommand {
 
     public VersionCommand(String name) {
         super(name,
-                "%nukkit.command.version.description",
+                "Версия сервера",
                 "%nukkit.command.version.usage",
                 new String[]{"ver", "about"}
         );

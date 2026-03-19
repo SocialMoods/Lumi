@@ -1,5 +1,7 @@
 package cn.nukkit.block;
 
+import cn.nukkit.item.ItemTool;
+
 /**
  * @author MagicDroidX
  * Nukkit Project
@@ -15,6 +17,16 @@ public class BlockUnknown extends BlockMeta {
     public BlockUnknown(int id, Integer meta) {
         super(meta);
         this.id = id;
+    }
+
+    @Override
+    public double getHardness() {
+        return 0.8;
+    }
+
+    @Override
+    public double getResistance() {
+        return 4;
     }
 
     @Override

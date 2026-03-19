@@ -2310,16 +2310,7 @@ public class Level implements ChunkManager, Metadatable {
 
     public void dropItem(Vector3 source, Item item, Vector3 motion, boolean dropAround, int delay) {
         if (item.getId() != 0 && item.getCount() > 0) {
-            if (motion == null) {
-                if (dropAround) {
-                    float f = ThreadLocalRandom.current().nextFloat() * 0.5f;
-                    float f1 = ThreadLocalRandom.current().nextFloat() * 6.2831855f;
-
-                    motion = new Vector3(-MathHelper.sin(f1) * f, 0.20000000298023224, MathHelper.cos(f1) * f);
-                } else {
-                    motion = new Vector3(Utils.random.nextDouble() * 0.2 - 0.1, 0.2, Utils.random.nextDouble() * 0.2 - 0.1);
-                }
-            }
+            motion = new Vector3(Utils.random.nextDouble() * 0.2 - 0.1, 0.2, Utils.random.nextDouble() * 0.2 - 0.1);
 
             CompoundTag itemTag = NBTIO.putItemHelper(item, true);
             itemTag.setName("Item");
@@ -2466,9 +2457,10 @@ public class Level implements ChunkManager, Metadatable {
                 ev.setCancelled();
             } else if (!player.isOp() && isInSpawnRadius(target)) {
                 ev.setCancelled();
-            } else if (!ev.getInstaBreak() && ev.isFastBreak()) {
-                ev.setCancelled();
             }
+//            else if (!ev.getInstaBreak() && ev.isFastBreak()) {
+//                ev.setCancelled();
+//            }
 
             this.server.getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {

@@ -34,13 +34,7 @@ public class SimpleCommandMap implements CommandMap {
         this.register("nukkit", new HelpCommand("help"));
         this.register("nukkit", new StopCommand("stop"));
         this.register("nukkit", new TellCommand("tell"));
-        this.register("nukkit", new BanCommand("ban"));
-        this.register("nukkit", new BanIpCommand("ban-ip"));
-        this.register("nukkit", new BanListCommand("banlist"));
-        this.register("nukkit", new PardonCommand("pardon"));
-        this.register("nukkit", new PardonIpCommand("pardon-ip"));
         this.register("nukkit", new ListCommand("list"));
-        this.register("nukkit", new KickCommand("kick"));
         this.register("nukkit", new OpCommand("op"));
         this.register("nukkit", new DeopCommand("deop"));
         this.register("nukkit", new SaveCommand("save"));

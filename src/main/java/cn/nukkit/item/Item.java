@@ -570,6 +570,7 @@ public class Item implements Cloneable, BlockID, ItemID, ProtocolInfo {
         List<Enchantment> enchantments = new ArrayList<>();
 
         ListTag<CompoundTag> enchants = this.getNamedTag().getList("ench", CompoundTag.class);
+
         for (CompoundTag entry : enchants.getAll()) {
             Enchantment e = Enchantment.get(entry.getShort("id"));
             if (e != null) {

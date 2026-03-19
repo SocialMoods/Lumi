@@ -2,15 +2,13 @@ package cn.nukkit.block;
 
 import cn.nukkit.Player;
 import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.blockentity.impl.BlockEntityBrewingStand;
 import cn.nukkit.blockentity.impl.BlockEntityFurnace;
 import cn.nukkit.blockentity.impl.BlockEntityHopper;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.event.inventory.InventoryMoveItemEvent;
-import cn.nukkit.inventory.ContainerInventory;
-import cn.nukkit.inventory.FurnaceInventory;
-import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.InventoryHolder;
+import cn.nukkit.inventory.*;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemHopper;
 import cn.nukkit.item.ItemTool;
@@ -247,17 +245,31 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                         return true;
                     }
                 }
-            } else if (blockEntity instanceof InventoryHolder) {
-                Inventory inv = ((InventoryHolder) blockEntity).getInventory();
+            } else if (blockEntity instanceof BlockEntityBrewingStand brewing) {
+                BrewingInventory inv = brewing.getInventory();
 
-                for (int i = 0; i < inv.getSize(); i++) {
+                boolean isBrewing = brewing.brewTime < BlockEntityBrewingStand.MAX_BREW_TIME;
+
+                if (isBrewing) {
+                    return false;
+                }
+
+                for (int i = 1; i <= 3; i++) {
                     Item item = inv.getItem(i);
 
                     if (!item.isNull()) {
                         Item itemToAdd = item.clone();
-                        itemToAdd.count = 1;
+                        itemToAdd.setCount(1);
 
-                        if (!inventory.canAddItem(itemToAdd)) {
+                        int emptySlot = -1;
+                        for (int s = 0; s < inventory.getSize(); s++) {
+                            if (inventory.getItem(s).isNull()) {
+                                emptySlot = s;
+                                break;
+                            }
+                        }
+
+                        if (emptySlot == -1) {
                             continue;
                         }
 
@@ -268,14 +280,64 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                             continue;
                         }
 
-                        Item[] items = inventory.addItem(itemToAdd);
+                        inventory.setItem(emptySlot, itemToAdd);
 
-                        if (items.length >= 1) {
+                        item.setCount(item.getCount() - 1);
+                        inv.setItem(i, item);
+
+                        brewing.updateBlock();
+                        return true;
+                    }
+                }
+            } else if (blockEntity instanceof InventoryHolder) {
+                Inventory inv = ((InventoryHolder) blockEntity).getInventory();
+
+                for (int i = 0; i < inv.getSize(); i++) {
+                    Item item = inv.getItem(i);
+
+                    if (!item.isNull()) {
+                        Item itemToAdd = item.clone();
+                        itemToAdd.setCount(1);
+
+                        int targetSlot = -1;
+                        boolean isPotion = itemToAdd.getId() == Item.POTION ||
+                                itemToAdd.getId() == Item.SPLASH_POTION ||
+                                itemToAdd.getId() == Item.LINGERING_POTION;
+
+                        if (isPotion) {
+                            for (int s = 0; s < inventory.getSize(); s++) {
+                                if (inventory.getItem(s).isNull()) {
+                                    targetSlot = s;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (!inventory.canAddItem(itemToAdd)) {
+                                continue;
+                            }
+                        }
+
+                        InventoryMoveItemEvent ev = new InventoryMoveItemEvent(inv, inventory, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
+                        ev.call();
+
+                        if (ev.isCancelled()) {
                             continue;
                         }
 
-                        item.count--;
+                        if (isPotion) {
+                            if (targetSlot != -1) {
+                                inventory.setItem(targetSlot, itemToAdd);
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            Item[] leftOver = inventory.addItem(itemToAdd);
+                            if (leftOver.length >= 1) {
+                                continue;
+                            }
+                        }
 
+                        item.setCount(item.getCount() - 1);
                         inv.setItem(i, item);
                         return true;
                     }

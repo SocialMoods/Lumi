@@ -37,6 +37,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.IntFunction;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author MagicDroidX
@@ -51,8 +53,16 @@ public class RakNetInterface implements AdvancedSourceInterface {
     private final Channel channel;
     private final Map<InetSocketAddress, RakNetPlayerSession> sessions = new HashMap<>();
     private final Queue<RakNetPlayerSession> sessionCreationQueue = PlatformDependent.newMpscQueue();
-
     private final long serverId = ThreadLocalRandom.current().nextLong();
+
+    private final Map<String, ConnectionStats> connectionTracker = new ConcurrentHashMap<>();
+    private static final int MAX_ATTEMPTS = 10;
+    private static final long TIME_WINDOW = 5000;
+
+    private static class ConnectionStats {
+        AtomicInteger count = new AtomicInteger(1);
+        long firstAttempt = System.currentTimeMillis();
+    }
 
     public RakNetInterface(Server server) {
         this.server = server;
@@ -120,7 +130,22 @@ public class RakNetInterface implements AdvancedSourceInterface {
     public boolean process() {
         RakNetPlayerSession session;
         while ((session = this.sessionCreationQueue.poll()) != null) {
+            long now = System.currentTimeMillis();
             InetSocketAddress address = session.getChannel().remoteAddress();
+            String ip = address.getAddress().getHostAddress();
+
+            ConnectionStats stats = connectionTracker.computeIfAbsent(ip, k -> new ConnectionStats());
+            if (now - stats.firstAttempt > TIME_WINDOW) {
+                stats.count.set(1);
+                stats.firstAttempt = now;
+            } else {
+                if (stats.count.incrementAndGet() > MAX_ATTEMPTS) {
+                    log.warn("[AntiFlood] Blocking IP {} due to connection flood", ip);
+                    this.blockAddress(address.getAddress());
+                    session.disconnect("Connection flood detected");
+                    continue;
+                }
+            }
             try {
                 PlayerCreationEvent event = new PlayerCreationEvent(this, Player.class, Player.class, null, address);
                 this.server.getPluginManager().callEvent(event);

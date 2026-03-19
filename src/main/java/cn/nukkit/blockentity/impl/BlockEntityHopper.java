@@ -347,6 +347,70 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
             }
 
             return pushedItem;
+        }
+        if (be instanceof BlockEntityBrewingStand brewing) {
+            BrewingInventory targetInv = brewing.getInventory();
+            if (targetInv.isFull()) return false;
+
+            for (int i = 0; i < this.inventory.getSize(); i++) {
+                Item item = this.inventory.getItem(i);
+                if (item.isNull()) continue;
+
+                Item itemToAdd = item.clone();
+                itemToAdd.setCount(1);
+
+                int targetSlot = -1;
+
+                if (itemToAdd.getId() == Item.BLAZE_POWDER) {
+                    targetSlot = 4;
+                }
+                else if (BlockEntityBrewingStand.ingredients.contains(itemToAdd.getNamespaceId())) {
+                    targetSlot = 0;
+                }
+                else if (itemToAdd.getId() == Item.POTION || itemToAdd.getId() == Item.SPLASH_POTION ||
+                        itemToAdd.getId() == Item.LINGERING_POTION || itemToAdd.getId() == Item.GLASS_BOTTLE) {
+
+                    for (int slot = 1; slot <= 3; slot++) {
+                        Item existing = targetInv.getItem(slot);
+                        if (existing.isNull()) {
+                            targetSlot = slot;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetSlot != -1) {
+                    Item slotItem = targetInv.getItem(targetSlot);
+                    boolean canPut;
+
+                    if (targetSlot >= 1 && targetSlot <= 3) {
+                        canPut = slotItem.isNull();
+                    } else {
+                        canPut = slotItem.isNull() || (slotItem.equals(itemToAdd) && slotItem.getCount() < slotItem.getMaxStackSize());
+                    }
+
+                    if (canPut) {
+                        InventoryMoveItemEvent ev = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
+                        this.server.getPluginManager().callEvent(ev);
+
+                        if (!ev.isCancelled()) {
+                            if (slotItem.isNull()) {
+                                targetInv.setItem(targetSlot, itemToAdd);
+                            } else {
+                                slotItem.setCount(slotItem.getCount() + 1);
+                                targetInv.setItem(targetSlot, slotItem);
+                            }
+
+                            item.setCount(item.getCount() - 1);
+                            this.inventory.setItem(i, item);
+
+                            setDirty();
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         } else {
             Inventory target = ((InventoryHolder) be).getInventory();
 

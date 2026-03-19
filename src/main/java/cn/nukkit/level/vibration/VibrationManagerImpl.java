@@ -28,28 +28,6 @@ public class VibrationManagerImpl implements VibrationManager {
 
     @Override
     public void callVibrationEvent(VibrationEvent event) {
-        VibrationOccurEvent vibrationOccurEvent = new VibrationOccurEvent(event);
-        if (!vibrationOccurEvent.call()) {
-            return;
-        }
-
-        listeners.parallelStream().forEach((listener) -> {
-            if (!listener.getListenerVector().equals(event.source()) &&
-                    listener.getListenerVector().distanceSquared(event.source()) <= Math.pow(listener.getListenRange(), 2) &&
-                    canVibrationArrive(level, event.source(), listener.getListenerVector()) && listener.onVibrationOccur(event)) {
-
-                if(listener.createParticle()) {
-                    this.createVibration(listener, event);
-                }
-                this.level.getServer().getScheduler().scheduleDelayedTask(InternalPlugin.INSTANCE, () -> {
-                    VibrationArriveEvent vibrationArriveEvent = new VibrationArriveEvent(event, listener);
-                    if (!vibrationArriveEvent.call()) {
-                        return;
-                    }
-                    listener.onVibrationArrive(event);
-                }, (int) event.source().distance(listener.getListenerVector()));
-            }
-        });
     }
 
     @Override

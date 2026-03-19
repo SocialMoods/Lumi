@@ -484,6 +484,7 @@ public abstract class Entity extends Location implements Metadatable {
     public int ticksLived = 0;
     protected int airTicks = 0;
 
+    private long lastTotemTriggerTick = -1;
     protected float health = 20;
     protected int maxHealth = 20;
 
@@ -1495,6 +1496,10 @@ public abstract class Entity extends Location implements Metadatable {
     }
 
     public boolean attack(EntityDamageEvent source) {
+        if (this.lastTotemTriggerTick != -1 && (server.getTick() - this.lastTotemTriggerTick) < 10) {
+            return false;
+        }
+
         if (hasEffect(EffectType.FIRE_RESISTANCE)
                 && (source.getCause() == DamageCause.FIRE
                 || source.getCause() == DamageCause.FIRE_TICK
@@ -1559,12 +1564,13 @@ public abstract class Entity extends Location implements Metadatable {
                     totem = true;
                 }
                 if (totem) {
+                    this.lastTotemTriggerTick = server.getTick();
                     this.getLevel().addLevelEvent(this, LevelEventPacket.EVENT_SOUND_TOTEM);
                     this.getLevel().addParticleEffect(this, ParticleEffect.TOTEM);
 
                     this.extinguish();
                     this.removeAllEffects(EntityEffectUpdateEvent.Cause.TOTEM);
-                    this.setHealth(1);
+                    this.setHealth(5);
 
                     this.addEffect(Effect.get(EffectType.REGENERATION).setDuration(800).setAmplifier(1), EntityEffectUpdateEvent.Cause.TOTEM);
                     this.addEffect(Effect.get(EffectType.FIRE_RESISTANCE).setDuration(800), EntityEffectUpdateEvent.Cause.TOTEM);

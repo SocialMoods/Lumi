@@ -500,7 +500,7 @@ public class BlockRegistry implements IRegistry<Integer, Block, Class<? extends 
         register(QUARTZ_BRICKS, BlockBricksQuartz.class); //559
 
         register(POWDER_SNOW, BlockPowderSnow.class); // 561
-        register(SCULK_SENSOR, BlockSculkSensor.class); // 562
+//        register(SCULK_SENSOR, BlockSculkSensor.class); // 562
         register(POINTED_DRIPSTONE, BlockPointedDripstone.class); // 563
 
         register(COPPER_ORE, BlockOreCopper.class); //566

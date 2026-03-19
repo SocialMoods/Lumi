@@ -85,7 +85,8 @@ public class BlockTNT extends BlockSolid {
                         .add(new FloatTag("", 0))
                         .add(new FloatTag("", 0)))
                 .putShort("Fuse", fuse);
-        Entity tnt = new EntityPrimedTNT(
+        Entity tnt = Entity.createEntity(
+                "PrimedTnt",
                 this.getLevel().getChunk(this.getFloorX() >> 4, this.getFloorZ() >> 4),
                 nbt, source
         );

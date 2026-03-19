@@ -145,18 +145,18 @@ public class StateBlockStorage {
                         NbtMap updatedState = BlockStateMapping.get().updateVanillaState(state);
                         blockState = BlockStateMapping.get().getUpdatedOrCustom(state, updatedState);
                         if (!blockState.isCustom()) {
-                            if (Nukkit.DEBUG > 1) {
+                            if (Nukkit.DEBUG > 2) {
                                 log.info("[{}] Updated unmapped block state: {} => {}", chunkBuilder.debugString(), state, blockState.getVanillaState());
                             }
                             chunkBuilder.dirty();
                         }
 
-                        if (Nukkit.DEBUG > 1 && blockState.getRuntimeId() == BlockStateMapping.get().getDefaultRuntimeId()) {
+                        if (Nukkit.DEBUG > 2 && blockState.getRuntimeId() == BlockStateMapping.get().getDefaultRuntimeId()) {
                             log.info("[{}] Chunk contains unknown block {}  => {}", chunkBuilder.debugString(), state, updatedState);
                         }
                     }
 
-                    if (Nukkit.DEBUG > 1 && this.palette.contains(blockState)) {
+                    if (Nukkit.DEBUG > 2 && this.palette.contains(blockState)) {
                         log.info("[{}] Palette contains block state twice: {}", chunkBuilder.debugString(), state);
                     }
                     this.palette.add(blockState);

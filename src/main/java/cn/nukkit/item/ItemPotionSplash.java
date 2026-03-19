@@ -35,6 +35,11 @@ public class ItemPotionSplash extends ItemProjectile {
     }
 
     @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
     public void onThrown(Player player, EntityProjectile projectile) {
         player.getLevel().addLevelSoundEvent(player, LevelSoundEventPacket.SOUND_BOW);
     }

@@ -41,15 +41,15 @@ public class ItemAppleGoldEnchanted extends ItemFood {
     @Override
     public boolean onEaten(Player player) {
         player.addEffect(Effect.get(EffectType.ABSORPTION)
-                .setAmplifier(3)
+                .setAmplifier(3) // 4 lvl
                 .setDuration(120 * 20));
         player.addEffect(Effect.get(EffectType.REGENERATION).
-                setAmplifier(4).
+                setAmplifier(3). // 4 lvl
                 setDuration(30 * 20));
         player.addEffect(Effect.get(EffectType.FIRE_RESISTANCE)
-                .setDuration(5 * 60 * 20));
+                .setDuration(5 * 60 * 20)); // 1 lvl
         player.addEffect(Effect.get(EffectType.RESISTANCE)
-                .setDuration(5 * 60 * 20));
+                .setDuration(5 * 60 * 20)); // 1 lvl
 
         return true;
     }

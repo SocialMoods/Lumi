@@ -41,12 +41,12 @@ public class GameRules {
         gameRules.gameRules.put(FREEZE_DAMAGE, new Value<>(Type.BOOLEAN, true, 440));
         gameRules.gameRules.put(FUNCTION_COMMAND_LIMIT, new Value<>(Type.INTEGER, 10000, 332));
         gameRules.gameRules.put(KEEP_INVENTORY, new Value<>(Type.BOOLEAN, false));
-        gameRules.gameRules.put(LOCATOR_BAR, new Value<>(Type.BOOLEAN, true));
+        gameRules.gameRules.put(LOCATOR_BAR, new Value<>(Type.BOOLEAN, false));
         gameRules.gameRules.put(MAX_COMMAND_CHAIN_LENGTH, new Value<>(Type.INTEGER, 65536));
         gameRules.gameRules.put(MOB_GRIEFING, new Value<>(Type.BOOLEAN, true));
         gameRules.gameRules.put(NATURAL_REGENERATION, new Value<>(Type.BOOLEAN, true));
         gameRules.gameRules.put(PVP, new Value<>(Type.BOOLEAN, true));
-        gameRules.gameRules.put(RANDOM_TICK_SPEED, new Value<>(Type.INTEGER, 3, 313)); // Vanilla: default 1
+        gameRules.gameRules.put(RANDOM_TICK_SPEED, new Value<>(Type.INTEGER, 20, 313)); // Vanilla: default 1
         gameRules.gameRules.put(SEND_COMMAND_FEEDBACK, new Value<>(Type.BOOLEAN, true, 361));
         gameRules.gameRules.put(SHOW_COORDINATES, new Value<>(Type.BOOLEAN, false));
         gameRules.gameRules.put(SHOW_DAYS_PLAYED, new Value<>(Type.BOOLEAN, false, 685));

@@ -6,7 +6,6 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.IntTag;
 import cn.nukkit.nbt.tag.ListTag;
-import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -112,7 +111,7 @@ public class PositionTrackingDBServerBroadcastPacket extends DataPacket {
         try {
             put(NBTIO.writeNetwork(tag != null ? tag : new CompoundTag()));
         } catch (IOException e) {
-            throw new EncoderException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -123,7 +122,7 @@ public class PositionTrackingDBServerBroadcastPacket extends DataPacket {
         try (FastByteArrayInputStream inputStream = new FastByteArrayInputStream(get())) {
             tag = NBTIO.readNetworkCompressed(inputStream);
         } catch (IOException e) {
-            throw new EncoderException(e);
+            throw new RuntimeException(e);
         }
     }
 

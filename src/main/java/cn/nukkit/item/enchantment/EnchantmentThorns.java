@@ -43,23 +43,23 @@ public class EnchantmentThorns extends Enchantment {
 
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
-        if (!(entity instanceof EntityHumanType human)) {
-            return;
-        }
-
-        int thornsLevel = 0;
-
-        for (Item armor : human.getInventory().getArmorContents()) {
-            Enchantment thorns = armor.getEnchantment(Enchantment.ID_THORNS);
-            if (thorns != null) {
-                thornsLevel = Math.max(thorns.getLevel(), thornsLevel);
-            }
-        }
-
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-
-        if (shouldHit(random, thornsLevel)) {
-            attacker.attack(new EntityDamageByEntityEvent(entity, attacker, EntityDamageEvent.DamageCause.THORNS, getDamage(random, level), 0f));
-        }
+//        if (!(entity instanceof EntityHumanType human)) {
+//            return;
+//        }
+//
+//        int thornsLevel = 0;
+//
+//        for (Item armor : human.getInventory().getArmorContents()) {
+//            Enchantment thorns = armor.getEnchantment(Enchantment.ID_THORNS);
+//            if (thorns != null) {
+//                thornsLevel = Math.max(thorns.getLevel(), thornsLevel);
+//            }
+//        }
+//
+//        ThreadLocalRandom random = ThreadLocalRandom.current();
+//
+//        if (shouldHit(random, thornsLevel)) {
+//            attacker.attack(new EntityDamageByEntityEvent(entity, attacker, EntityDamageEvent.DamageCause.THORNS, getDamage(random, level), 0f));
+//        }
     }
 }
