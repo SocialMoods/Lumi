@@ -187,18 +187,10 @@ public class NetworkInventoryAction {
                             this.inventorySlot = 1;
                             break;
                         case AnvilInventory.ANVIL_INPUT_UI_SLOT:
-                            if (player.getWindowById(Player.ANVIL_WINDOW_ID) == null) {
-                                player.getServer().getLogger().error("Player " + player.getName() + " does not have anvil window open");
-                                return null;
-                            }
                             this.windowId = Player.ANVIL_WINDOW_ID;
                             this.inventorySlot = 0;
                             break;
                         case AnvilInventory.ANVIL_MATERIAL_UI_SLOT:
-                            if (player.getWindowById(Player.ANVIL_WINDOW_ID) == null) {
-                                player.getServer().getLogger().error("Player " + player.getName() + " does not have anvil window open");
-                                return null;
-                            }
                             this.windowId = Player.ANVIL_WINDOW_ID;
                             this.inventorySlot = 1;
                             break;

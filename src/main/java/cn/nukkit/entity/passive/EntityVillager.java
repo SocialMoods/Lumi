@@ -231,7 +231,7 @@ public class EntityVillager extends EntityWalkingAnimal implements InventoryHold
      * @return 该村民是否可以交易
      */
     public boolean getCanTrade() {
-        return false;
+        return this.canTrade;
     }
 
     /**

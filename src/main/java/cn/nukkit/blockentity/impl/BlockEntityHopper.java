@@ -425,8 +425,25 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                     Item itemToAdd = item.clone();
                     itemToAdd.setCount(1);
 
-                    if (!target.canAddItem(itemToAdd)) {
-                        continue;
+                    int targetSlot = -1;
+                    boolean isPotion = itemToAdd.getId() == Item.POTION ||
+                            itemToAdd.getId() == Item.SPLASH_POTION ||
+                            itemToAdd.getId() == Item.LINGERING_POTION;
+
+                    if (isPotion) {
+                        for (int s = 0; s < target.getSize(); s++) {
+                            if (target.getItem(s).isNull()) {
+                                targetSlot = s;
+                                break;
+                            }
+                        }
+                        if (targetSlot == -1) {
+                            continue;
+                        }
+                    } else {
+                        if (!target.canAddItem(itemToAdd)) {
+                            continue;
+                        }
                     }
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(this.inventory, target, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
@@ -436,10 +453,13 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                         continue;
                     }
 
-                    Item[] items = target.addItem(itemToAdd);
-
-                    if (items.length > 0) {
-                        continue;
+                    if (isPotion) {
+                        target.setItem(targetSlot, itemToAdd);
+                    } else {
+                        Item[] leftOver = target.addItem(itemToAdd);
+                        if (leftOver.length > 0) {
+                            continue;
+                        }
                     }
 
                     item.count--;
