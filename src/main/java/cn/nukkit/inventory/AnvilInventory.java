@@ -1,8 +1,13 @@
 package cn.nukkit.inventory;
 
 import cn.nukkit.Player;
+import cn.nukkit.event.inventory.AnvilInventoryChangeEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.level.Position;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author MagicDroidX
@@ -16,12 +21,39 @@ public class AnvilInventory extends FakeBlockUIComponent {
 
     public static final int TARGET = 0;
     public static final int SACRIFICE = 1;
-    public static final int RESULT = ANVIL_OUTPUT_UI_SLOT - 1; //1: offset
+    public static final int RESULT = ANVIL_OUTPUT_UI_SLOT - 1; //1: offset;
+
+    @Getter
+    private Item clientInputItem = Item.AIR_ITEM.clone();
+    @Getter
+    private Item clientMaterialItem = Item.AIR_ITEM.clone();
 
     private int cost;
 
     public AnvilInventory(PlayerUIInventory playerUI, Position position) {
         super(playerUI, InventoryType.ANVIL, 1, position);
+    }
+
+    /**
+     * Calls then client changes slot (only clientside)
+     * @param slot 0 (target) or 1 (material)
+     * @param oldItem old item
+     * @param newItem new item
+     */
+    public void onSlotChange(int slot, Item oldItem, Item newItem) {
+        if (slot == TARGET) {
+            this.clientInputItem = newItem.clone();
+        } else if (slot == SACRIFICE) {
+            this.clientMaterialItem = newItem.clone();
+        }
+
+        AnvilInventoryChangeEvent event = new AnvilInventoryChangeEvent(this);
+        if (!event.call()) {
+            this.getViewers().forEach(player -> {
+                player.removeAllWindows(false);
+                player.sendAllInventories();
+            });
+        }
     }
 
     @Override

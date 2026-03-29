@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  */
 public abstract class EntitySlenderProjectile extends EntityProjectile {
 
-    private static final int SPLIT_NUMBER = 10;
+    protected static final int SPLIT_NUMBER = 10;
     private MovingObjectPosition lastHitBlock;
 
     public EntitySlenderProjectile(FullChunk chunk, CompoundTag nbt) {

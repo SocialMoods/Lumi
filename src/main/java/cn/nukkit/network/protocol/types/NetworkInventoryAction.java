@@ -9,6 +9,7 @@ import cn.nukkit.item.*;
 import cn.nukkit.network.protocol.InventoryTransactionPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -265,6 +266,10 @@ public class NetworkInventoryAction {
                             player.getServer().getLogger().debug("Player " + player.getName() + " has an invalid open container with window ID " + this.windowId);
                             return null;
                         }
+                    }
+
+                    if (window instanceof AnvilInventory inventory) {
+                        inventory.onSlotChange(this.inventorySlot, this.oldItem, this.newItem);
                     }
                     return new SlotChangeAction(window, this.inventorySlot, this.oldItem, this.newItem);
                 }
