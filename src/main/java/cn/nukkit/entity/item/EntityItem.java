@@ -128,6 +128,12 @@ public class EntityItem extends Entity {
 
     @Override
     public boolean attack(EntityDamageEvent source) {
+        if (this.floatsInLava && (source.getCause() == DamageCause.FIRE
+                || source.getCause() == DamageCause.FIRE_TICK
+                || source.getCause() == DamageCause.LAVA)) {
+            return false;
+        }
+
         DamageCause cause = source.getCause();
         if ((cause == DamageCause.VOID || cause == DamageCause.CONTACT || cause == DamageCause.FIRE_TICK
                 || (cause == DamageCause.ENTITY_EXPLOSION || cause == DamageCause.BLOCK_EXPLOSION) && !this.isInsideOfWater()

@@ -11,13 +11,16 @@ public class EffectHealthBoost extends Effect {
         super(EffectType.HEALTH_BOOST, "%potion.healthBoost", new Color(248, 125, 35));
     }
 
+    @Override
     public void onAdd(Entity entity) {
-        entity.setMaxHealth(entity.getMaxHealth() + 4 * this.getLevel());
+        entity.setMaxHealth(entity.getRealMaxHealth());
     }
 
+    @Override
     public void onRemove(Entity entity) {
-        entity.setMaxHealth(entity.getMaxHealth() - 4 * this.getLevel());
-        if (entity.getHealth() > entity.getMaxHealth()){
+        entity.setMaxHealth(entity.getRealMaxHealth());
+
+        if (entity.getHealth() > entity.getMaxHealth()) {
             entity.setHealth(entity.getMaxHealth());
         }
     }

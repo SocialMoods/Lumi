@@ -339,7 +339,6 @@ public abstract class BaseChunk extends BaseFullChunk implements Chunk {
     public ChunkSection getSection(float fY) {
         int y = (int) (this.getSectionOffset() + fY);
         if (y >= this.sections.length) {
-            this.getProvider().getLevel().getServer().getLogger().logException(new ChunkException("Invalid section " + y + " in chunk " + this.getX() + ", " + this.getZ()));
             y = this.sections.length - 1;
         }
         return this.sections[y];
