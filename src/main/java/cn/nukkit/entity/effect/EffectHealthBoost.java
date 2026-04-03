@@ -1,6 +1,5 @@
 package cn.nukkit.entity.effect;
 
-import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 
 import java.awt.*;

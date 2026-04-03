@@ -322,10 +322,8 @@ public class EntityPiglin extends EntityWalkingMob {
             return Item.get(ItemNamespaceId.NETHER_BRICK, 0, ThreadLocalRandom.current().nextInt(2, 9));
         } else if (random < 379) {
             return Item.get(ItemNamespaceId.ARROW, 0, ThreadLocalRandom.current().nextInt(6, 12));
-        } else if (random < 419) {
-            return Item.get(Block.GRAVEL, 0, ThreadLocalRandom.current().nextInt(8, 17));
         } else {
-            return Item.get(Block.BLACKSTONE, 0, ThreadLocalRandom.current().nextInt(8, 17));
+            return Item.get(Block.GRAVEL, 0, ThreadLocalRandom.current().nextInt(8, 17));
         }
     }
 

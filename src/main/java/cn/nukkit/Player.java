@@ -4013,6 +4013,12 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         this.removeAllEffects(EntityEffectUpdateEvent.Cause.DEATH);
         this.setHealth(this.getMaxHealth());
+        if (this.getRealMaxHealth() > 20) {
+            this.setMaxHealth(20);
+            if (this.health > 20) {
+                this.setHealth(20);
+            }
+        }
         this.foodData.setFood(20, 20);
 
         this.sendData(this);
