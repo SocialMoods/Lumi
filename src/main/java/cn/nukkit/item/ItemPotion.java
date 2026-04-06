@@ -6,6 +6,7 @@ import cn.nukkit.event.player.PlayerItemConsumeEvent;
 import cn.nukkit.level.vibration.VanillaVibrationTypes;
 import cn.nukkit.level.vibration.VibrationEvent;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.network.protocol.ProtocolInfo;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +29,13 @@ public class ItemPotion extends Item {
     public void setDamage(Integer meta) {
         super.setDamage(meta);
         this.updateName();
+    }
+
+    @Override
+    public int getMaxStackSize(int protocol) {
+        if (protocol < ProtocolInfo.v1_21_60) return 1;
+
+        return super.getMaxStackSize(protocol);
     }
 
     private void updateName() {

@@ -962,6 +962,11 @@ public class Item implements Cloneable, BlockID, ItemID, ProtocolInfo {
         return 64;
     }
 
+    public int getMaxStackSize(int protocol) {
+        // used for potion stacking
+        return this.getMaxStackSize();
+    }
+
     final public Integer getFuelTime() {
         return Registries.FUEL.get(getNamespaceId());
     }

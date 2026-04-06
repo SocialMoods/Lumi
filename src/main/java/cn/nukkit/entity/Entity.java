@@ -1557,11 +1557,12 @@ public abstract class Entity extends Location implements Metadatable {
                 Player p = (Player) this;
                 boolean totem = false;
                 boolean isOffhand = false;
-                if (p.getOffhandInventory().getItemFast(0) instanceof ItemTotem) {
+                if (p.getInventory().getItemInHandFast() instanceof ItemTotem) {
+                    totem = true;
+                }
+                else if (p.getOffhandInventory().getItemFast(0) instanceof ItemTotem) {
                     totem = true;
                     isOffhand = true;
-                } else if (p.getInventory().getItemInHandFast() instanceof ItemTotem) {
-                    totem = true;
                 }
                 if (totem) {
                     this.lastTotemTriggerTick = server.getTick();

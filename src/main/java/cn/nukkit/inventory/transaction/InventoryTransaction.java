@@ -78,9 +78,24 @@ public class InventoryTransaction {
         if (action instanceof SlotChangeAction slotChangeAction) {
             Item targetItem = slotChangeAction.getTargetItem();
             Item sourceItem = slotChangeAction.getSourceItem();
-            if (targetItem.getCount() > targetItem.getMaxStackSize() || sourceItem.getCount() > sourceItem.getMaxStackSize()) {
+
+            int sourceMaxStackSize = sourceItem.getMaxStackSize();
+            int targetMaxStackSize = targetItem.getMaxStackSize();
+
+            for (Player viewer : slotChangeAction.getInventory().getViewers()) {
+                if (viewer.protocol < ProtocolInfo.v1_21_60) {
+                    sourceMaxStackSize = sourceItem.getMaxStackSize(viewer.protocol);
+                    targetMaxStackSize = targetItem.getMaxStackSize(viewer.protocol);
+                    break;
+                }
+            }
+
+            if (targetItem.getCount() > targetMaxStackSize || sourceItem.getCount() > sourceMaxStackSize) {
                 invalid = true;
-                Server.getInstance().getLogger().debug("Failed to add SlotChangeAction for " + source.getName() + ": illegal item stack size");
+                Server.getInstance().getLogger().debug(
+                        String.format("Failed to add SlotChangeAction for %s: illegal item stack size (Source: %d/%d, Target: %d/%d)",
+                                source.getName(), sourceItem.getCount(), sourceMaxStackSize, targetItem.getCount(), targetMaxStackSize)
+                );
                 return;
             }
 

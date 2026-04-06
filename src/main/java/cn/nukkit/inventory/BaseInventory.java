@@ -263,7 +263,12 @@ public abstract class BaseInventory implements Inventory {
         int i1 = this.getSize();
         for (int i = 0; i < i1; ++i) {
             Item slot = this.getItemFast(i);
-            int maxStackSize = Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+            int maxStackSize;
+            if (this.holder instanceof Player player) {
+                maxStackSize =  Math.min(slot.getMaxStackSize(player.protocol), this.getMaxStackSize());
+            } else {
+                maxStackSize = Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+            }
             if (item.equals(slot, checkDamage, checkTag)) {
                 int diff;
                 if ((diff = maxStackSize - slot.getCount()) > 0) {
@@ -306,7 +311,12 @@ public abstract class BaseInventory implements Inventory {
             for (Iterator<Item> iterator = itemSlots.iterator(); iterator.hasNext();) {
                 Item slot = iterator.next();
                 if (slot.equals(item)) {
-                    int maxStackSize = Math.min(item.getMaxStackSize(), this.getMaxStackSize());
+                    int maxStackSize;
+                    if (this.holder instanceof Player player) {
+                        maxStackSize =  Math.min(slot.getMaxStackSize(player.protocol), this.getMaxStackSize());
+                    } else {
+                        maxStackSize = Math.min(item.getMaxStackSize(), this.getMaxStackSize());
+                    }
                     if (item.getCount() < maxStackSize) {
                         int amount = Math.min(maxStackSize - item.getCount(), slot.getCount());
                         if (amount > 0) {
@@ -329,7 +339,13 @@ public abstract class BaseInventory implements Inventory {
             for (int slotIndex : emptySlots) {
                 if (!itemSlots.isEmpty()) {
                     Item slot = itemSlots.get(0);
-                    int amount = Math.min(Math.min(slot.getMaxStackSize(), this.getMaxStackSize()), slot.getCount());
+                    int maxStackSize;
+                    if (this.holder instanceof Player player) {
+                        maxStackSize = Math.min(slot.getMaxStackSize(player.protocol), this.getMaxStackSize());
+                    } else {
+                        maxStackSize = Math.min(slot.getMaxStackSize(), this.getMaxStackSize());
+                    }
+                    int amount = Math.min(Math.min(maxStackSize, this.getMaxStackSize()), slot.getCount());
                     slot.setCount(slot.getCount() - amount);
                     Item item = slot.clone();
                     item.setCount(amount);
@@ -498,7 +514,15 @@ public abstract class BaseInventory implements Inventory {
         }
 
         for (Item item : this.slots.values()) {
-            if (item == null || item.getId() == 0 || item.getCount() < item.getMaxStackSize() || item.getCount() < this.maxStackSize) {
+            if (item == null) return false;
+
+            int maxStackSize;
+            if (this.holder instanceof Player player) {
+                maxStackSize = item.getMaxStackSize(player.protocol);
+            } else {
+                maxStackSize = item.getMaxStackSize();
+            }
+            if (item.getId() == 0 || item.getCount() < maxStackSize || item.getCount() < this.maxStackSize) {
                 return false;
             }
         }
@@ -522,7 +546,12 @@ public abstract class BaseInventory implements Inventory {
     }
 
     public int getFreeSpace(Item item) {
-        int maxStackSize = Math.min(item.getMaxStackSize(), this.maxStackSize);
+        int maxStackSize;
+        if (this.holder instanceof Player player) {
+            maxStackSize = item.getMaxStackSize(player.protocol);
+        } else {
+            maxStackSize = item.getMaxStackSize();
+        }
         int space = (this.getSize() - this.slots.size()) * maxStackSize;
 
         for (Item slot : this.getContents().values()) {
@@ -581,7 +610,7 @@ public abstract class BaseInventory implements Inventory {
 
     @Override
     public void sendSlot(int index, Collection<Player> players) {
-        this.sendSlot(index, players.toArray(Player.EMPTY_ARRAY));
+        this.sendSlot(index, players.toArray(cn.nukkit.Player.EMPTY_ARRAY));
     }
 
     @Override
