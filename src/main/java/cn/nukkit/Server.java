@@ -21,7 +21,6 @@ import cn.nukkit.level.*;
 import cn.nukkit.level.biome.EnumBiome;
 import cn.nukkit.level.format.LevelProvider;
 import cn.nukkit.level.format.LevelProviderManager;
-import cn.nukkit.level.format.anvil.Anvil;
 import cn.nukkit.level.format.leveldb.LevelDBProvider;
 import cn.nukkit.level.generator.*;
 import cn.nukkit.level.tickingarea.manager.SimpleTickingAreaManager;
@@ -31,6 +30,7 @@ import cn.nukkit.math.NukkitMath;
 import cn.nukkit.metadata.EntityMetadataStore;
 import cn.nukkit.metadata.LevelMetadataStore;
 import cn.nukkit.metadata.PlayerMetadataStore;
+import cn.nukkit.metrics.LumiMetrics;
 import cn.nukkit.metrics.NukkitMetrics;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -378,7 +378,6 @@ public class Server {
 
         Registries.BLOCK.initCustomBlocks();
 
-        LevelProviderManager.addProvider(this, Anvil.class);
         LevelProviderManager.addProvider(this, LevelDBProvider.class);
 
         Generator.addGenerator(Flat.class, "flat", Generator.TYPE_FLAT);
@@ -460,9 +459,8 @@ public class Server {
             this.scheduler.scheduleDelayedRepeatingTask(InternalPlugin.INSTANCE, this.spawnerTask, spawnerTicks, spawnerTicks);
         }
 
-        if (this.settings.general().bstatsMetrics()) {
-            new NukkitMetrics(this);
-        }
+        LumiMetrics.start();
+        NukkitMetrics.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::forceShutdown));
 

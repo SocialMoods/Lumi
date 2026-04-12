@@ -123,4 +123,12 @@ public class ItemPotion extends Item {
     public static ItemPotion fromPotion(PotionType potion) {
         return new ItemPotion(potion.id());
     }
+
+    @Override
+    public boolean isSupportedOn(int protocolId) {
+        if(protocolId < ProtocolInfo.v1_21_0) {
+            if(getDamage() > 40) return false;
+        }
+        return true;
+    }
 }
