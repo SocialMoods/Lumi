@@ -25,6 +25,7 @@ public interface BlockEntityID {
     String HOPPER = "Hopper";
     String BED = "Bed";
     String JUKEBOX = "Jukebox";
+    String SHELF = "Shelf";
     String SHULKER_BOX = "ShulkerBox";
     String BANNER = "Banner";
     String LECTERN = "Lectern";
@@ -39,6 +40,7 @@ public interface BlockEntityID {
     String TARGET = "Target";
     String BRUSHABLE_BLOCK = "BrushableBlock";
     String CONDUIT = "Conduit";
+    String COPPER_GOLEM_STATUE = "CopperGolemStatue";
     String CHISELED_BOOKSHELF = "ChiseledBookshelf";
     String HANGING_SIGN = "HangingSign";
     String SCULK_SENSOR = "SculkSensor";

@@ -37,6 +37,7 @@ public class BlockEntityRegistry implements IRegistry<String, Class<? extends Bl
         register(BlockEntityID.HOPPER, BlockEntityHopper.class);
         register(BlockEntityID.BED, BlockEntityBed.class);
         register(BlockEntityID.JUKEBOX, BlockEntityJukebox.class);
+        register(BlockEntityID.SHELF, BlockEntityShelf.class);
         register(BlockEntityID.SHULKER_BOX, BlockEntityShulkerBox.class);
         register(BlockEntityID.BANNER, BlockEntityBanner.class);
         register(BlockEntityID.DROPPER, BlockEntityDropper.class);
@@ -54,6 +55,7 @@ public class BlockEntityRegistry implements IRegistry<String, Class<? extends Bl
         register(BlockEntityID.TARGET, BlockEntityTarget.class);
         register(BlockEntityID.BRUSHABLE_BLOCK, BlockEntityBrushableBlock.class);
         register(BlockEntityID.CONDUIT, BlockEntityConduit.class);
+        register(BlockEntityID.COPPER_GOLEM_STATUE, BlockEntityCopperGolemStatue.class);
         register(BlockEntityID.CHISELED_BOOKSHELF, BlockEntityChiseledBookshelf.class);
         register(BlockEntityID.HANGING_SIGN, BlockEntityHangingSign.class);
         register(BlockEntityID.SCULK_SENSOR, BlockEntitySculkSensor.class);
