@@ -12,7 +12,6 @@ import cn.nukkit.level.format.generic.BaseFullChunk;
 import cn.nukkit.level.generator.noise.vanilla.f.NoiseGeneratorOctavesF;
 import cn.nukkit.level.generator.object.ore.OreType;
 import cn.nukkit.level.generator.populator.impl.*;
-import cn.nukkit.level.generator.populator.overworld.*;
 import cn.nukkit.level.generator.populator.type.Populator;
 import cn.nukkit.level.generator.task.ChunkPopulationTask;
 import cn.nukkit.math.MathHelper;
@@ -79,16 +78,6 @@ public class Normal extends Generator {
             new PopulatorSpring(BlockID.WATER, BlockID.STONE, 15, 8, 255),
             new PopulatorSpring(BlockID.LAVA, BlockID.STONE, 10, 16, 255),
             new PopulatorBedrock(BEDROCK_LAYER)
-    );
-    private List<Populator> structurePopulators = ImmutableList.of(
-            new PopulatorFossil(),
-            new PopulatorShipwreck(),
-            new PopulatorDesertPyramid(),
-            new PopulatorJungleTemple(),
-            new PopulatorIgloo(),
-            new PopulatorOceanRuin(),
-            new PopulatorDesertWell(),
-            new PopulatorDungeon()
     );
     public static final int seaHeight = 64; // should be 62
     public NoiseGeneratorOctavesF scaleNoise;
@@ -158,10 +147,7 @@ public class Normal extends Generator {
 
     @Override
     public void populateStructure(final int chunkX, final int chunkZ) {
-        final BaseFullChunk chunk = level.getChunk(chunkX, chunkZ);
-        for (final Populator populator : structurePopulators) {
-            Server.getInstance().computeThreadPool.submit(new ChunkPopulationTask(level, chunk, populator));
-        }
+
     }
 
     @Override
