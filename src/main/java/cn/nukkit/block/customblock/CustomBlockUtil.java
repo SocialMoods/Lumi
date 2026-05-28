@@ -2,6 +2,7 @@ package cn.nukkit.block.customblock;
 
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockID;
 import cn.nukkit.block.customblock.comparator.HashedPaletteComparator;
 import cn.nukkit.block.customblock.properties.BlockProperties;
 import cn.nukkit.block.customblock.properties.BlockProperty;
@@ -13,6 +14,7 @@ import cn.nukkit.level.format.leveldb.BlockStateMapping;
 import cn.nukkit.level.format.leveldb.LevelDBConstants;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.registry.Registries;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -195,7 +197,7 @@ public class CustomBlockUtil {
                     state = state.toBuilder().putInt("version", paletteVersion).build();
                 }
 
-                states.add(definition.getBlockState());
+                states.add(state);
                 state2Legacy.computeIfAbsent(state, s -> new IntOpenHashSet()).add(convertLegacyToFullId(definition.getLegacyId()));
             }
         }
@@ -224,6 +226,8 @@ public class CustomBlockUtil {
                 runtimeId++;
             }
         }
+
+        palette.setInfoUpdate(palette.getLegacyToRuntimeIdMap().get(BlockID.INFO_UPDATE << Block.DATA_BITS));
     }
 
     @Data

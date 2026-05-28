@@ -1,30 +1,4 @@
 {
-  "-212": {
-    "18": "minecraft:birch_wood",
-    "19": "minecraft:jungle_wood",
-    "16": "minecraft:oak_wood",
-    "17": "minecraft:stripped_spruce_wood",
-    "29": "minecraft:stripped_dark_oak_wood",
-    "27": "minecraft:stripped_jungle_wood",
-    "28": "minecraft:stripped_acacia_wood",
-    "25": "minecraft:stripped_spruce_wood",
-    "26": "minecraft:stripped_birch_wood",
-    "24": "minecraft:stripped_oak_wood",
-    "21": "minecraft:dark_oak_wood",
-    "20": "minecraft:acacia_wood",
-    "36": "minecraft:acacia_wood",
-    "37": "minecraft:dark_oak_wood",
-    "34": "minecraft:birch_wood",
-    "35": "minecraft:jungle_wood",
-    "32": "minecraft:oak_wood",
-    "33": "minecraft:spruce_wood",
-    "45": "minecraft:stripped_dark_oak_wood",
-    "43": "minecraft:stripped_jungle_wood",
-    "44": "minecraft:stripped_acacia_wood",
-    "41": "minecraft:stripped_spruce_wood",
-    "42": "minecraft:stripped_birch_wood",
-    "40": "minecraft:stripped_oak_wood"
-  },
   "-137": {
     "10": "minecraft:dead_horn_coral_wall_fan",
     "12": "minecraft:horn_coral_wall_fan",
@@ -69,22 +43,6 @@
   },
   "-133": {
     "12": "minecraft:horn_coral_fan"
-  },
-  "17": {
-    "11": "minecraft:jungle_log",
-    "10": "minecraft:birch_log",
-    "9": "minecraft:spruce_log",
-    "8": "minecraft:oak_log",
-    "7": "minecraft:jungle_log",
-    "6": "minecraft:birch_log",
-    "5": "minecraft:spruce_log",
-    "4": "minecraft:oak_log"
-  },
-  "162": {
-    "8": "minecraft:acacia_log",
-    "5": "minecraft:acacia_log",
-    "9": "minecraft:acacia_log",
-    "4": "minecraft:acacia_log"
   },
   "31": {
     "0": "minecraft:tall_grass"

@@ -5,11 +5,13 @@ import cn.nukkit.math.Vector3f;
 import cn.nukkit.nbt.tag.CompoundTag;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.annotation.Nullable;
 
 @Builder
 @Getter
+@ToString
 public class Component implements NBTData {
     private final CompoundTag result = new CompoundTag();
     @Nullable

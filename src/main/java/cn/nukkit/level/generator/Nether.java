@@ -14,9 +14,7 @@ import cn.nukkit.level.generator.noise.nukkit.f.SimplexF;
 import cn.nukkit.level.generator.object.ore.OreType;
 import cn.nukkit.level.generator.populator.impl.*;
 import cn.nukkit.level.generator.populator.nether.PopulatorGlowStone;
-import cn.nukkit.level.generator.populator.nether.PopulatorNetherFortress;
 import cn.nukkit.level.generator.populator.type.Populator;
-import cn.nukkit.level.generator.task.ChunkPopulationTask;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Utils;
@@ -52,9 +50,6 @@ public class Nether extends Generator {
         }),
         new PopulatorNetherWart(),
         new PopulatorNetherFire(FIRE, NETHERRACK)
-    );
-    private final List<Populator> structurePopulators = ImmutableList.of(
-        new PopulatorNetherFortress()
     );
     private final SimplexF[] noiseGen = new SimplexF[3];
     private ChunkManager level;
@@ -98,11 +93,8 @@ public class Nether extends Generator {
     }
 
     @Override
-    public void populateStructure(final int chunkX, final int chunkZ) {
-        final BaseFullChunk chunk = level.getChunk(chunkX, chunkZ);
-        for (final Populator populator : structurePopulators) {
-            Server.getInstance().computeThreadPool.submit(new ChunkPopulationTask(level, chunk, populator));
-        }
+    public void populateStructure(int chunkX, int chunkZ) {
+
     }
 
     @Override

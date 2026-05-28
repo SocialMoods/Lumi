@@ -71,14 +71,14 @@ public abstract class Generator implements BlockID {
         if (Generator.nameList.containsKey(name)) {
             return Generator.nameList.get(name);
         }
-        return OldNormal.class;
+        return Normal.class;
     }
 
     public static Class<? extends Generator> getGenerator(int type) {
         if (Generator.typeList.containsKey(type)) {
             return Generator.typeList.get(type);
         }
-        return OldNormal.class;
+        return Normal.class;
     }
 
     public static String getGeneratorName(Class<? extends Generator> c) {
