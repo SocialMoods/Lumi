@@ -96,6 +96,10 @@ public record CustomBlockDefinition(String identifier, CompoundTag nbt) {
                         .putString("culling", "")
                         .putCompound("bone_visibility", new CompoundTag())
                 );
+
+                components.putCompound("minecraft:creative_category", new CompoundTag()
+                        .putString("category", blockCreativeCategory.name().toLowerCase(Locale.ENGLISH))
+                        .putString("group", ItemCreativeGroup.NONE.getGroupName()));
             }
             //设置方块在创造栏的分类
             this.nbt.putCompound("menu_category", new CompoundTag()
@@ -106,7 +110,7 @@ public record CustomBlockDefinition(String identifier, CompoundTag nbt) {
             //molang版本
             this.nbt.putInt("molangVersion", 9);
 
-            nbt.putCompound("vanilla_block_data", new CompoundTag().putInt("block_id", customBlock.getId()));
+
 
             //设置方块的properties
             var propertiesNBT = getPropertiesNBT();
@@ -399,7 +403,7 @@ public record CustomBlockDefinition(String identifier, CompoundTag nbt) {
         }
 
         public CustomBlockDefinition build() {
-            return new CustomBlockDefinition(this.identifier, this.nbt);
+            return new CustomBlockDefinition(this.identifier, nbt.putCompound("vanilla_block_data", new CompoundTag().putInt("block_id", customBlock.getId())));
         }
     }
 }
