@@ -12,7 +12,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMaps;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -30,7 +32,9 @@ public class BlockPalette {
     private final Int2IntMap runtimeIdToLegacy = new Int2IntOpenHashMap();
     private final Int2IntMap stateHashToLegacy = new Int2IntOpenHashMap();
 
-    private final int infoUpdate;
+    @ApiStatus.Internal
+    @Setter
+    private int infoUpdate;
     private volatile boolean locked;
 
     public BlockPalette(int protocol) {
