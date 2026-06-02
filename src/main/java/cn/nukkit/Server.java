@@ -6,6 +6,7 @@ import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.data.skin.Skin;
 import cn.nukkit.entity.data.profession.Profession;
 import cn.nukkit.entity.data.property.EntityProperty;
+import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.level.LevelInitEvent;
 import cn.nukkit.event.level.LevelLoadEvent;
@@ -76,6 +77,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.extern.log4j.Log4j2;
+import org.densy.eventbus.api.EventBus;
+import org.densy.eventbus.api.subscription.annotation.SubscriptionAnnotationInfo;
+import org.densy.eventbus.api.subscription.annotation.SubscriptionAnnotationResolver;
+import org.densy.eventbus.core.EventBusImpl;
 import org.iq80.leveldb.CompressionType;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
@@ -126,6 +131,7 @@ public class Server {
     private boolean hasStopped;
 
     private final PluginManager pluginManager;
+    private final EventBus eventBus;
     private final ServerScheduler scheduler;
 
     private int tickCounter;
@@ -357,6 +363,16 @@ public class Server {
         this.pluginManager = new PluginManager(this, this.commandMap);
         this.pluginManager.subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this.consoleSender);
         this.pluginManager.registerInterface(JavaPluginLoader.class);
+
+        this.eventBus = new EventBusImpl();
+        this.eventBus.registerAnnotationResolver(SubscriptionAnnotationResolver.of(
+                EventHandler.class,
+                annotation -> new SubscriptionAnnotationInfo(
+                        annotation.priority().getSlot(),
+                        annotation.async(),
+                        !annotation.ignoreCancelled()
+                )
+        ));
 
         this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
 
@@ -681,9 +697,6 @@ public class Server {
                 this.unloadLevel(level, true);
                 this.nextTick = System.nanoTime(); // Fix Watchdog killing the server while saving worlds
             }
-
-            this.getLogger().debug("Removing event handlers...");
-            HandlerList.unregisterAll();
 
             this.getLogger().debug("Stopping all tasks...");
             this.scheduler.cancelAllTasks();
@@ -1244,6 +1257,10 @@ public class Server {
 
     public PluginManager getPluginManager() {
         return this.pluginManager;
+    }
+
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     public ResourcePackManager getResourcePackManager() {

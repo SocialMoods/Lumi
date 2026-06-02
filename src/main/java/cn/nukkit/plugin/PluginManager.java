@@ -13,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -507,7 +506,6 @@ public class PluginManager {
             }
 
             this.server.getScheduler().cancelTask(plugin);
-            HandlerList.unregisterAll(plugin);
             for (Permission permission : plugin.getDescription().getPermissions()) {
                 this.removePermission(permission);
             }
@@ -525,49 +523,32 @@ public class PluginManager {
 
     public void callEvent(Event event) {
         try {
-            for (RegisteredListener registration : getEventListeners(event.getClass()).getRegisteredListeners()) {
-                if (!registration.getPlugin().isEnabled()) {
-                    continue;
-                }
-
-                try {
-                    registration.callEvent(event);
-                } catch (Exception e) {
-                    log.error(this.server.getLanguage().translateString("nukkit.plugin.eventError", event.getEventName(),
-                            registration.getPlugin().getDescription().getFullName(),
-                            e.getMessage(),
-                            registration.getListener() != null ?
-                                    registration.getListener().getClass().getName() :
-                                    registration.getConsumer().getClass().getName()), e);
-                }
-            }
-        } catch (IllegalAccessException e) {
+            this.server.getEventBus().call(event);
+        } catch (Exception e) {
             log.error("An error has occurred while calling the event {}", event, e);
         }
     }
 
+    @Deprecated
     public <T extends Event> void subscribeEvent(
             Class<T> eventClass,
             NonReflectionEventConsumer<T> consumer,
             Plugin plugin
     ) {
-        subscribeEvent(
-                eventClass, consumer, EventPriority.NORMAL, plugin
-        );
+        subscribeEvent(eventClass, consumer, EventPriority.NORMAL, plugin);
     }
 
+    @Deprecated
     public <T extends Event> void subscribeEvent(
             Class<T> eventClass,
             NonReflectionEventConsumer<T> consumer,
             EventPriority priority,
             Plugin plugin
     ) {
-        subscribeEvent(
-                eventClass, consumer,
-                priority, false, plugin
-        );
+        subscribeEvent(eventClass, consumer, priority, false, plugin);
     }
 
+    @Deprecated
     public <T extends Event> void subscribeEvent(
             Class<T> eventClass,
             NonReflectionEventConsumer<T> consumer,
@@ -575,108 +556,26 @@ public class PluginManager {
             boolean ignoreCancelled,
             Plugin plugin
     ) {
-        EventExecutor executor = new NonReflectionEventExecutor<>(eventClass, consumer);
-
-        RegisteredListener rl = new RegisteredListener(
-                null,  //null for non reflection registration
-                consumer,
-                executor,
-                priority,
-                plugin,
-                ignoreCancelled
-        );
         try {
-            getEventListeners(eventClass).register(rl);
-        } catch (IllegalAccessException e) {
+            this.server.getEventBus().subscribe(eventClass, consumer::execute, priority.getSlot(), !ignoreCancelled);
+        } catch (Exception e) {
             log.error("An error occurred while subscribing the event listener event: {}, consumer: {} for plugin: {} version: {}",
                     eventClass, consumer, plugin.getDescription().getName(), plugin.getDescription().getVersion(), e);
         }
     }
 
+
+    @Deprecated
     public void registerEvents(Listener listener, Plugin plugin) {
         if (!plugin.isEnabled()) {
             throw new PluginException("Plugin attempted to register " + listener.getClass().getName() + " while not enabled");
         }
-
-        Set<Method> methods;
-        try {
-            Method[] publicMethods = listener.getClass().getMethods();
-            Method[] privateMethods = listener.getClass().getDeclaredMethods();
-            methods = new HashSet<>(publicMethods.length + privateMethods.length, 1.0f);
-            Collections.addAll(methods, publicMethods);
-            Collections.addAll(methods, privateMethods);
-        } catch (NoClassDefFoundError e) {
-            plugin.getLogger().error("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
-            return;
-        }
-
-        for (final Method method : methods) {
-            final EventHandler eh = method.getAnnotation(EventHandler.class);
-            if (eh == null) continue;
-            if (method.isBridge() || method.isSynthetic()) {
-                continue;
-            }
-            final Class<?> checkClass;
-
-            if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
-                plugin.getLogger().error(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
-                continue;
-            }
-
-            final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
-            method.setAccessible(true);
-
-            for (Class<?> clazz = eventClass; Event.class.isAssignableFrom(clazz); clazz = clazz.getSuperclass()) {
-                if (clazz.getAnnotation(Deprecated.class) != null) {
-                    this.server.getLogger().warning(this.server.getLanguage().translateString("nukkit.plugin.deprecatedEvent", plugin.getName(), clazz.getName(), listener.getClass().getName() + "." + method.getName() + "()"));
-                    break;
-                }
-            }
-            this.registerEvent(eventClass, listener, eh.priority(), new MethodEventExecutor(method), plugin, eh.ignoreCancelled());
-        }
+        this.server.getEventBus().subscribe(listener);
     }
 
-    public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin) throws PluginException {
-        this.registerEvent(event, listener, priority, executor, plugin, false);
-    }
 
-    public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin, boolean ignoreCancelled) throws PluginException {
-        if (!plugin.isEnabled()) {
-            throw new PluginException("Plugin attempted to register " + event + " while not enabled");
-        }
-
-        try {
-            this.getEventListeners(event).register(new RegisteredListener(listener, null, executor, priority, plugin, ignoreCancelled));
-        } catch (IllegalAccessException e) {
-            log.error("An error occurred while registering the event listener event:{}, listener:{} for plugin:{} version:{}",
-                    event, listener, plugin.getDescription().getName(), plugin.getDescription().getVersion(), e);
-        }
-    }
-
+    @Deprecated
     private HandlerList getEventListeners(Class<? extends Event> type) throws IllegalAccessException {
-        try {
-            Method method = getRegistrationClass(type).getDeclaredMethod("getHandlers");
-            method.setAccessible(true);
-            return (HandlerList) method.invoke(null);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("getHandlers method in " + type.getName() + " was not static!");
-        } catch (Exception e) {
-            throw new IllegalAccessException(Utils.getExceptionMessage(e));
-        }
-    }
-
-    private Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) throws IllegalAccessException {
-        try {
-            clazz.getDeclaredMethod("getHandlers");
-            return clazz;
-        } catch (NoSuchMethodException e) {
-            if (clazz.getSuperclass() != null
-                    && clazz.getSuperclass() != Event.class
-                    && Event.class.isAssignableFrom(clazz.getSuperclass())) {
-                return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
-            } else {
-                throw new IllegalAccessException("Unable to find handler list for event " + clazz.getName() + ". Static getHandlers method required!");
-            }
-        }
+        throw new UnsupportedOperationException("HandlerList deprecated since 1.6.0 and replaced with new event system");
     }
 }

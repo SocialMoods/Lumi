@@ -1,13 +1,8 @@
 package cn.nukkit.event;
 
 /**
- * Created by Nukkit Team.
+ * Marker interface for events that can be cancelled.
  */
-public interface Cancellable {
+public interface Cancellable extends org.densy.eventbus.api.Cancellable {
 
-    boolean isCancelled();
-
-    void setCancelled();
-
-    void setCancelled(boolean forceCancel);
 }

@@ -4,15 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityVehicle;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 
 public class EntityExitVehicleEvent extends VehicleEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final Entity riding;
 

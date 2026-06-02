@@ -3,18 +3,11 @@ package cn.nukkit.event.block;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 
 /**
  * Event for Block fire (ignite).
  */
 public class BlockIgniteEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final Block source;
     private final Entity entity;

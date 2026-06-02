@@ -2,7 +2,6 @@ package cn.nukkit.event.inventory;
 
 import cn.nukkit.blockentity.impl.BlockEntityCampfire;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.block.BlockEvent;
 import cn.nukkit.item.Item;
 
@@ -11,12 +10,6 @@ import cn.nukkit.item.Item;
  * Nukkit Project
  */
 public class CampfireSmeltEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final BlockEntityCampfire campfire;
     private final Item source;

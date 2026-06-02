@@ -3,13 +3,10 @@ package cn.nukkit.event.block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 
 public class ComposterEmptyEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
     private Item drop;
@@ -64,10 +61,6 @@ public class ComposterEmptyEvent extends BlockEvent implements Cancellable {
 
     public void setMotion(Vector3 motion) {
         this.motion = motion;
-    }
-
-    public static HandlerList getHandlers() {
-        return handlers;
     }
 
 }
