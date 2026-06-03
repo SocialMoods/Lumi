@@ -95,8 +95,7 @@ public class EntitySmallFireBall extends EntityProjectile {
 
             if (fire.isBlockTopFacingSurfaceSolid(fire.down()) || fire.canNeighborBurn()) {
                 BlockIgniteEvent e = new BlockIgniteEvent(this.getLevelBlock(), null, null, BlockIgniteEvent.BlockIgniteCause.FIREBALL);
-                level.getServer().getPluginManager().callEvent(e);
-                if (!e.isCancelled()) {
+                if (e.call()) {
                     level.setBlock(fire, fire, true);
                 }
             }

@@ -133,9 +133,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                 }
 
                 PlayerMissedSwingEvent evt = new PlayerMissedSwingEvent(handle.player);
-                Server.getInstance().getPluginManager().callEvent(evt);
-
-                if (!evt.isCancelled()) {
+                if (evt.call()) {
                     handle.player.level.addSound(handle.player, Sound.GAME_PLAYER_ATTACK_NODAMAGE);
                 }
             }
@@ -155,9 +153,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
 
     private void toggleSneak(PlayerHandle handle, boolean value) {
         PlayerToggleSneakEvent event = new PlayerToggleSneakEvent(handle.player, value);
-        Server.getInstance().getPluginManager().callEvent(event);
-
-        if (!event.call()) {
+        if (event.call()) {
             handle.setNeedSendData(true);
         } else {
             handle.setSneaking(value);

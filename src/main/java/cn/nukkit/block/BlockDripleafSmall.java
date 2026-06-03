@@ -104,8 +104,7 @@ public class BlockDripleafSmall extends BlockFlowable implements BlockProperties
         }
 
         BlockGrowEvent event = new BlockGrowEvent(this, Block.get(BlockID.BIG_DRIPLEAF, 0, this));
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

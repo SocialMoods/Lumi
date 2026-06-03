@@ -293,8 +293,7 @@ public class BlockVine extends BlockTransparentMeta {
         } else {
             event = new BlockGrowEvent(block, vine);
         }
-        this.level.getServer().getPluginManager().callEvent(event);
-        if (!event.isCancelled()) {
+        if (event.call()) {
             this.level.setBlock(block, vine, true);
         }
     }

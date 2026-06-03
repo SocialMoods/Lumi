@@ -214,18 +214,14 @@ public class EntityMinecartHopper extends EntityMinecartAbstract implements Inve
                     Item smelting = targetInv.getSmelting();
                     if (smelting.isNull()) {
                         event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                        this.server.getPluginManager().callEvent(event);
-
-                        if (!event.isCancelled()) {
+                        if (event.call()) {
                             targetInv.setSmelting(itemToAdd);
                             item.count--;
                             pushedItem = true;
                         }
                     } else if (targetInv.getSmelting().getId() == itemToAdd.getId() && targetInv.getSmelting().getDamage() == itemToAdd.getDamage() && smelting.count < smelting.getMaxStackSize()) {
                         event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                        this.server.getPluginManager().callEvent(event);
-
-                        if (!event.isCancelled()) {
+                        if (event.call()) {
                             smelting.count++;
                             targetInv.setSmelting(smelting);
                             item.count--;
@@ -259,9 +255,7 @@ public class EntityMinecartHopper extends EntityMinecartAbstract implements Inve
                     }
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(this.inventory, target, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                    this.server.getPluginManager().callEvent(ev);
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         continue;
                     }
 

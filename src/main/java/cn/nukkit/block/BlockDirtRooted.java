@@ -57,8 +57,7 @@ public class BlockDirtRooted extends BlockDirt {
 
         Block down = this.down();
         BlockGrowEvent event = new BlockGrowEvent(down, Block.get(BlockID.HANGING_ROOTS, 0, down));
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

@@ -53,8 +53,7 @@ public class BlockBuddingAmethyst extends BlockSolid {
         if (targetBlock != null) {
             targetBlock.setBlockFace(face);
             BlockSpreadEvent event = new BlockSpreadEvent(block, this, targetBlock);
-            this.getLevel().getServer().getPluginManager().callEvent(event);
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 this.getLevel().setBlock(block, event.getNewState(), false, true);
             }
         }

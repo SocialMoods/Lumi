@@ -41,8 +41,7 @@ public class BatchingHelper {
         }
 
         BatchPacketsEvent ev = new BatchPacketsEvent(players, packets);
-        ev.call();
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return;
         }
 

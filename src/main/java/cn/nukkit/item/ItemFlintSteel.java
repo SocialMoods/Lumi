@@ -70,9 +70,7 @@ public class ItemFlintSteel extends ItemTool {
 
             if (fire.isBlockTopFacingSurfaceSolid(fire.down()) || fire.canNeighborBurn()) {
                 BlockIgniteEvent e = new BlockIgniteEvent(block, null, player, BlockIgniteEvent.BlockIgniteCause.FLINT_AND_STEEL);
-                block.getLevel().getServer().getPluginManager().callEvent(e);
-
-                if (!e.isCancelled()) {
+                if (e.call()) {
                     level.setBlock(fire, fire, true);
                     level.scheduleUpdate(fire, fire.tickRate() + Utils.random.nextInt(10));
                     level.addLevelSoundEvent(block, LevelSoundEventPacket.SOUND_IGNITE);

@@ -82,8 +82,7 @@ public class BlockWater extends BlockLiquid {
                         && level.canBlockSeeSky(this)
                         && hasAdjacentNonWaterBlock()) {
                     WaterFrostEvent ev = new WaterFrostEvent(this);
-                    level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         level.setBlock(this, Block.get(Block.ICE), true, true);
                     }
                 }

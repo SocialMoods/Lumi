@@ -84,9 +84,7 @@ public class BlockRedstoneTorch extends BlockTorch implements Faceable {
                 this.level.scheduleUpdate(this, tickRate());
             } else if (type == Level.BLOCK_UPDATE_SCHEDULED) {
                 RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
-                getLevel().getServer().getPluginManager().callEvent(ev);
-
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     return 0;
                 }
 

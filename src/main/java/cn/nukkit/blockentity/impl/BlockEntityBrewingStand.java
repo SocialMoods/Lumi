@@ -189,9 +189,7 @@ public class BlockEntityBrewingStand extends BlockEntitySpawnable implements Inv
 
         if (brewTime == MAX_BREW_TIME) {
             StartBrewEvent e = new StartBrewEvent(this);
-            this.server.getPluginManager().callEvent(e);
-
-            if (e.isCancelled()) {
+            if (!e.call()) {
                 return false;
             }
 
@@ -209,9 +207,7 @@ public class BlockEntityBrewingStand extends BlockEntitySpawnable implements Inv
 
         //20 seconds
         BrewEvent e = new BrewEvent(this);
-        this.server.getPluginManager().callEvent(e);
-
-        if (e.isCancelled()) {
+        if (!e.call()) {
             stopBrewing();
             return true;
         }

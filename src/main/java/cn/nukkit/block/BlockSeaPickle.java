@@ -65,8 +65,7 @@ public class BlockSeaPickle extends BlockFlowable {
                 }
             } else if (!this.isDead()) {
                 BlockFadeEvent event = new BlockFadeEvent(this, new BlockSeaPickle(this.getDamage() ^ 0x4));
-                event.call();
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.getLevel().setBlock(this, event.getNewState(), true, true);
                 }
             }
@@ -121,9 +120,7 @@ public class BlockSeaPickle extends BlockFlowable {
         }
 
         BlockGrowEvent blockGrowEvent = new BlockGrowEvent(this, block);
-        Server.getInstance().getPluginManager().callEvent(blockGrowEvent);
-
-        if (blockGrowEvent.isCancelled()) {
+        if (!blockGrowEvent.call()) {
             return false;
         }
 
@@ -141,7 +138,7 @@ public class BlockSeaPickle extends BlockFlowable {
                 Block up = blockNearby.up();
                 if (up instanceof BlockWater && (up.getDamage() == 0 || up.getDamage() == 8) && random.nextInt(6) == 0) {
                     BlockSpreadEvent blockSpreadEvent = new BlockSpreadEvent(up, this, new BlockSeaPickle(random.nextInt(3)));
-                    if (!blockSpreadEvent.isCancelled()) {
+                    if (blockSpreadEvent.call()) {
                         this.getLevel().setBlock(up, 1, new BlockWater(), true, false);
                         this.getLevel().setBlock(up, blockSpreadEvent.getNewState(), true, true);
                     }

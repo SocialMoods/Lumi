@@ -124,9 +124,7 @@ public class BlockComposter extends BlockSolidMeta implements ItemID {
     public boolean addItem(@NotNull Item item, Player player, int chance) {
         boolean success = ThreadLocalRandom.current().nextInt(100) < chance;
         ComposterFillEvent event = new ComposterFillEvent(this, player, item, chance, success);
-        this.level.getServer().getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 
@@ -161,8 +159,7 @@ public class BlockComposter extends BlockSolidMeta implements ItemID {
             return null;
         }
         ComposterEmptyEvent event = new ComposterEmptyEvent(this, player, item, new ItemBoneMeal(), 0);
-        this.level.getServer().getPluginManager().callEvent(event);
-        if (!event.isCancelled()) {
+        if (event.call()) {
             this.setDamage(event.getNewLevel());
             this.level.setBlock(this, this, true, true);
             if (item != null) {

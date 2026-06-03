@@ -89,8 +89,7 @@ public class ItemPotion extends Item {
             return false;
         }
         PlayerItemConsumeEvent consumeEvent = new PlayerItemConsumeEvent(player, this);
-        player.getServer().getPluginManager().callEvent(consumeEvent);
-        if (consumeEvent.isCancelled()) {
+        if (!consumeEvent.call()) {
             return false;
         }
         PotionType potion = PotionType.get(this.getDamage());

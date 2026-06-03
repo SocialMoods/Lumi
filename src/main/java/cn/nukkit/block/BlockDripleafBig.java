@@ -117,8 +117,7 @@ public class BlockDripleafBig extends BlockSolidMeta implements BlockPropertiesH
         }
 
         Event event = new PlayerInteractEvent((Player) entity, null, this, null, PlayerInteractEvent.Action.PHYSICAL);
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return;
         }
 
@@ -169,8 +168,7 @@ public class BlockDripleafBig extends BlockSolidMeta implements BlockPropertiesH
         }
 
         BlockGrowEvent event = new BlockGrowEvent(this, Block.get(BlockID.BIG_DRIPLEAF, 0, this));
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

@@ -60,9 +60,7 @@ public abstract class BlockCrops extends BlockFlowable implements BlockPropertie
                 block.setPropertyValue(GROWTH, Math.min(newGrowth, GROWTH.getMaxValue()));
 
                 BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                Server.getInstance().getPluginManager().callEvent(ev);
-
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     return false;
                 }
 
@@ -96,9 +94,7 @@ public abstract class BlockCrops extends BlockFlowable implements BlockPropertie
 
                     BlockCrops block = (BlockCrops) this.clone();
                     BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                    Server.getInstance().getPluginManager().callEvent(ev);
-
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.getLevel().setBlock(this, ev.getNewState(), false, true);
                     } else {
                         return Level.BLOCK_UPDATE_RANDOM;

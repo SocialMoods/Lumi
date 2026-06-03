@@ -66,7 +66,7 @@ public class BlockLever extends BlockFlowable implements Faceable {
 
     @Override
     public boolean onActivate(Item item, Player player) {
-        this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, isPowerOn() ? 15 : 0, isPowerOn() ? 0 : 15));
+        new BlockRedstoneEvent(this, isPowerOn() ? 15 : 0, isPowerOn() ? 0 : 15).call();
         this.setDamage(this.getDamage() ^ 0x08);
 
         var pos = this.add(0.5, 0.5, 0.5);

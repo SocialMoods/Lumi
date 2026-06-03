@@ -208,8 +208,7 @@ public class BlockBell extends BlockTransparentMeta implements Faceable, BlockEn
         }
 
         BellRingEvent event = new BellRingEvent(this, cause, causeEntity);
-        this.level.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

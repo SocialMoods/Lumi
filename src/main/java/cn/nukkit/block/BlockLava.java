@@ -61,7 +61,7 @@ public class BlockLava extends BlockLiquid {
         entity.highestPosition -= (entity.highestPosition - entity.y) * 0.5;
 
         EntityCombustByBlockEvent ev = new EntityCombustByBlockEvent(this, entity, 8);
-        Server.getInstance().getPluginManager().callEvent(ev);
+        ev.call();
         if (!ev.isCancelled()
                 // Making sure the entity is actually alive and not invulnerable.
                 && entity.isAlive()
@@ -101,9 +101,7 @@ public class BlockLava extends BlockLiquid {
                     if (block.getId() == AIR) {
                         if (this.isSurroundingBlockFlammable(block)) {
                             BlockIgniteEvent e = new BlockIgniteEvent(block, this, null, BlockIgniteEvent.BlockIgniteCause.LAVA);
-                            this.level.getServer().getPluginManager().callEvent(e);
-
-                            if (!e.isCancelled()) {
+                            if (e.call()) {
                                 Block fire = Block.get(BlockID.FIRE);
                                 this.getLevel().setBlock(v, fire, true);
                                 this.getLevel().scheduleUpdate(fire, fire.tickRate());
@@ -123,9 +121,7 @@ public class BlockLava extends BlockLiquid {
 
                     if (block.up().getId() == AIR && block.getBurnChance() > 0) {
                         BlockIgniteEvent e = new BlockIgniteEvent(block, this, null, BlockIgniteEvent.BlockIgniteCause.LAVA);
-                        this.level.getServer().getPluginManager().callEvent(e);
-
-                        if (!e.isCancelled()) {
+                        if (e.call()) {
                             Block fire = Block.get(BlockID.FIRE);
                             this.getLevel().setBlock(v, fire, true);
                             this.getLevel().scheduleUpdate(fire, fire.tickRate());

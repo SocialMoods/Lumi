@@ -241,7 +241,7 @@ public abstract class BlockDoor extends BlockTransparentMeta implements Faceable
         if (type == Level.BLOCK_UPDATE_REDSTONE) {
             boolean powered = this.isGettingPower();
             if ((!isOpen() && powered) || (isOpen() && !powered)) {
-                this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, isOpen() ? 15 : 0, isOpen() ? 0 : 15));
+                new BlockRedstoneEvent(this, isOpen() ? 15 : 0, isOpen() ? 0 : 15).call();
 
                 this.toggle(null);
             }
@@ -349,9 +349,7 @@ public abstract class BlockDoor extends BlockTransparentMeta implements Faceable
 
     public boolean toggle(Player player) {
         DoorToggleEvent event = new DoorToggleEvent(this, player);
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

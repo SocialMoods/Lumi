@@ -74,8 +74,7 @@ public abstract class EntityProjectile extends Entity {
 
     public void onCollideWithEntity(Entity entity) {
         ProjectileHitEvent hitEvent = new ProjectileHitEvent(this, MovingObjectPosition.fromEntity(entity));
-        this.server.getPluginManager().callEvent(hitEvent);
-        if (hitEvent.isCancelled()) {
+        if (!hitEvent.call()) {
             return;
         }
 
@@ -97,8 +96,7 @@ public abstract class EntityProjectile extends Entity {
 
             if (this.fireTicks > 0) {
                 EntityCombustByEntityEvent event = new EntityCombustByEntityEvent(this, entity, 5);
-                this.server.getPluginManager().callEvent(event);
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     entity.setOnFire(event.getDuration());
                 }
             }
@@ -194,8 +192,7 @@ public abstract class EntityProjectile extends Entity {
 
             if (this.isCollided && !this.hadCollision) { //collide with block
                 ProjectileHitEvent hitEvent = new ProjectileHitEvent(this, MovingObjectPosition.fromBlock(this.getFloorX(), this.getFloorY(), this.getFloorZ(), -1, this));
-                this.server.getPluginManager().callEvent(hitEvent);
-                if (!hitEvent.isCancelled()) {
+                if (hitEvent.call()) {
                     this.hadCollision = true;
 
                     this.motionX = 0;

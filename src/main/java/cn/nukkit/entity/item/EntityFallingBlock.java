@@ -182,23 +182,20 @@ public class EntityFallingBlock extends Entity {
                     int mergedHeight = (floorBlock.getDamage() & 0x7) + 1 + (this.getDamage() & 0x7) + 1;
                     if (mergedHeight > 8) {
                         EntityBlockChangeEvent event = new EntityBlockChangeEvent(this, floorBlock, Block.get(Block.SNOW_LAYER, 0x7));
-                        this.server.getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
+                        if (event.call()) {
                             this.level.setBlock(pos, event.getTo(), true);
                             Vector3 abovePos = pos.up();
                             Block aboveBlock = this.level.getBlock(abovePos);
                             if (aboveBlock.getId() == Block.AIR) {
                                 EntityBlockChangeEvent event2 = new EntityBlockChangeEvent(this, aboveBlock, Block.get(Block.SNOW_LAYER, mergedHeight - 9)); // -8-1
-                                this.server.getPluginManager().callEvent(event2);
-                                if (!event2.isCancelled()) {
+                                if (event2.call()) {
                                     this.level.setBlock(abovePos, event2.getTo(), true);
                                 }
                             }
                         }
                     } else {
                         EntityBlockChangeEvent event = new EntityBlockChangeEvent(this, floorBlock, Block.get(Block.SNOW_LAYER, mergedHeight - 1));
-                        this.server.getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
+                        if (event.call()) {
                             this.level.setBlock(pos, event.getTo(), true);
                         }
                     }
@@ -208,8 +205,7 @@ public class EntityFallingBlock extends Entity {
                     }
                 } else if (floorBlock.canBeReplaced()) {
                     EntityBlockChangeEvent event = new EntityBlockChangeEvent(this, block, Block.get(blockId, damage));
-                    this.server.getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
+                    if (event.call()) {
 
                         if (breakOnGround) {
                             if (this.level.getGameRules().getBoolean(GameRule.DO_ENTITY_DROPS)) {

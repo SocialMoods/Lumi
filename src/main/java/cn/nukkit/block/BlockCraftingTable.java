@@ -52,8 +52,7 @@ public class BlockCraftingTable extends BlockSolid {
     public boolean onActivate(Item item, Player player) {
         if (player != null) {
             CraftingTableOpenEvent ev = new CraftingTableOpenEvent(player, this);
-            player.getServer().getPluginManager().callEvent(ev);
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 player.craftingType = Player.CRAFTING_BIG;
                 player.setCraftingGrid(player.getUIInventory().getBigCraftingGrid());
                 if (player.protocol >= 407) {

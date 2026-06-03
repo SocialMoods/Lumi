@@ -123,7 +123,7 @@ public class RakNetInterface implements AdvancedSourceInterface {
             InetSocketAddress address = session.getChannel().remoteAddress();
             try {
                 PlayerCreationEvent event = new PlayerCreationEvent(this, Player.class, Player.class, null, address);
-                this.server.getPluginManager().callEvent(event);
+                event.call();
 
                 this.sessions.put(event.getSocketAddress(), session);
 

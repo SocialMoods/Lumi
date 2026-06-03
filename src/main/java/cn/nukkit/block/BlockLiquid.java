@@ -271,8 +271,7 @@ public abstract class BlockLiquid extends BlockTransparentMeta {
                         to = getBlock(decay);
                     }
                     BlockFromToEvent event = new BlockFromToEvent(this, to);
-                    level.getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
+                    if (event.call()) {
                         this.level.setBlock(this, layer, event.getTo(), true, true);
                         if (!decayed) {
                             this.level.scheduleUpdate(this, this.tickRate());
@@ -329,8 +328,7 @@ public abstract class BlockLiquid extends BlockTransparentMeta {
             }
 
             LiquidFlowEvent event = new LiquidFlowEvent(block, this, newFlowDecay);
-            level.getServer().getPluginManager().callEvent(event);
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 if (block.layer == 0 && block.getId() > 0) {
                     this.level.useBreakOn(block, block.getId() == COBWEB ? Item.get(Item.WOODEN_SWORD) : null);
                 }
@@ -482,8 +480,7 @@ public abstract class BlockLiquid extends BlockTransparentMeta {
 
     protected boolean liquidCollide(Block cause, Block result) {
         BlockFromToEvent event = new BlockFromToEvent(this, result);
-        this.level.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
         this.level.setBlock(this, event.getTo(), true, true);

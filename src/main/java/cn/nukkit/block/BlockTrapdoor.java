@@ -61,7 +61,7 @@ public class BlockTrapdoor extends BlockTransparentMeta implements Faceable {
         if (type == Level.BLOCK_UPDATE_REDSTONE) {
             boolean powered = level.isBlockPowered(this);
             if (!this.isOpen() && powered || this.isOpen() && !powered) {
-                this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, this.isOpen() ? 15 : 0, this.isOpen() ? 0 : 15));
+                new BlockRedstoneEvent(this, this.isOpen() ? 15 : 0, this.isOpen() ? 0 : 15).call();
 
                 this.toggle(null);
                 return type;
@@ -172,8 +172,7 @@ public class BlockTrapdoor extends BlockTransparentMeta implements Faceable {
 
     public boolean toggle(Player player) {
         DoorToggleEvent ev = new DoorToggleEvent(this, player);
-        this.getLevel().getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
         this.setDamage(this.getDamage() ^ TRAPDOOR_OPEN_BIT);

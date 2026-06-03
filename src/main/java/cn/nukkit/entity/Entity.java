@@ -760,7 +760,7 @@ public abstract class Entity extends Location implements Metadatable {
         this.initEntity();
 
         this.lastUpdate = this.server.getTick();
-        this.server.getPluginManager().callEvent(new EntitySpawnEvent(this));
+        new EntitySpawnEvent(this).call();
 
         this.scheduleUpdate();
     }
@@ -1527,8 +1527,7 @@ public abstract class Entity extends Location implements Metadatable {
             return false;
         }
 
-        server.getPluginManager().callEvent(source);
-        if (source.isCancelled()) {
+        if (!source.call()) {
             return false;
         }
 
@@ -1605,8 +1604,7 @@ public abstract class Entity extends Location implements Metadatable {
         if (!this.isAlive()) {
             return;
         }
-        this.server.getPluginManager().callEvent(source);
-        if (source.isCancelled()) {
+        if (!source.call()) {
             return;
         }
         this.setHealth(this.health + source.getAmount());
@@ -1882,9 +1880,7 @@ public abstract class Entity extends Location implements Metadatable {
 
         if (this.inPortalTicks == 80 && server.getSettings().world().enableNether()) {
             EntityPortalEnterEvent ev = new EntityPortalEnterEvent(this, EntityPortalEnterEvent.PortalType.NETHER);
-            this.server.getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 if (this.getLevel().getDimension() == Level.DIMENSION_NETHER) {
                     this.switchLevel(server.getDefaultLevel());
                 } else {
@@ -2044,8 +2040,7 @@ public abstract class Entity extends Location implements Metadatable {
 
         // Entity entering a vehicle
         EntityVehicleEnterEvent ev = new EntityVehicleEnterEvent(entity, this);
-        server.getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
 
@@ -2069,8 +2064,7 @@ public abstract class Entity extends Location implements Metadatable {
         if (this instanceof EntityVehicle) {
             // Run the events
             EntityVehicleExitEvent ev = new EntityVehicleExitEvent(entity, (EntityVehicle) this);
-            server.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 int seatIndex = this.passengers.indexOf(entity);
                 if (seatIndex == 0) {
                     this.broadcastLinkPacket(entity, TYPE_RIDE);
@@ -2270,8 +2264,7 @@ public abstract class Entity extends Location implements Metadatable {
                         ev = new EntityInteractEvent(this, down);
                     }
 
-                    this.server.getPluginManager().callEvent(ev);
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         return;
                     }
                     this.level.setBlock(down, Block.get(BlockID.DIRT), true, true);
@@ -2363,8 +2356,7 @@ public abstract class Entity extends Location implements Metadatable {
 
         if (this.isValid()) {
             EntityLevelChangeEvent ev = new EntityLevelChangeEvent(this, this.level, targetLevel);
-            this.server.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             }
 
@@ -2854,8 +2846,7 @@ public abstract class Entity extends Location implements Metadatable {
     public boolean setMotion(Vector3 motion) {
         if (!this.justCreated) {
             EntityMotionEvent ev = new EntityMotionEvent(this, motion);
-            this.server.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             }
         }
@@ -2909,8 +2900,7 @@ public abstract class Entity extends Location implements Metadatable {
         Location to = location;
         if (cause != null) {
             EntityTeleportEvent ev = new EntityTeleportEvent(this, from, to, cause);
-            this.server.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             }
             to = ev.getTo();
@@ -2976,7 +2966,7 @@ public abstract class Entity extends Location implements Metadatable {
     public void close() {
         if (!this.closed) {
             this.closed = true;
-            this.server.getPluginManager().callEvent(new EntityDespawnEvent(this));
+            new EntityDespawnEvent(this).call();
             this.despawnFromAll();
             if (this.chunk != null) {
                 this.chunk.removeEntity(this);

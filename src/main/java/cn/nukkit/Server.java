@@ -674,7 +674,7 @@ public class Server {
             this.hasStopped = true;
 
             ServerStopEvent serverStopEvent = new ServerStopEvent();
-            this.pluginManager.callEvent(serverStopEvent);
+            serverStopEvent.call();
 
             this.getLogger().debug("Saving server settings...");
             this.settings.save();
@@ -1063,7 +1063,8 @@ public class Server {
 
             if ((this.tickCounter & 0b111111111) == 0) {
                 try {
-                    this.pluginManager.callEvent(this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5));
+                    this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
+                    this.queryRegenerateEvent.call();
                     if (this.queryHandler != null) {
                         this.queryHandler.regenerateInfo();
                     }
@@ -1407,7 +1408,7 @@ public class Server {
 
         PlayerDataSerializeEvent event = new PlayerDataSerializeEvent(name, playerDataSerializer);
         if (runEvent) {
-            pluginManager.callEvent(event);
+            event.call();
         }
 
         Optional<InputStream> dataStream = Optional.empty();
@@ -1487,7 +1488,7 @@ public class Server {
         if (this.settings.player().savePlayerData()) {
             PlayerDataSerializeEvent event = new PlayerDataSerializeEvent(nameLower, playerDataSerializer);
             if (runEvent) {
-                pluginManager.callEvent(event);
+                event.call();
             }
 
             if (async) {
@@ -1804,7 +1805,7 @@ public class Server {
         level.initLevel();
         level.setTickRate(this.settings.performance().baseTickRate());
 
-        this.pluginManager.callEvent(new LevelLoadEvent(level));
+        new LevelLoadEvent(level).call();
         return true;
     }
 
@@ -1903,8 +1904,8 @@ public class Server {
             return false;
         }
 
-        this.pluginManager.callEvent(new LevelInitEvent(level));
-        this.pluginManager.callEvent(new LevelLoadEvent(level));
+        new LevelInitEvent(level).call();
+        new LevelLoadEvent(level).call();
         return true;
     }
 

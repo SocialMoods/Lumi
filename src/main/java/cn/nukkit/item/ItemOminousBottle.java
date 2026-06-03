@@ -22,8 +22,7 @@ public class ItemOminousBottle extends StringItemBase {
     public boolean onUse(Player player, int ticksUsed) {
         if (ticksUsed < 10) return false;
         PlayerItemConsumeEvent consumeEvent = new PlayerItemConsumeEvent(player, this);
-        player.getServer().getPluginManager().callEvent(consumeEvent);
-        if (consumeEvent.isCancelled()) {
+        if (!consumeEvent.call()) {
             return false;
         }
 

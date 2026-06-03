@@ -1123,8 +1123,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 }
 
                 PlayerChunkRequestEvent ev = new PlayerChunkRequestEvent(this, chunkX, chunkZ);
-                this.server.getPluginManager().callEvent(ev);
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     this.level.requestChunk(chunkX, chunkZ, this);
                 }
             }
@@ -1161,7 +1160,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         boolean dead = this.getHealth() < 1;
         this.checkSpawnBlockPosition();
         PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(this, this.level.getSafeSpawn(dead ? this.getSpawn() : this), true);
-        this.server.getPluginManager().callEvent(respawnEvent);
+        respawnEvent.call();
 
         if (dead) {
             if (this.server.getSettings().world().enableHardcore()) {
@@ -1188,7 +1187,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 new TranslationContainer(TextFormat.YELLOW + "%multiplayer.player.joined", new String[]{this.displayName})
         );
 
-        this.server.getPluginManager().callEvent(playerJoinEvent);
+        playerJoinEvent.call();
 
         if (!playerJoinEvent.getJoinMessage().toString().isBlank()) {
             this.server.broadcastMessage(playerJoinEvent.getJoinMessage());
@@ -1393,8 +1392,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         }
 
         PlayerBedEnterEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerBedEnterEvent(this, this.level.getBlock(pos)));
-        if (ev.isCancelled()) {
+        ev = new PlayerBedEnterEvent(this, this.level.getBlock(pos));
+        if (!ev.call()) {
             return false;
         }
 
@@ -1469,7 +1468,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
     public void stopSleep() {
         if (this.sleeping != null) {
-            this.server.getPluginManager().callEvent(new PlayerBedLeaveEvent(this, this.level.getBlock(this.sleeping)));
+            new PlayerBedLeaveEvent(this, this.level.getBlock(this.sleeping)).call();
 
             this.sleeping = null;
             this.removeDataProperty(DATA_PLAYER_BED_POSITION);
@@ -1554,9 +1553,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         }
 
         PlayerGameModeChangeEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerGameModeChangeEvent(this, gamemode, newSettings));
-
-        if (ev.isCancelled()) {
+        ev = new PlayerGameModeChangeEvent(this, gamemode, newSettings);
+        if (!ev.call()) {
             return false;
         }
 
@@ -1767,9 +1765,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         if (server.getSettings().world().enableEnd() && inEndPortalTicks == (this.gamemode == CREATIVE ? 1 : 80)) {
             EntityPortalEnterEvent ev = new EntityPortalEnterEvent(this, EntityPortalEnterEvent.PortalType.END);
-            this.getServer().getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 if (this.getLevel().isEnd) {
                     if (this.server.getSettings().features().vanillaPortals() && this.getSpawn().getLevel().getDimension() == Level.DIMENSION_OVERWORLD) {
                         this.teleport(this.getSpawn(), TeleportCause.END_PORTAL);
@@ -1814,9 +1810,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
             if (this.inPortalTicks == this.server.getSettings().world().portalTicks() || (this.server.getSettings().features().vanillaPortals() && this.inPortalTicks == 25 && this.gamemode == CREATIVE)) {
                 EntityPortalEnterEvent ev = new EntityPortalEnterEvent(this, EntityPortalEnterEvent.PortalType.NETHER);
-                this.getServer().getPluginManager().callEvent(ev);
-
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     this.portalPos = null;
                     return;
                 }
@@ -1857,8 +1851,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             }
             this.addFreezingTicks(1);
             EntityFreezeEvent event = new EntityFreezeEvent(this);
-            this.server.getPluginManager().callEvent(event);
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 this.addMovementSpeedModifier(new EntityMovementSpeedModifier("minecraft:freezing", getFreezingTicks() * (float) -3.58e-4, EntityMovementSpeedModifier.Operation.ADD));
             }
         }
@@ -1905,9 +1898,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     Location to = this.getLocation();
 
                     PlayerMoveEvent moveEvent = new PlayerMoveEvent(this, from, to);
-                    this.server.getPluginManager().callEvent(moveEvent);
-
-                    if (moveEvent.isCancelled()) {
+                    if (!moveEvent.call()) {
                         this.teleport(from, null);
                         return;
                     }
@@ -1975,8 +1966,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     double diffHorizontalSqr = (diffX * diffX + diffZ * diffZ) / tickDiffSq;
                     if (diffHorizontalSqr > MAXIMUM_SPEED) {
                         PlayerInvalidMoveEvent ev;
-                        this.getServer().getPluginManager().callEvent(ev = new PlayerInvalidMoveEvent(this, true));
-                        if (!ev.isCancelled()) {
+                        ev = new PlayerInvalidMoveEvent(this, true);
+                        if (ev.call()) {
                             revert = ev.isRevert();
                             if (revert) {
                                 server.getLogger().debug(username + ": diffHSpeed=" + diffHorizontalSqr + " > MAXIMUM_SPEED=" + MAXIMUM_SPEED);
@@ -2025,7 +2016,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         if (!revert && !this.firstMove) {
             PlayerMoveEvent moveEvent = new PlayerMoveEvent(this, from, to);
-            this.server.getPluginManager().callEvent(moveEvent);
+            moveEvent.call();
 
             if (!(revert = moveEvent.isCancelled())) {
                 this.lastX = to.x;
@@ -2147,8 +2138,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     if (block instanceof BlockWater water && up.isAir()) {
                         if (water.getFluidHeightPercent() < 0.15) {
                             WaterFrostEvent ev = new WaterFrostEvent(block);
-                            server.getPluginManager().callEvent(ev);
-                            if (!ev.isCancelled()) {
+                            if (ev.call()) {
                                 level.setBlock(block, Block.get(Block.FROSTED_ICE), true, false);
                                 level.scheduleUpdate(level.getBlock(block), ThreadLocalRandom.current().nextInt(20, 40));
                             }
@@ -2226,8 +2216,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     public void setMotionLocally(Vector3 motion) {
         if (!this.justCreated) {
             EntityMotionEvent ev = new EntityMotionEvent(this, motion);
-            ev.call();
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return;
             }
         }
@@ -2368,8 +2357,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                             if (diff > 1 && expectedVelocity < 0) {
                                 if (this.inAirTicks < 150) {
                                     PlayerInvalidMoveEvent ev = new PlayerInvalidMoveEvent(this, true);
-                                    this.getServer().getPluginManager().callEvent(ev);
-                                    if (!ev.isCancelled()) {
+                                    if (ev.call()) {
                                         this.startAirTicks = this.inAirTicks - 5;
                                         this.setMotion(new Vector3(0, expectedVelocity, 0));
                                     }
@@ -2777,8 +2765,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         }
 
         PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
+        ev = new PlayerLoginEvent(this, "Plugin reason");
+        if (!ev.call()) {
             this.close(this.getLeaveMessage(), ev.getKickMessage());
             return;
         }
@@ -2970,8 +2958,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         }
 
         DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
-        this.server.getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return;
         }
 
@@ -3027,8 +3014,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         Block target = this.level.getBlock(pos);
         PlayerInteractEvent playerInteractEvent = new PlayerInteractEvent(this, this.inventory.getItemInHand(), target, face,
                 target.getId() == 0 ? Action.LEFT_CLICK_AIR : Action.LEFT_CLICK_BLOCK);
-        this.getServer().getPluginManager().callEvent(playerInteractEvent);
-        if (playerInteractEvent.isCancelled()) {
+        if (!playerInteractEvent.call()) {
             this.needSendHeldItem = true;
             return;
         }
@@ -3152,8 +3138,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         for (String msg : message.split("\n")) {
             if (!msg.trim().isEmpty() && msg.length() <= maxMsgLength) {
                 PlayerChatEvent chatEvent = new PlayerChatEvent(this, msg);
-                this.server.getPluginManager().callEvent(chatEvent);
-                if (!chatEvent.isCancelled()) {
+                if (chatEvent.call()) {
                     this.server.broadcastMessage(this.getServer().getLanguage().translateString(chatEvent.getFormat(), new String[]{chatEvent.getPlayer().displayName, chatEvent.getMessage()}), chatEvent.getRecipients());
                 }
             }
@@ -3196,8 +3181,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
     public boolean kick(PlayerKickEvent.Reason reason, String reasonString, boolean isAdmin, String extraData) {
         PlayerKickEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerKickEvent(this, reason, reasonString, this.getLeaveMessage(), extraData));
-        if (!ev.isCancelled()) {
+        ev = new PlayerKickEvent(this, reason, reasonString, this.getLeaveMessage(), extraData);
+        if (ev.call()) {
             String message;
             if (isAdmin) {
                 if (!this.isBanned()) {
@@ -3576,7 +3561,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             this.connected = false;
             PlayerQuitEvent ev = null;
             if (this.username != null && !this.username.isEmpty()) {
-                this.server.getPluginManager().callEvent(ev = new PlayerQuitEvent(this, message, true, reason));
+                ev = new PlayerQuitEvent(this, message, true, reason);
+                ev.call();
                 if (this.loggedIn && ev.getAutoSave()) {
                     this.save();
                 }
@@ -3860,9 +3846,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         PlayerDeathEvent ev = new PlayerDeathEvent(this, this.getDrops(), new TranslationContainer(message, params.toArray(new String[0])), this.expLevel);
         ev.setKeepInventory(this.level.gameRules.getBoolean(GameRule.KEEP_INVENTORY));
         ev.setKeepExperience(ev.getKeepInventory()); // Same as above
-        this.server.getPluginManager().callEvent(ev);
-
-        if (!ev.isCancelled()) {
+        if (ev.call()) {
             if (this.fishing != null) {
                 this.stopFishing(false);
             }
@@ -3973,7 +3957,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             }
         }
         PlayerRespawnEvent playerRespawnEvent = new PlayerRespawnEvent(this, this.getSpawn());
-        this.server.getPluginManager().callEvent(playerRespawnEvent);
+        playerRespawnEvent.call();
 
         Position respawnPos = playerRespawnEvent.getRespawnPosition();
 
@@ -4075,9 +4059,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
     public void setExperience(int exp, int level) {
         PlayerExperienceChangeEvent ev = new PlayerExperienceChangeEvent(this, this.exp, this.expLevel, exp, level);
-        this.server.getPluginManager().callEvent(ev);
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return;
         }
 
@@ -4411,8 +4393,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         if (cause != null) {
             PlayerTeleportEvent event = new PlayerTeleportEvent(this, from, to, cause);
-            this.server.getPluginManager().callEvent(event);
-            if (event.isCancelled()) return false;
+            if (!event.call()) return false;
             to = event.getTo();
         }
 
@@ -4800,8 +4781,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
             for (Item drop : drops) {
                 PlayerDropItemEvent event = new PlayerDropItemEvent(this, drop);
-                event.call();
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.level.dropItem(this, drop);
                 }
             }
@@ -5179,8 +5159,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     ev.setCancelled();
                 }
 
-                this.server.getPluginManager().callEvent(ev);
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     return false;
                 }
 
@@ -5224,8 +5203,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                     ev.setCancelled();
                 }
 
-                this.server.getPluginManager().callEvent(ev);
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     return false;
                 }
 
@@ -5255,8 +5233,8 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                         }
 
                         InventoryPickupItemEvent ev;
-                        this.server.getPluginManager().callEvent(ev = new InventoryPickupItemEvent(this.inventory, (EntityItem) entity));
-                        if (ev.isCancelled()) {
+                        ev = new InventoryPickupItemEvent(this.inventory, (EntityItem) entity);
+                        if (!ev.call()) {
                             return false;
                         }
 
@@ -5385,8 +5363,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         fishingHook.setMotion(new Vector3(-Math.sin(FastMath.toRadians(yaw)) * Math.cos(FastMath.toRadians(pitch)) * f * f, -Math.sin(FastMath.toRadians(pitch)) * f * f,
                 Math.cos(FastMath.toRadians(yaw)) * Math.cos(FastMath.toRadians(pitch)) * f * f));
         ProjectileLaunchEvent ev = new ProjectileLaunchEvent(fishingHook);
-        this.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             fishingHook.close();
         } else {
             this.fishing = fishingHook;
@@ -5476,7 +5453,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             @Override
             public void onRun() {
                 this.event = new PlayerAsyncPreLoginEvent(username, uuid, loginChainData, playerInstance.getSkin(), playerInstance.getAddress(), playerInstance.getPort());
-                server.getPluginManager().callEvent(this.event);
+                this.event.call();
             }
 
             @Override

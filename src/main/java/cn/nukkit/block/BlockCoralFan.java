@@ -74,8 +74,7 @@ public class BlockCoralFan extends BlockFlowable implements Faceable {
 
             if (!this.isDead() && !(this.getLevelBlockAtLayer(1) instanceof BlockWater) && !(this.getLevelBlockAtLayer(1) instanceof BlockIceFrosted)) {
                 BlockFadeEvent event = new BlockFadeEvent(this, new BlockCoralFanDead(this.getDamage()));
-                event.call();
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.getLevel().setBlock(this, event.getNewState(), true, true);
                 }
             }

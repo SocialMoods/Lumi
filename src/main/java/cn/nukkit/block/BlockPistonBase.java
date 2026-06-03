@@ -197,8 +197,7 @@ public abstract class BlockPistonBase extends BlockSolidMeta implements Faceable
         }
 
         BlockPistonEvent event = new BlockPistonEvent(this, direction, calculator.getBlocksToMove(), calculator.getBlocksToDestroy(), extending);
-        this.level.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

@@ -146,7 +146,7 @@ public class JavaPluginLoader implements PluginLoader {
 
             ((PluginBase) plugin).setEnabled(true);
 
-            this.server.getPluginManager().callEvent(new PluginEnableEvent(plugin));
+            new PluginEnableEvent(plugin).call();
         }
     }
 
@@ -157,7 +157,7 @@ public class JavaPluginLoader implements PluginLoader {
 
             this.server.getServiceManager().cancel(plugin);
 
-            this.server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
+            new PluginDisableEvent(plugin).call();
 
             ((PluginBase) plugin).setEnabled(false);
         }

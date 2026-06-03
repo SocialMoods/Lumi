@@ -82,9 +82,7 @@ public class ItemTrident extends ItemTool {
                 }
             }
 
-            player.getServer().getPluginManager().callEvent(playerToggleSpinAttackEvent);
-
-            if (playerToggleSpinAttackEvent.isCancelled()) {
+            if (!playerToggleSpinAttackEvent.call()) {
                 player.setNeedSendData(true);
             } else {
                 player.onSpinAttack(riptideLevel);
@@ -138,14 +136,12 @@ public class ItemTrident extends ItemTool {
             entityShootBowEvent.setCancelled();
         }
 
-        Server.getInstance().getPluginManager().callEvent(entityShootBowEvent);
-        if (entityShootBowEvent.isCancelled()) {
+        if (!entityShootBowEvent.call()) {
             entityShootBowEvent.getProjectile().close();
         } else {
             entityShootBowEvent.getProjectile().setMotion(entityShootBowEvent.getProjectile().getMotion().multiply(entityShootBowEvent.getForce()));
             ProjectileLaunchEvent ev = new ProjectileLaunchEvent(entityShootBowEvent.getProjectile());
-            Server.getInstance().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 entityShootBowEvent.getProjectile().close();
             } else {
                 entityShootBowEvent.getProjectile().spawnToAll();

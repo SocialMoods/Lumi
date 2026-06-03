@@ -55,8 +55,7 @@ public class BlockBambooSapling extends BlockFlowable {
                 BlockBamboo newState = new BlockBamboo();
                 newState.setLeafSize(BlockBamboo.LEAF_SIZE_SMALL);
                 BlockGrowEvent blockGrowEvent = new BlockGrowEvent(up, newState);
-                level.getServer().getPluginManager().callEvent(blockGrowEvent);
-                if (!blockGrowEvent.isCancelled()) {
+                if (blockGrowEvent.call()) {
                     Block newState1 = blockGrowEvent.getNewState();
                     newState1.y = up.y;
                     newState1.x = x;
