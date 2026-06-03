@@ -521,6 +521,7 @@ public class PluginManager {
         this.defaultPermsOp.clear();
     }
 
+    @Deprecated
     public void callEvent(Event event) {
         try {
             this.server.getEventBus().call(event);
@@ -571,11 +572,5 @@ public class PluginManager {
             throw new PluginException("Plugin attempted to register " + listener.getClass().getName() + " while not enabled");
         }
         this.server.getEventBus().subscribe(listener);
-    }
-
-
-    @Deprecated
-    private HandlerList getEventListeners(Class<? extends Event> type) throws IllegalAccessException {
-        throw new UnsupportedOperationException("HandlerList deprecated since 1.6.0 and replaced with new event system");
     }
 }

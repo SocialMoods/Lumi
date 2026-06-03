@@ -146,6 +146,9 @@ tasks {
         }
         transform(Log4j2PluginsCacheFileTransformer())
         exclude("META-INF/versions/")
+        // relocate eventbus classes
+        relocate("org.densy.eventbus.api", "cn.nukkit.event.bus")
+        relocate("org.densy.eventbus.core", "cn.nukkit.event.bus.impl")
     }
 }
 

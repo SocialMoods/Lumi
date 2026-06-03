@@ -698,6 +698,8 @@ public class Server {
                 this.nextTick = System.nanoTime(); // Fix Watchdog killing the server while saving worlds
             }
 
+            this.eventBus.getAsyncExecutor().shutdown();
+
             this.getLogger().debug("Stopping all tasks...");
             this.scheduler.cancelAllTasks();
             this.scheduler.mainThreadHeartbeat(Integer.MAX_VALUE);
