@@ -48,7 +48,7 @@ public class EntitySquid extends EntityCreature {
     @Override
     public boolean attack(EntityDamageEvent source) {
         boolean att =  super.attack(source);
-        if (!source.call()) {
+        if (source.isCancelled()) {
             return att;
         }
 

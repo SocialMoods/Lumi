@@ -4009,7 +4009,7 @@ public class Level implements ChunkManager, Metadatable {
 
             lock.lock();
 
-            if (!event.call()) {
+            if (event.isCancelled()) {
                 return false;
             }
 

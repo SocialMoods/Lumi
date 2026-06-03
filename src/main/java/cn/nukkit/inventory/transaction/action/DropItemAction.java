@@ -30,7 +30,7 @@ public class DropItemAction extends InventoryAction {
             source.stopAction();
         }
 
-        return ev.call();
+        return !ev.isCancelled();
     }
 
     /**

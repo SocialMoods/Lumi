@@ -231,7 +231,7 @@ public class InventoryTransaction {
             }
         }
 
-        return ev.call();
+        return !ev.isCancelled();
     }
 
     public boolean execute() {
