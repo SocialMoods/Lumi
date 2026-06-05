@@ -24,6 +24,11 @@ public class BlockDripstone extends BlockSolid {
     }
 
     @Override
+    public int getToolTier() {
+        return ItemTool.TIER_WOODEN;
+    }
+
+    @Override
     public int getToolType() {
         return ItemTool.TYPE_PICKAXE;
     }
@@ -33,9 +38,4 @@ public class BlockDripstone extends BlockSolid {
         return false;
     }
 
-    // TODO:
-    /*@Override
-    public boolean isLavaResistant() {
-        return true;
-    }*/
 }
