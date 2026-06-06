@@ -3,14 +3,19 @@ name: Build Project
 on:
   push:
     branches:
-      - master
+      - stable
+      - dev
   pull_request:
     branches:
-      - master
+      - stable
+      - dev
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      DEVELOPMENT: ${{ github.ref_name == 'dev' }}
 
     steps:
       - name: Checkout code
@@ -41,5 +46,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: lumi
+          name: lumi-${{ github.ref_name }}
           path: '**/build/libs/*.jar'
