@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.koshakmine"
-version = "1.6.0-SNAPSHOT"
+version = "1.6.0"
 application.mainClass.set("cn.nukkit.Nukkit")
 
 java {
@@ -144,9 +144,30 @@ tasks {
     }
 }
 
+fun isDevelopmentPublish(): Boolean {
+    fun isPublishRequested(): Boolean {
+        return gradle.startParameter.taskNames.any {
+            it.startsWith("publish", ignoreCase = true)
+        }
+    }
+    return System.getenv("DEVELOPMENT")?.toBooleanStrictOrNull()
+        ?: if (isPublishRequested()) {
+            error("DEVELOPMENT env is required. Use DEVELOPMENT=true for snapshots or DEVELOPMENT=false for releases.")
+        } else {
+            false
+        }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
+            val releaseVersion = project.version.toString().removeSuffix("-SNAPSHOT")
+            version = if (isDevelopmentPublish()) {
+                "$releaseVersion-SNAPSHOT"
+            } else {
+                releaseVersion
+            }
+
             artifact(tasks.shadowJar) {
                 classifier = null
             }
@@ -158,7 +179,8 @@ publishing {
     repositories {
         maven {
             name = "lumi"
-            url = uri("https://repo.lumi.su/snapshots")
+            url = uri("https://repo.lumi.su/${if (isDevelopmentPublish()) "snapshots" else "releases"}")
+
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
