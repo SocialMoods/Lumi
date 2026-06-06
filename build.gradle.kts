@@ -8,8 +8,11 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
 }
 
+val isDevelopment: Boolean = System.getenv("DEVELOPMENT")?.toBooleanStrictOrNull() ?: true
+val releaseVersion = "1.6.0"
+
 group = "com.koshakmine"
-version = "1.6.0"
+version = if (isDevelopment) "$releaseVersion-SNAPSHOT" else releaseVersion
 application.mainClass.set("cn.nukkit.Nukkit")
 
 java {
@@ -144,30 +147,9 @@ tasks {
     }
 }
 
-fun isDevelopmentPublish(): Boolean {
-    fun isPublishRequested(): Boolean {
-        return gradle.startParameter.taskNames.any {
-            it.startsWith("publish", ignoreCase = true)
-        }
-    }
-    return System.getenv("DEVELOPMENT")?.toBooleanStrictOrNull()
-        ?: if (isPublishRequested()) {
-            error("DEVELOPMENT env is required. Use DEVELOPMENT=true for snapshots or DEVELOPMENT=false for releases.")
-        } else {
-            false
-        }
-}
-
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            val releaseVersion = project.version.toString().removeSuffix("-SNAPSHOT")
-            version = if (isDevelopmentPublish()) {
-                "$releaseVersion-SNAPSHOT"
-            } else {
-                releaseVersion
-            }
-
             artifact(tasks.shadowJar) {
                 classifier = null
             }
@@ -179,7 +161,7 @@ publishing {
     repositories {
         maven {
             name = "lumi"
-            url = uri("https://repo.lumi.su/${if (isDevelopmentPublish()) "snapshots" else "releases"}")
+            url = uri("https://repo.lumi.su/${if (isDevelopment) "snapshots" else "releases"}")
 
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
