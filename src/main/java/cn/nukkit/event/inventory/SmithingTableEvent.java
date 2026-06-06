@@ -20,7 +20,6 @@ package cn.nukkit.event.inventory;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.inventory.SmithingInventory;
 import cn.nukkit.item.Item;
 
@@ -29,11 +28,6 @@ import cn.nukkit.item.Item;
  * @since 2021-05-16
  */
 public class SmithingTableEvent extends InventoryEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final Item equipmentItem;
     private final Item resultItem;

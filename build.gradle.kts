@@ -31,6 +31,9 @@ repositories {
         mavenContent { snapshotsOnly() }
     }
     maven {
+        url = uri("https://repo.densy.org/snapshots")
+    }
+    maven {
         url = uri("https://repo.lanink.cn/repository/maven-public/")
     }
     mavenCentral()
@@ -109,6 +112,8 @@ dependencies {
     implementation("org.jctools:jctools-core:4.0.6")
     implementation("org.bstats:bstats-base:3.2.1")
     implementation("com.fulcrumgenomics:jlibdeflate:0.1.0")
+    implementation("org.densy.eventbus:api:1.1.0-SNAPSHOT")
+    implementation("org.densy.eventbus:core:1.1.0-SNAPSHOT")
 
     // Test dependencies
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
@@ -144,6 +149,9 @@ tasks {
         }
         transform(Log4j2PluginsCacheFileTransformer())
         exclude("META-INF/versions/")
+        // relocate eventbus classes
+        relocate("org.densy.eventbus.api", "cn.nukkit.event.bus")
+        relocate("org.densy.eventbus.core", "cn.nukkit.event.bus.impl")
     }
 }
 

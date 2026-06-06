@@ -2,7 +2,6 @@ package cn.nukkit.event.potion;
 
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.entity.effect.Effect;
 import cn.nukkit.entity.effect.PotionType;
 
@@ -13,12 +12,6 @@ import java.util.List;
  * @since 2016/1/12
  */
 public class PotionApplyEvent extends PotionEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final Entity entity;
     private List<Effect> applyEffects;

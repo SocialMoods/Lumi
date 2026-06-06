@@ -123,7 +123,7 @@ public class EntityItem extends Entity {
             this.floatsInLava = true;
         }
 
-        this.server.getPluginManager().callEvent(new ItemSpawnEvent(this));
+        new ItemSpawnEvent(this).call();
     }
 
     @Override
@@ -200,8 +200,7 @@ public class EntityItem extends Entity {
 
             if (this.age > 6000) {
                 ItemDespawnEvent ev = new ItemDespawnEvent(this);
-                this.server.getPluginManager().callEvent(ev);
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     this.age = 0;
                 } else {
                     this.close();

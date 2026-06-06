@@ -233,9 +233,7 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                     }
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(inv, inventory, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                    ev.call();
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         return false;
                     }
 
@@ -262,9 +260,7 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                         }
 
                         InventoryMoveItemEvent ev = new InventoryMoveItemEvent(inv, inventory, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                        ev.call();
-
-                        if (ev.isCancelled()) {
+                        if (!ev.call()) {
                             continue;
                         }
 
@@ -295,8 +291,7 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                         return false;
                     }
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(null, inventory, this, item, InventoryMoveItemEvent.Action.PICKUP);
-                    ev.call();
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         return false;
                     }
                     Item[] items = inventory.addItem(itemToAdd);
@@ -333,9 +328,7 @@ public class BlockHopper extends BlockTransparentMeta implements Faceable, Block
                 }
 
                 InventoryMoveItemEvent ev = new InventoryMoveItemEvent(null, inventory, this, item, InventoryMoveItemEvent.Action.PICKUP);
-                ev.call();
-
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     continue;
                 }
 

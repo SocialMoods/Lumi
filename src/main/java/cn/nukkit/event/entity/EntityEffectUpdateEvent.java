@@ -3,7 +3,6 @@ package cn.nukkit.event.entity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.effect.Effect;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 import javax.annotation.Nullable;
@@ -14,12 +13,6 @@ import javax.annotation.Nullable;
  */
 @Getter
 public class EntityEffectUpdateEvent extends EntityEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     /**
      * Gets the old potion effect of the changed type, which will be removed. Null if Action == ADDED.

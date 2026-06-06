@@ -161,8 +161,7 @@ public class EntityPrimedTNT extends Entity implements EntityExplosive {
     @Override
     public void explode() {
         EntityExplosionPrimeEvent event = new EntityExplosionPrimeEvent(this, 4);
-        server.getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return;
         }
         Explosion explosion = new Explosion(this, event.getForce(), this);

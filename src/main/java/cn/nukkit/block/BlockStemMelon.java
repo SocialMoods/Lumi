@@ -74,9 +74,7 @@ public class BlockStemMelon extends BlockCrops implements Faceable, BlockPropert
 
                     Block block = this.clone();
                     BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                    Server.getInstance().getPluginManager().callEvent(ev);
-
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.getLevel().setBlock(this, ev.getNewState(), true, true);
                     }
                     return Level.BLOCK_UPDATE_RANDOM;
@@ -93,8 +91,7 @@ public class BlockStemMelon extends BlockCrops implements Faceable, BlockPropert
                     Block d = side.down();
                     if (side.getId() == AIR && (d.getId() == FARMLAND || d.getId() == GRASS || d.getId() == DIRT)) {
                         BlockGrowEvent ev = new BlockGrowEvent(side, Block.get(MELON_BLOCK));
-                        Server.getInstance().getPluginManager().callEvent(ev);
-                        if (!ev.isCancelled()) {
+                        if (ev.call()) {
                             this.getLevel().setBlock(side, ev.getNewState(), false, true);
 
                             this.setBlockFace(sideFace);

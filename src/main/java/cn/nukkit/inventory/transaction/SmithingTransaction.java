@@ -128,8 +128,7 @@ public class SmithingTransaction extends InventoryTransaction {
         Item ingredient = ingredientItem != null? ingredientItem : air;
         Item template = templateItem != null? templateItem : air;
         SmithingTableEvent event = new SmithingTableEvent(inventory, equipment, outputItem, ingredient, template, source);
-        this.source.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             this.source.removeAllWindows(false);
             this.sendInventories();
             return true;

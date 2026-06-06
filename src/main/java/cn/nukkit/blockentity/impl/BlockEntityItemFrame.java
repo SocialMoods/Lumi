@@ -147,8 +147,7 @@ public class BlockEntityItemFrame extends BlockEntitySpawnable {
         if (item != null && item.getId() != Item.AIR) {
             if (player != null) {
                 ItemFrameDropItemEvent event = new ItemFrameDropItemEvent(player, this.getBlock(), this, item);
-                this.level.getServer().getPluginManager().callEvent(event);
-                if (event.isCancelled()) {
+                if (!event.call()) {
                     this.spawnTo(player);
                     return true;
                 }

@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.blockentity.impl.BlockEntityItemFrame;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,15 +14,10 @@ import org.jetbrains.annotations.Nullable;
  * The event that the item display box is used will be called when an item is placed, rotated, or dropped
  */
 public class ItemFrameUseEvent extends BlockEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
     protected final Player player;
     protected final Item item;
     protected final BlockEntityItemFrame itemFrame;
     protected final Action action;
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     public ItemFrameUseEvent(@Nullable Player player, @NotNull Block block, @NotNull BlockEntityItemFrame itemFrame, @Nullable Item item, Action action) {
         super(block);

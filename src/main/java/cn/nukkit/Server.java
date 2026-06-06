@@ -6,6 +6,7 @@ import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.data.skin.Skin;
 import cn.nukkit.entity.data.profession.Profession;
 import cn.nukkit.entity.data.property.EntityProperty;
+import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.level.LevelInitEvent;
 import cn.nukkit.event.level.LevelLoadEvent;
@@ -76,6 +77,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.extern.log4j.Log4j2;
+import org.densy.eventbus.api.EventBus;
+import org.densy.eventbus.api.subscription.annotation.SubscriptionAnnotationInfo;
+import org.densy.eventbus.api.subscription.annotation.SubscriptionAnnotationResolver;
+import org.densy.eventbus.core.EventBusImpl;
 import org.iq80.leveldb.CompressionType;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
@@ -126,6 +131,7 @@ public class Server {
     private boolean hasStopped;
 
     private final PluginManager pluginManager;
+    private final EventBus eventBus;
     private final ServerScheduler scheduler;
 
     private int tickCounter;
@@ -357,6 +363,16 @@ public class Server {
         this.pluginManager = new PluginManager(this, this.commandMap);
         this.pluginManager.subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this.consoleSender);
         this.pluginManager.registerInterface(JavaPluginLoader.class);
+
+        this.eventBus = new EventBusImpl();
+        this.eventBus.registerAnnotationResolver(SubscriptionAnnotationResolver.of(
+                EventHandler.class,
+                annotation -> new SubscriptionAnnotationInfo(
+                        annotation.priority().getSlot(),
+                        annotation.async(),
+                        !annotation.ignoreCancelled()
+                )
+        ));
 
         this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
 
@@ -658,7 +674,7 @@ public class Server {
             this.hasStopped = true;
 
             ServerStopEvent serverStopEvent = new ServerStopEvent();
-            this.pluginManager.callEvent(serverStopEvent);
+            serverStopEvent.call();
 
             this.getLogger().debug("Saving server settings...");
             this.settings.save();
@@ -682,8 +698,7 @@ public class Server {
                 this.nextTick = System.nanoTime(); // Fix Watchdog killing the server while saving worlds
             }
 
-            this.getLogger().debug("Removing event handlers...");
-            HandlerList.unregisterAll();
+            this.eventBus.getAsyncExecutor().shutdown();
 
             this.getLogger().debug("Stopping all tasks...");
             this.scheduler.cancelAllTasks();
@@ -1048,7 +1063,8 @@ public class Server {
 
             if ((this.tickCounter & 0b111111111) == 0) {
                 try {
-                    this.pluginManager.callEvent(this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5));
+                    this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
+                    this.queryRegenerateEvent.call();
                     if (this.queryHandler != null) {
                         this.queryHandler.regenerateInfo();
                     }
@@ -1246,6 +1262,10 @@ public class Server {
         return this.pluginManager;
     }
 
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
     public ResourcePackManager getResourcePackManager() {
         return resourcePackManager;
     }
@@ -1388,7 +1408,7 @@ public class Server {
 
         PlayerDataSerializeEvent event = new PlayerDataSerializeEvent(name, playerDataSerializer);
         if (runEvent) {
-            pluginManager.callEvent(event);
+            event.call();
         }
 
         Optional<InputStream> dataStream = Optional.empty();
@@ -1468,7 +1488,7 @@ public class Server {
         if (this.settings.player().savePlayerData()) {
             PlayerDataSerializeEvent event = new PlayerDataSerializeEvent(nameLower, playerDataSerializer);
             if (runEvent) {
-                pluginManager.callEvent(event);
+                event.call();
             }
 
             if (async) {
@@ -1785,7 +1805,7 @@ public class Server {
         level.initLevel();
         level.setTickRate(this.settings.performance().baseTickRate());
 
-        this.pluginManager.callEvent(new LevelLoadEvent(level));
+        new LevelLoadEvent(level).call();
         return true;
     }
 
@@ -1884,8 +1904,8 @@ public class Server {
             return false;
         }
 
-        this.pluginManager.callEvent(new LevelInitEvent(level));
-        this.pluginManager.callEvent(new LevelLoadEvent(level));
+        new LevelInitEvent(level).call();
+        new LevelLoadEvent(level).call();
         return true;
     }
 

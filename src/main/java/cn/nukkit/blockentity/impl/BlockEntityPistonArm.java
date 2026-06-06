@@ -121,9 +121,7 @@ public class BlockEntityPistonArm extends BlockEntitySpawnable {
         }
 
         EntityMoveByPistonEvent event = new EntityMoveByPistonEvent(entity, entity.getPosition());
-        this.level.getServer().getPluginManager().callEvent(event);
-
-        if (!event.isCancelled()) {
+        if (event.call()) {
             entity.onPushByPiston(this, moveDirection);
         }
     }

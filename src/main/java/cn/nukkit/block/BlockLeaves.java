@@ -139,7 +139,7 @@ public class BlockLeaves extends BlockTransparentMeta {
             return Level.BLOCK_UPDATE_NORMAL;
         } else if (type == Level.BLOCK_UPDATE_RANDOM && isCheckDecay() && !isPersistent()) {
             LeavesDecayEvent ev = new LeavesDecayEvent(this);
-            Server.getInstance().getPluginManager().callEvent(ev);
+            ev.call();
 
             if (ev.isCancelled() || findLog()) {
                 setCheckDecay(false);

@@ -2,17 +2,10 @@ package cn.nukkit.event.inventory;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.inventory.AnvilInventory;
 import cn.nukkit.item.Item;
 
 public class RepairItemEvent extends InventoryEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private Item oldItem;
     private Item newItem;

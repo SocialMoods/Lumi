@@ -34,8 +34,7 @@ public class BlockRedstoneLampLit extends BlockRedstoneLamp {
     public int onUpdate(int type) {
         if ((type == Level.BLOCK_UPDATE_NORMAL || type == Level.BLOCK_UPDATE_REDSTONE) && !this.level.isBlockPowered(this.getLocation())) {
             RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
-            getLevel().getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return 0;
             }
             this.level.scheduleUpdate(this, 4);

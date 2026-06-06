@@ -1,7 +1,6 @@
 package cn.nukkit.event.redstone;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.block.BlockUpdateEvent;
 
 /**
@@ -9,12 +8,6 @@ import cn.nukkit.event.block.BlockUpdateEvent;
  * Nukkit Project
  */
 public class RedstoneUpdateEvent extends BlockUpdateEvent {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     public RedstoneUpdateEvent(Block source) {
         super(source);

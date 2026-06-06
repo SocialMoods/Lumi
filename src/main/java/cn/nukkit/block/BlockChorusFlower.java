@@ -119,9 +119,7 @@ public class BlockChorusFlower extends BlockTransparentMeta {
                         BlockChorusFlower block = (BlockChorusFlower) this.clone();
                         block.y = this.y + 1;
                         BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                        Server.getInstance().getPluginManager().callEvent(ev);
-
-                        if (!ev.isCancelled()) {
+                        if (ev.call()) {
                             this.getLevel().setBlock(this, Block.get(CHORUS_PLANT));
                             this.getLevel().setBlock(block, ev.getNewState());
                             this.level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_CHORUSGROW);
@@ -141,9 +139,7 @@ public class BlockChorusFlower extends BlockTransparentMeta {
                                 block.z = check.z;
                                 block.setAge(getAge() + 1);
                                 BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                                Server.getInstance().getPluginManager().callEvent(ev);
-
-                                if (!ev.isCancelled()) {
+                                if (ev.call()) {
                                     this.getLevel().setBlock(this, Block.get(CHORUS_PLANT));
                                     this.getLevel().setBlock(block, ev.getNewState());
                                     this.level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_CHORUSGROW);
@@ -157,9 +153,7 @@ public class BlockChorusFlower extends BlockTransparentMeta {
                         BlockChorusFlower block = (BlockChorusFlower) this.clone();
                         block.setAge(getMaxAge());
                         BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                        Server.getInstance().getPluginManager().callEvent(ev);
-
-                        if (!ev.isCancelled()) {
+                        if (ev.call()) {
                             this.getLevel().setBlock(block, ev.getNewState());
                             this.level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_CHORUSDEATH);
                         } else {

@@ -303,7 +303,7 @@ public class BlockEntitySign extends BlockEntitySpawnable {
             }
         }
 
-        this.server.getPluginManager().callEvent(signChangeEvent);
+        signChangeEvent.call();
 
         if (!signChangeEvent.isCancelled() && player.isOpenSignFront() != null) {
             this.setText(player.isOpenSignFront(), signChangeEvent.getLines());

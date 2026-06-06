@@ -159,8 +159,7 @@ public abstract class BaseInventory implements Inventory {
         InventoryHolder holder = this.getHolder();
         if (holder instanceof Entity) {
             EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
-            Server.getInstance().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 this.sendSlot(index, this.getViewers());
                 return false;
             }
@@ -387,8 +386,7 @@ public abstract class BaseInventory implements Inventory {
             InventoryHolder holder = this.getHolder();
             if (holder instanceof Entity) {
                 EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, old, item, index);
-                Server.getInstance().getPluginManager().callEvent(ev);
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     this.sendSlot(index, this.getViewers());
                     return false;
                 }
@@ -436,8 +434,7 @@ public abstract class BaseInventory implements Inventory {
     @Override
     public boolean open(Player who) {
         InventoryOpenEvent ev = new InventoryOpenEvent(this, who);
-        who.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
         this.onOpen(who);

@@ -71,8 +71,7 @@ public class BlockFire extends BlockFlowable {
         if (entity instanceof EntityPotionSplash potion) {
             if (potion.potionId == PotionType.WATER.id()) {
                 BlockFadeEvent event = new BlockFadeEvent(this, Block.get(AIR));
-                this.level.getServer().getPluginManager().callEvent(event);
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.level.setBlock(this, event.getNewState(), true);
                 }
             }
@@ -191,9 +190,7 @@ public class BlockFire extends BlockFlowable {
                                         }
 
                                         BlockIgniteEvent e = new BlockIgniteEvent(block, this, null, BlockIgniteEvent.BlockIgniteCause.SPREAD);
-                                        this.level.getServer().getPluginManager().callEvent(e);
-
-                                        if (!e.isCancelled()) {
+                                        if (e.call()) {
                                             this.getLevel().setBlock(block, Block.get(FIRE, damage), true);
                                             this.getLevel().scheduleUpdate(block, this.tickRate());
                                         }
@@ -225,17 +222,13 @@ public class BlockFire extends BlockFlowable {
                 }
 
                 BlockIgniteEvent e = new BlockIgniteEvent(block, this, null, BlockIgniteEvent.BlockIgniteCause.SPREAD);
-                this.level.getServer().getPluginManager().callEvent(e);
-
-                if (!e.isCancelled()) {
+                if (e.call()) {
                     this.getLevel().setBlock(block, Block.get(FIRE, meta), true);
                     this.getLevel().scheduleUpdate(block, this.tickRate());
                 }
             } else {
                 BlockBurnEvent ev = new BlockBurnEvent(block);
-                this.getLevel().getServer().getPluginManager().callEvent(ev);
-
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     this.getLevel().setBlock(block, Block.get(BlockID.AIR), true);
                 }
             }

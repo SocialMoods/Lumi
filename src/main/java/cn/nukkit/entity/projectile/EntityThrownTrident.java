@@ -251,8 +251,7 @@ public class EntityThrownTrident extends EntitySlenderProjectile {
         }
 
         ProjectileHitEvent hitEvent = new ProjectileHitEvent(this, MovingObjectPosition.fromEntity(entity));
-        this.server.getPluginManager().callEvent(hitEvent);
-        if (hitEvent.isCancelled()) {
+        if (!hitEvent.call()) {
             return;
         }
         float damage = this.getResultDamage();
@@ -275,8 +274,7 @@ public class EntityThrownTrident extends EntitySlenderProjectile {
         if (trident != null && level.isThundering() && this.hasChanneling && this.canSeeSky()) {
             EntityLightning bolt = new EntityLightning(this.getChunk(), getDefaultNBT(this));
             LightningStrikeEvent strikeEvent = new LightningStrikeEvent(level, bolt);
-            server.getPluginManager().callEvent(strikeEvent);
-            if (!strikeEvent.isCancelled()) {
+            if (strikeEvent.call()) {
                 bolt.spawnToAll();
                 level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_ITEM_TRIDENT_THUNDER);
             } else {

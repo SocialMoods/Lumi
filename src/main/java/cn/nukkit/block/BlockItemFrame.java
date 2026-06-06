@@ -112,8 +112,7 @@ public class BlockItemFrame extends BlockTransparentMeta implements Faceable, Bl
         if (itemFrame.getItem().getId() == Item.AIR) {
             Item itemToFrame = item.clone();
             ItemFrameUseEvent event = new ItemFrameUseEvent(player, this, itemFrame, itemToFrame, ItemFrameUseEvent.Action.PUT);
-            this.getLevel().getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 return false;
             }
             if (player != null && player.isSurvival()) {
@@ -129,8 +128,7 @@ public class BlockItemFrame extends BlockTransparentMeta implements Faceable, Bl
             this.getLevel().addSound(new ItemFrameItemAddedSound(this));
         } else {
             ItemFrameUseEvent event = new ItemFrameUseEvent(player, this, itemFrame, null, ItemFrameUseEvent.Action.ROTATION);
-            this.getLevel().getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 return false;
             }
             itemFrame.setItemRotation((itemFrame.getItemRotation() + 1) % 8);

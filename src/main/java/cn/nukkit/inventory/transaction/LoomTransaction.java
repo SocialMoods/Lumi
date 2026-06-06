@@ -77,8 +77,7 @@ public class LoomTransaction extends InventoryTransaction {
     protected boolean callExecuteEvent() {
         LoomInventory inventory = (LoomInventory) getSource().getWindowById(Player.LOOM_WINDOW_ID);
         LoomItemEvent event = new LoomItemEvent(inventory, this.outputItem, this.source);
-        event.call();
-        if (event.isCancelled()) {
+        if (!event.call()) {
             this.source.removeAllWindows(false);
             this.sendInventories();
             return false;

@@ -253,9 +253,7 @@ public class EntityFishingHook extends EntitySlenderProjectile {
                 motion.y += Math.sqrt(player.add(0, player.getEyeHeight(), 0).distance(pos)) * 0.08;
 
                 PlayerFishEvent event = new PlayerFishEvent(player, this, item, experience, motion);
-                this.getServer().getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     EntityItem itemEntity = new EntityItem(
                             this.level.getChunk((int) this.x >> 4, (int) this.z >> 4, true),
                             Entity.getDefaultNBT(pos, event.getMotion(), ThreadLocalRandom.current().nextFloat() * 360, 0).putShort("Health", 5).putCompound("Item", NBTIO.putItemHelper(event.getLoot(), true)).putShort("PickupDelay", 1));
@@ -308,8 +306,7 @@ public class EntityFishingHook extends EntitySlenderProjectile {
             return;
         }
         ProjectileHitEvent hitEvent = new ProjectileHitEvent(this, MovingObjectPosition.fromEntity(entity));
-        this.server.getPluginManager().callEvent(hitEvent);
-        if (hitEvent.isCancelled()) {
+        if (!hitEvent.call()) {
             return;
         }
         float damage = this.getResultDamage();

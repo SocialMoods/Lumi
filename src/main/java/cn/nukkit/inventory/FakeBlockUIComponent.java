@@ -28,8 +28,7 @@ public class FakeBlockUIComponent extends PlayerUIComponent {
     @Override
     public boolean open(Player who) {
         InventoryOpenEvent ev = new InventoryOpenEvent(this, who);
-        who.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
         this.onOpen(who);
@@ -73,7 +72,7 @@ public class FakeBlockUIComponent extends PlayerUIComponent {
     @Override
     public void close(Player who) {
         InventoryCloseEvent ev = new InventoryCloseEvent(this, who);
-        who.getServer().getPluginManager().callEvent(ev);
+        ev.call();
         this.onClose(who);
     }
 

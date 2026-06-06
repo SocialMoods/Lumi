@@ -181,10 +181,10 @@ public class EntityBoat extends EntityVehicle {
         Location from = new Location(lastX, lastY, lastZ, lastYaw, lastPitch, level);
         Location to = new Location(this.x, this.y, this.z, this.yaw, this.pitch, level);
 
-        this.getServer().getPluginManager().callEvent(new VehicleUpdateEvent(this));
+        new VehicleUpdateEvent(this).call();
 
         if (!from.equals(to)) {
-            this.getServer().getPluginManager().callEvent(new VehicleMoveEvent(this, from, to));
+            new VehicleMoveEvent(this, from, to).call();
         }
 
         this.move(this.motionX, this.motionY, this.motionZ);

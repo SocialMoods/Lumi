@@ -78,8 +78,7 @@ public class ChestInventory extends ContainerInventory {
                 Block block = this.getHolder().getBlock();
                 if (block instanceof BlockTrappedChest trappedChest) {
                     RedstoneUpdateEvent event = new RedstoneUpdateEvent(trappedChest);
-                    this.getHolder().level.getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
+                    if (event.call()) {
                         level.updateAroundRedstone(block);
                     }
                 }

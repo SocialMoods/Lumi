@@ -170,8 +170,7 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                         continue;
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(inv, this.inventory, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                    this.server.getPluginManager().callEvent(ev);
-                    if (ev.isCancelled())
+                    if (!ev.call())
                         continue;
 
                     Item[] items = this.inventory.addItem(itemToAdd);
@@ -215,9 +214,7 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                     }
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(this.inventory, holderInventory, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                    this.server.getPluginManager().callEvent(ev);
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         continue;
                     }
 
@@ -298,18 +295,14 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                         Item smelting = targetInv.getSmelting();
                         if (smelting.isNull()) {
                             event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                            this.server.getPluginManager().callEvent(event);
-
-                            if (!event.isCancelled()) {
+                            if (event.call()) {
                                 targetInv.setSmelting(itemToAdd);
                                 item.count--;
                                 pushedItem = true;
                             }
                         } else if (targetInv.getSmelting().getNamespaceId().equals(itemToAdd.getNamespaceId()) && targetInv.getSmelting().getDamage() == itemToAdd.getDamage() && smelting.count < smelting.getMaxStackSize()) {
                             event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                            this.server.getPluginManager().callEvent(event);
-
-                            if (!event.isCancelled()) {
+                            if (event.call()) {
                                 smelting.count++;
                                 targetInv.setSmelting(smelting);
                                 item.count--;
@@ -320,18 +313,14 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                         Item fuel = targetInv.getFuel();
                         if (fuel.isNull()) {
                             event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                            this.server.getPluginManager().callEvent(event);
-
-                            if (!event.isCancelled()) {
+                            if (event.call()) {
                                 targetInv.setFuel(itemToAdd);
                                 item.count--;
                                 pushedItem = true;
                             }
                         } else if (fuel.getNamespaceId().equals(itemToAdd.getNamespaceId()) && fuel.getDamage() == itemToAdd.getDamage() && fuel.count < fuel.getMaxStackSize()) {
                             event = new InventoryMoveItemEvent(this.inventory, targetInv, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                            this.server.getPluginManager().callEvent(event);
-
-                            if (!event.isCancelled()) {
+                            if (event.call()) {
                                 fuel.count++;
                                 targetInv.setFuel(fuel);
                                 item.count--;
@@ -366,9 +355,7 @@ public class BlockEntityHopper extends BlockEntitySpawnableContainer implements 
                     }
 
                     InventoryMoveItemEvent ev = new InventoryMoveItemEvent(this.inventory, target, this, itemToAdd, InventoryMoveItemEvent.Action.SLOT_CHANGE);
-                    this.server.getPluginManager().callEvent(ev);
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         continue;
                     }
 

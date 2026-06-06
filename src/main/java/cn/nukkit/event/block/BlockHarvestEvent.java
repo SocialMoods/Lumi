@@ -2,12 +2,9 @@ package cn.nukkit.event.block;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.item.Item;
 
 public class BlockHarvestEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
 
     private Block newState;
     private Item[] drops;
@@ -32,10 +29,6 @@ public class BlockHarvestEvent extends BlockEvent implements Cancellable {
 
     public void setDrops(Item[] drops) {
         this.drops = drops;
-    }
-
-    public static HandlerList getHandlers() {
-        return handlers;
     }
 
 }

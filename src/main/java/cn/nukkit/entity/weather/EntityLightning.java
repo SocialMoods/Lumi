@@ -54,9 +54,7 @@ public class EntityLightning extends Entity implements EntityLightningStrike {
                 this.getLevel().setBlock(fire, fire, true);
                 if (fire.isBlockTopFacingSurfaceSolid(fire.down()) || fire.canNeighborBurn()) {
                     BlockIgniteEvent e = new BlockIgniteEvent(block, null, this, BlockIgniteEvent.BlockIgniteCause.LIGHTNING);
-                    getServer().getPluginManager().callEvent(e);
-
-                    if (!e.isCancelled()) {
+                    if (e.call()) {
                         level.setBlock(fire, fire, true);
                         level.scheduleUpdate(fire, fire.tickRate() + Utils.random.nextInt(10));
                     }
@@ -117,9 +115,7 @@ public class EntityLightning extends Entity implements EntityLightningStrike {
 
                     if (block.getId() == Block.AIR || block.getId() == Block.TALL_GRASS) {
                         BlockIgniteEvent e = new BlockIgniteEvent(block, null, this, BlockIgniteEvent.BlockIgniteCause.LIGHTNING);
-                        getServer().getPluginManager().callEvent(e);
-
-                        if (!e.isCancelled()) {
+                        if (e.call()) {
                             Block fire = Block.get(BlockID.FIRE);
                             this.level.setBlock(block, fire);
                             this.getLevel().scheduleUpdate(fire, fire.tickRate());

@@ -199,7 +199,7 @@ public class BlockLectern extends BlockTransparentMeta implements Faceable, Bloc
     public void onPageChange(boolean active) {
         if (isActivated() != active) {
             setActivated(active);
-            this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 15, 0));
+            new BlockRedstoneEvent(this, 15, 0).call();
             level.setBlock((int) this.x, (int) this.y, (int) this.z, 0, this, false, false); // No need to send this to client
             level.updateAroundRedstone(this, null);
             if (active) {

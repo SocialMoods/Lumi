@@ -48,9 +48,7 @@ public class RCON {
         while ((command = serverThread.receive()) != null) {
             RemoteConsoleCommandSender sender = new RemoteConsoleCommandSender();
             RemoteServerCommandEvent event = new RemoteServerCommandEvent(sender, command.getCommand());
-            this.server.getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 this.server.dispatchCommand(sender, command.getCommand());
             }
 

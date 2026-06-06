@@ -46,9 +46,7 @@ public class BlockNetherWart extends BlockFlowable {
                     BlockNetherWart block = (BlockNetherWart) this.clone();
                     block.setDamage(block.getDamage() + 1);
                     BlockGrowEvent ev = new BlockGrowEvent(this, block);
-                    Server.getInstance().getPluginManager().callEvent(ev);
-
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.getLevel().setBlock(this, ev.getNewState(), true, true);
                     } else {
                         return Level.BLOCK_UPDATE_RANDOM;

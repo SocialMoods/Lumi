@@ -86,8 +86,7 @@ public class RepairItemTransaction extends InventoryTransaction {
         }
 
         RepairItemEvent event = new RepairItemEvent(inventory, this.inputItem, this.outputItem, this.materialItem, this.cost, this.source);
-        this.source.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             this.source.removeAllWindows(false);
             this.sendInventories();
             return true;
@@ -114,8 +113,7 @@ public class RepairItemTransaction extends InventoryTransaction {
                 Block newBlock = Block.get(id);
                 newBlock.setDamage(oldBlock.getDamage());
                 AnvilDamageEvent ev = new AnvilDamageEvent(oldBlock, newBlock, DamageCause.USE, this.source);
-                this.source.getServer().getPluginManager().callEvent(ev);
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     this.source.level.setBlock(oldBlock, ev.getNewBlock(), true);
                     if (id == Block.AIR) {
                         this.source.level.addLevelEvent(oldBlock, LevelEventPacket.EVENT_SOUND_ANVIL_BREAK);

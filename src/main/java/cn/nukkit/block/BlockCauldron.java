@@ -140,8 +140,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
             if (bucket.getDamage() == ItemBucket.EMPTY_BUCKET) {
                 if (cauldron.isCustomColor() && !cauldron.hasPotion() && getFillLevel() > 0) {
                     PlayerBucketFillEvent ev = new PlayerBucketFillEvent(player, this, null, item, Item.get(Item.BUCKET, ItemBucket.WATER_BUCKET, 1, bucket.getCompoundTag()));
-                    this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         replaceBucket(bucket, player, ev.getItem());
                         this.setFillLevel(0);
                         this.level.setBlock(this, this, true);
@@ -158,8 +157,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
                     };
 
                     PlayerBucketFillEvent ev = new PlayerBucketFillEvent(player, this, null, item, Item.get(Item.BUCKET, newBucketMeta, 1, bucket.getCompoundTag()));
-                    this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         replaceBucket(bucket, player, ev.getItem());
                         this.setFillLevel(0);
                         this.level.setBlock(this, this, true);
@@ -171,8 +169,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
                 }
             } else if ((bucket.getDamage() == ItemBucket.WATER_BUCKET || bucket.getDamage() == ItemBucket.LAVA_BUCKET || bucket.getDamage() == ItemBucket.POWDER_SNOW_BUCKET) && !(isFull() && !cauldron.isCustomColor() && !cauldron.hasPotion() && item.getDamage() == 8)) {
                 PlayerBucketEmptyEvent ev = new PlayerBucketEmptyEvent(player, this, null, item, Item.get(ItemID.BUCKET, 0, 1, bucket.getCompoundTag()));
-                this.level.getServer().getPluginManager().callEvent(ev);
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     if (player.isSurvival() || player.isAdventure()) {
                         replaceBucket(bucket, player, ev.getItem());
                     }
@@ -351,8 +348,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
                     };
 
                     PlayerBucketFillEvent ev = new PlayerBucketFillEvent(player, this, null, item, Item.get(Item.BUCKET, newBucketMeta, 1, bucket.getCompoundTag()));
-                    this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         replaceBucket(bucket, player, ev.getItem());
                         this.setFillLevel(0);
                         this.level.setBlock(this, new BlockCauldron(), true);
@@ -371,8 +367,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
                     };
 
                     PlayerBucketEmptyEvent ev = new PlayerBucketEmptyEvent(player, this, null, item, Item.get(Item.BUCKET, newBucketMeta, 1, bucket.getCompoundTag()));
-                    this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         replaceBucket(bucket, player, ev.getItem());
 
                         if (cauldron.hasPotion()) {
@@ -552,8 +547,7 @@ public class BlockCauldron extends BlockSolidMeta implements BlockEntityHolder<B
     @Override
     public void onEntityCollide(Entity entity) {
         EntityCombustByBlockEvent ev = new EntityCombustByBlockEvent(this, entity, 15);
-        Server.getInstance().getPluginManager().callEvent(ev);
-        if (!ev.isCancelled()) {
+        if (ev.call()) {
             if (getCauldronLiquid() == CauldronLiquid.LAVA && entity.isAlive() && entity.noDamageTicks == 0) {
                 entity.setOnFire(ev.getDuration());
                 if (!entity.hasEffect(EffectType.FIRE_RESISTANCE)) {

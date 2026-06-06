@@ -61,9 +61,7 @@ public abstract class ItemFood extends Item {
         }
 
         PlayerItemConsumeEvent event = new PlayerItemConsumeEvent(player, this);
-        event.call();
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             player.getInventory().sendContents(player);
             return false;
         }
