@@ -53,5 +53,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: lumi-${{ github.ref_name }}
+          name: ${{ steps.artifact_name.outputs.name }}
           path: '**/build/libs/*.jar'
