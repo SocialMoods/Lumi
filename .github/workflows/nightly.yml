@@ -41,12 +41,12 @@ jobs:
           VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
         env:
-          DEVELOPMENT: ${{ github.ref_name == 'dev' }}
+          DEVELOPMENT: true
 
       - name: Build with Gradle
         run: ./gradlew build
         env:
-          DEVELOPMENT: ${{ github.ref_name == 'dev' }}
+          DEVELOPMENT: true
 
       - name: Find artifacts
         id: find_artifacts

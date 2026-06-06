@@ -12,6 +12,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      DEVELOPMENT: false
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,6 +65,9 @@ jobs:
             **This is the stable version of Lumi.**
 
             🔗 Commit: [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+
+            ### Version
+            `${{ steps.project_version.outputs.version }}`
 
             ### Artifacts
             ${{ steps.find_artifacts.outputs.files }}
