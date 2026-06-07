@@ -8,8 +8,11 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
 }
 
+val isDevelopment: Boolean = System.getenv("DEVELOPMENT")?.toBooleanStrictOrNull() ?: true
+val releaseVersion = "1.6.0"
+
 group = "com.koshakmine"
-version = "1.6.0-SNAPSHOT"
+version = if (isDevelopment) "$releaseVersion-SNAPSHOT" else releaseVersion
 application.mainClass.set("cn.nukkit.Nukkit")
 
 java {
@@ -158,7 +161,8 @@ publishing {
     repositories {
         maven {
             name = "lumi"
-            url = uri("https://repo.lumi.su/snapshots")
+            url = uri("https://repo.lumi.su/${if (isDevelopment) "snapshots" else "releases"}")
+
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")

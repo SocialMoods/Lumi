@@ -1,16 +1,19 @@
-name: Nightly Build
+name: Release Project
 
 on:
   push:
     branches:
       - stable
-      - dev
 
 jobs:
   build-and-release:
     permissions:
       contents: write
+
     runs-on: ubuntu-latest
+
+    env:
+      DEVELOPMENT: false
 
     steps:
       - name: Checkout
@@ -40,13 +43,11 @@ jobs:
         run: |
           VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-        env:
-          DEVELOPMENT: true
 
       - name: Build with Gradle
         run: ./gradlew build
         env:
-          DEVELOPMENT: true
+          DEVELOPMENT: false
 
       - name: Find artifacts
         id: find_artifacts
@@ -55,13 +56,13 @@ jobs:
           find build/libs -name "*.jar" -exec cp {} artifacts/ \;
           echo "files=$(ls artifacts | paste -sd ',' -)" >> $GITHUB_OUTPUT
 
-      - name: Create or Update Nightly Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: nightly
-          name: Latest Build
+          tag_name: v${{ steps.project_version.outputs.version }}-${{ github.sha }}
+          name: Release ${{ steps.project_version.outputs.version }}
           body: |
-            **This is the latest version of Lumi built from source.**
+            **This is the stable version of Lumi.**
 
             🔗 Commit: [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
 
@@ -69,7 +70,7 @@ jobs:
             `${{ steps.project_version.outputs.version }}`
 
             ### Artifacts
-            - `Lumi-${{ steps.project_version.outputs.version }}.jar` – includes all dependencies.
+            ${{ steps.find_artifacts.outputs.files }}
           draft: false
           prerelease: false
           files: artifacts/*.jar
