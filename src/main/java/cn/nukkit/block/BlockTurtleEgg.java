@@ -10,7 +10,6 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityLiving;
 import cn.nukkit.entity.mob.EntityGhast;
 import cn.nukkit.entity.mob.EntityPhantom;
-import cn.nukkit.entity.mob.EntitySilverfish;
 import cn.nukkit.entity.passive.EntityBat;
 import cn.nukkit.entity.passive.EntityChicken;
 import cn.nukkit.event.Event;
@@ -26,7 +25,6 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.particle.BoneMealParticle;
 import cn.nukkit.math.BlockFace;
-import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -133,9 +131,11 @@ public class BlockTurtleEgg extends BlockTransparentMeta implements BlockPropert
                     down(),
                     item
             );
-            if (placeEvent.isCancelled()) {
+
+            if (!placeEvent.call()) {
                 return false;
             }
+
             if (!this.level.setBlock(this, placeEvent.getBlock(), true, true)) {
                 return false;
             }
@@ -163,8 +163,7 @@ public class BlockTurtleEgg extends BlockTransparentMeta implements BlockPropert
                         BlockTurtleEgg newState = (BlockTurtleEgg) this.clone();
                         newState.setCracks(crackState.next());
                         BlockGrowEvent event = new BlockGrowEvent(this, newState);
-                        this.level.getServer().getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
+                        if (event.call()) {
                             level.addSound(this, Sound.BLOCK_TURTLE_EGG_CRACK, 0.7f, 0.9f + random.nextFloat() * 0.2f);
                             this.level.setBlock(this, event.getNewState(), true, true);
                         }
@@ -231,10 +230,9 @@ public class BlockTurtleEgg extends BlockTransparentMeta implements BlockPropert
                 ev = new EntityInteractEvent(entity, this);
             }
 
-            boolean cracked = false;
+            boolean cracked;
 
             if (entity.fallDistance > 0) {
-                System.out.println(entity.fallDistance);
                 cracked = ThreadLocalRandom.current().nextInt(3) != 0;
             } else {
                 cracked = ThreadLocalRandom.current().nextInt(100) > 0;

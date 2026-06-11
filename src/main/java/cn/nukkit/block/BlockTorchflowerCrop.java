@@ -53,8 +53,7 @@ public class BlockTorchflowerCrop extends BlockCrops {
         }
         
         BlockGrowEvent ev = new BlockGrowEvent(this, block);
-        Server.getInstance().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
 
