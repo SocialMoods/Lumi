@@ -43,8 +43,15 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Prepare artifact name
+        id: artifact_name
+        run: |
+          REF_NAME="${{ github.head_ref || github.ref_name }}"
+          SAFE_REF_NAME="${REF_NAME//\//-}"
+          echo "name=lumi-$SAFE_REF_NAME" >> $GITHUB_OUTPUT
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: lumi-${{ github.ref_name }}
+          name: ${{ steps.artifact_name.outputs.name }}
           path: '**/build/libs/*.jar'
