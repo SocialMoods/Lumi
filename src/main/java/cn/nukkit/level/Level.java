@@ -161,6 +161,8 @@ public class Level implements ChunkManager, Metadatable {
         RANDOM_TICK_BLOCKS.add(Block.CAULDRON_BLOCK);
         RANDOM_TICK_BLOCKS.add(Block.CHORUS_FLOWER);
 
+        RANDOM_TICK_BLOCKS.add(Block.TURTLE_EGG);
+
         RANDOM_TICK_BLOCKS.add(Block.BAMBOO);
         RANDOM_TICK_BLOCKS.add(Block.BAMBOO_SAPLING);
         RANDOM_TICK_BLOCKS.add(Block.CORAL_FAN);
@@ -175,6 +177,8 @@ public class Level implements ChunkManager, Metadatable {
         RANDOM_TICK_BLOCKS.add(Block.AZALEA_LEAVES_FLOWERED);
         RANDOM_TICK_BLOCKS.add(Block.AZALEA);
         RANDOM_TICK_BLOCKS.add(Block.FLOWERING_AZALEA);
+
+        RANDOM_TICK_BLOCKS.add(Block.TORCHFLOWER_CROP);
 
         RANDOM_TICK_BLOCKS.add(Block.MANGROVE_PROPAGULE);
         RANDOM_TICK_BLOCKS.add(Block.MANGROVE_LEAVES);

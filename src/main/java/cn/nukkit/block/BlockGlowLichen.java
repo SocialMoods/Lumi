@@ -3,6 +3,7 @@ package cn.nukkit.block;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemNamespaceId;
+import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 
 import java.util.*;
@@ -28,14 +29,15 @@ public class BlockGlowLichen extends BlockLichen {
 
     @Override
     public boolean onActivate(Item item, Player player) {
-
         if (!item.getNamespaceId().equals(ItemNamespaceId.BONE_MEAL)) {
             return false;
         }
 
         Map<Block, BlockFace> candidates = getCandidates();
 
-        item.decrement(1);
+        if (player != null && !player.isCreative()) {
+            item.count--;
+        }
 
         if (candidates.isEmpty()) {
             return true;
@@ -102,6 +104,24 @@ public class BlockGlowLichen extends BlockLichen {
     public int getLightLevel() {
         return 7;
     }
+
+    @Override
+    public int getToolType() {
+        return ItemTool.TYPE_AXE;
+    }
+
+    @Override
+    public Item[] getDrops(Item item) {
+        Item drop = toItem();
+        drop.setCount(getGrowthSides().length);
+        if (item.isShears()) {
+            return new Item[]{
+                    drop
+            };
+        }
+        return Item.EMPTY_ARRAY;
+    }
+
 
     private boolean isSupportNeighborAdded(Map<Block, BlockFace> candidates, BlockFace side, Block supportNeighbor) {
         // Air is a valid candidate!
