@@ -161,6 +161,8 @@ public class Level implements ChunkManager, Metadatable {
         RANDOM_TICK_BLOCKS.add(Block.CAULDRON_BLOCK);
         RANDOM_TICK_BLOCKS.add(Block.CHORUS_FLOWER);
 
+        RANDOM_TICK_BLOCKS.add(Block.TURTLE_EGG);
+
         RANDOM_TICK_BLOCKS.add(Block.BAMBOO);
         RANDOM_TICK_BLOCKS.add(Block.BAMBOO_SAPLING);
         RANDOM_TICK_BLOCKS.add(Block.CORAL_FAN);
@@ -175,6 +177,8 @@ public class Level implements ChunkManager, Metadatable {
         RANDOM_TICK_BLOCKS.add(Block.AZALEA_LEAVES_FLOWERED);
         RANDOM_TICK_BLOCKS.add(Block.AZALEA);
         RANDOM_TICK_BLOCKS.add(Block.FLOWERING_AZALEA);
+
+        RANDOM_TICK_BLOCKS.add(Block.TORCHFLOWER_CROP);
 
         RANDOM_TICK_BLOCKS.add(Block.MANGROVE_PROPAGULE);
         RANDOM_TICK_BLOCKS.add(Block.MANGROVE_LEAVES);
@@ -959,7 +963,7 @@ public class Level implements ChunkManager, Metadatable {
             ev.setCancelled();
         }
 
-        this.server.getPluginManager().callEvent(ev);
+        ev.call();
 
         if (!force && ev.isCancelled()) {
             return false;
@@ -1175,9 +1179,7 @@ public class Level implements ChunkManager, Metadatable {
         while ((queuedUpdate = this.normalUpdateQueue.poll()) != null) {
             Block block = getBlock(queuedUpdate.block, queuedUpdate.block.layer);
             BlockUpdateEvent event = new BlockUpdateEvent(block);
-            this.server.getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 block.onUpdate(BLOCK_UPDATE_NORMAL);
                 if (queuedUpdate.neighbor != null) {
                     block.onNeighborChange(queuedUpdate.neighbor.getOpposite());
@@ -1309,8 +1311,7 @@ public class Level implements ChunkManager, Metadatable {
 
             EntityLightning bolt = new EntityLightning(chunk, nbt);
             LightningStrikeEvent ev = new LightningStrikeEvent(this, bolt);
-            server.getPluginManager().callEvent(ev);
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 bolt.spawnToAll();
                 this.addLevelSoundEvent(vector, LevelSoundEventPacket.SOUND_THUNDER, -1, EntityLightning.NETWORK_ID);
                 this.addLevelSoundEvent(vector, LevelSoundEventPacket.SOUND_EXPLODE, -1, EntityLightning.NETWORK_ID);
@@ -1596,7 +1597,7 @@ public class Level implements ChunkManager, Metadatable {
             return false;
         }
 
-        this.server.getPluginManager().callEvent(new LevelSaveEvent(this));
+        new LevelSaveEvent(this).call();
 
         LevelProvider levelProvider = requireProvider();
         levelProvider.setTime(this.time);
@@ -2308,8 +2309,7 @@ public class Level implements ChunkManager, Metadatable {
                 addLightUpdate(x, y, z);
             }
             BlockUpdateEvent ev = new BlockUpdateEvent(block);
-            this.server.getPluginManager().callEvent(ev);
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 for (Entity entity : this.getNearbyEntities(new SimpleAxisAlignedBB(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1))) {
                     entity.scheduleUpdate();
                 }
@@ -2525,8 +2525,7 @@ public class Level implements ChunkManager, Metadatable {
                 ev.setCancelled();
             }
 
-            this.server.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return null;
             }
 
@@ -2543,9 +2542,7 @@ public class Level implements ChunkManager, Metadatable {
         }
 
         BlockNaturalBreakEvent ev = new BlockNaturalBreakEvent(target, item, drops, dropExp);
-        ev.call();
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return null;
         }
 
@@ -2656,9 +2653,7 @@ public class Level implements ChunkManager, Metadatable {
                 ev.setCancelled();
             }
 
-            this.server.getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 target.onTouch(vector, item, face, fx, fy, fz, player, ev.getAction());
                 if (ev.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     target.onPlayerRightClick(player, item, face, new Vector3(fx, fy, fz));
@@ -2777,8 +2772,7 @@ public class Level implements ChunkManager, Metadatable {
                 event.setCancelled();
             }
 
-            this.server.getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 return null;
             }
 
@@ -2790,9 +2784,7 @@ public class Level implements ChunkManager, Metadatable {
                     Position spawnPos = target.add(0.5, -1, 0.5);
 
                     CreatureSpawnEvent ev = new CreatureSpawnEvent(EntitySnowGolem.NETWORK_ID, spawnPos, CreatureSpawnEvent.SpawnReason.BUILD_SNOWMAN, player);
-                    server.getPluginManager().callEvent(ev);
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         return null;
                     }
 
@@ -2821,9 +2813,7 @@ public class Level implements ChunkManager, Metadatable {
                         Position spawnPos = block.add(0.5, -1, 0.5);
 
                         CreatureSpawnEvent ev = new CreatureSpawnEvent(EntityIronGolem.NETWORK_ID, spawnPos, CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM, player);
-                        server.getPluginManager().callEvent(ev);
-
-                        if (ev.isCancelled()) {
+                        if (!ev.call()) {
                             return null;
                         }
 
@@ -3261,7 +3251,7 @@ public class Level implements ChunkManager, Metadatable {
                 this.setChunk(x, z, chunk, false);
                 chunk = this.getChunk(x, z, false);
                 if (chunk != null && (oldChunk == null || !isPopulated) && chunk.isPopulated() && chunk.getProvider() != null) {
-                    this.server.getPluginManager().callEvent(new ChunkPopulateEvent(chunk));
+                    new ChunkPopulateEvent(chunk).call();
 
                     for (ChunkLoader loader : this.getChunkLoaders(x, z)) {
                         loader.onChunkPopulated(chunk);
@@ -3669,7 +3659,7 @@ public class Level implements ChunkManager, Metadatable {
     public void setSpawnLocation(Vector3 pos) {
         Position previousSpawn = this.getSpawnLocation();
         this.requireProvider().setSpawn(pos);
-        this.server.getPluginManager().callEvent(new SpawnChangeEvent(this, previousSpawn));
+        new SpawnChangeEvent(this, previousSpawn).call();
         SetSpawnPositionPacket pk = new SetSpawnPositionPacket();
         pk.spawnType = SetSpawnPositionPacket.TYPE_WORLD_SPAWN;
         pk.x = pos.getFloorX();
@@ -3936,9 +3926,7 @@ public class Level implements ChunkManager, Metadatable {
 
             lock.unlock();
 
-            this.server.getPluginManager().callEvent(
-                    new ChunkLoadEvent(chunk, !chunk.isGenerated())
-            );
+            new ChunkLoadEvent(chunk, !chunk.isGenerated()).call();
 
             if (this.isChunkInUse(index)) {
                 Collection<ChunkLoader> loaders = List.of(this.getChunkLoaders(x, z));
@@ -4021,7 +4009,7 @@ public class Level implements ChunkManager, Metadatable {
 
             lock.unlock();
 
-            this.server.getPluginManager().callEvent(event);
+            event.call();
 
             lock.lock();
 
@@ -4525,9 +4513,7 @@ public class Level implements ChunkManager, Metadatable {
 
     public boolean setRaining(boolean raining, int intensity) {
         WeatherChangeEvent ev = new WeatherChangeEvent(this, raining, intensity);
-        this.server.getPluginManager().callEvent(ev);
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
 
@@ -4569,9 +4555,7 @@ public class Level implements ChunkManager, Metadatable {
 
     public boolean setThundering(boolean thundering) {
         ThunderChangeEvent ev = new ThunderChangeEvent(this, thundering);
-        this.server.getPluginManager().callEvent(ev);
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
 

@@ -3,13 +3,10 @@ package cn.nukkit.event.block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 public class ComposterFillEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
     private final Item item;
@@ -43,9 +40,5 @@ public class ComposterFillEvent extends BlockEvent implements Cancellable {
 
     public void setSuccess(boolean success) {
         this.success = success;
-    }
-
-    public static HandlerList getHandlers() {
-        return handlers;
     }
 }

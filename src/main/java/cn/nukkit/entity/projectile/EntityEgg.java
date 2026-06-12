@@ -84,9 +84,7 @@ public class EntityEgg extends EntityProjectile implements EntityClimateVariant 
                 Position spawnPos = add(0.5, 1, 0.5);
 
                 CreatureSpawnEvent ev = new CreatureSpawnEvent(NETWORK_ID, spawnPos, CreatureSpawnEvent.SpawnReason.EGG, shootingEntity);
-                level.getServer().getPluginManager().callEvent(ev);
-
-                if (ev.isCancelled()) {
+                if (!ev.call()) {
                     return false;
                 }
 

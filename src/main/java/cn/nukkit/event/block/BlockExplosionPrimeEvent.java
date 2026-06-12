@@ -3,7 +3,6 @@ package cn.nukkit.event.block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 
 import javax.annotation.Nullable;
 
@@ -15,12 +14,6 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 public class BlockExplosionPrimeEvent extends BlockEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private double force;
     private boolean blockBreaking;

@@ -69,7 +69,7 @@ public abstract class BlockButton extends BlockFlowable implements Faceable {
             return false;
         }
 
-        this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 0, 15));
+        new BlockRedstoneEvent(this, 0, 15).call();
         setActivated(true, player);
         this.level.setBlock(this, this, true, true);
         this.level.addSound(new ButtonClickSound(this.add(0.5, 0.5, 0.5)));
@@ -89,7 +89,7 @@ public abstract class BlockButton extends BlockFlowable implements Faceable {
             }
         } else if (type == Level.BLOCK_UPDATE_SCHEDULED) {
             if (this.isActivated()) {
-                this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 15, 0));
+                new BlockRedstoneEvent(this, 15, 0).call();
 
                 this.setActivated(false);
                 this.level.setBlock(this, this, true, true);
@@ -155,7 +155,7 @@ public abstract class BlockButton extends BlockFlowable implements Faceable {
     @Override
     public boolean onBreak(Item item) {
         if (isActivated()) {
-            this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 15, 0));
+            new BlockRedstoneEvent(this, 15, 0).call();
         }
 
         return super.onBreak(item);

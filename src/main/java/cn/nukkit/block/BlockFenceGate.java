@@ -110,9 +110,7 @@ public class BlockFenceGate extends BlockTransparentMeta implements Faceable {
 
     public boolean toggle(Player player) {
         DoorToggleEvent event = new DoorToggleEvent(this, player);
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

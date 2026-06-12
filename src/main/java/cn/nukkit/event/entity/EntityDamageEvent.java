@@ -3,9 +3,8 @@ package cn.nukkit.event.entity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.effect.EffectType;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
-import cn.nukkit.event.EventException;
 import com.google.common.collect.ImmutableMap;
+import org.densy.eventbus.api.exception.EventException;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -15,13 +14,7 @@ import java.util.Map;
  * Nukkit Project
  */
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
     private boolean canBePrevented = true;
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private int attackCooldown = 10;
 

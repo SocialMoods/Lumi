@@ -108,9 +108,7 @@ public class ItemBucket extends Item {
         Block targetBlock;
         if (target instanceof BlockPowderSnow && this.getDamage() == 0) {
             PlayerBucketFillEvent ev = new PlayerBucketFillEvent(player, block, face, this, Item.get(BUCKET, POWDER_SNOW_BUCKET, 1));
-            player.getServer().getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 player.getLevel().setBlock(target, target.layer, Block.get(BlockID.AIR), true, true);
 
                 useBucket(player, ev.getItem());
@@ -134,8 +132,8 @@ public class ItemBucket extends Item {
             if (target instanceof BlockLiquid && target.getDamage() == 0) {
                 Item result = Item.get(BUCKET, getDamageByTarget(target.getId()), 1);
                 PlayerBucketFillEvent ev;
-                player.getServer().getPluginManager().callEvent(ev = new PlayerBucketFillEvent(player, block, face, this, result));
-                if (!ev.isCancelled()) {
+                ev = new PlayerBucketFillEvent(player, block, face, this, result);
+                if (ev.call()) {
                     player.getLevel().setBlock(target, target.layer, Block.get(BlockID.AIR), true, true);
 
                     // When water is removed ensure any adjacent still water is
@@ -196,9 +194,7 @@ public class ItemBucket extends Item {
                 nether = true;
             }
 
-            player.getServer().getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 player.getLevel().setBlock(placementBlock, placementBlock.layer, targetBlock, true, true);
                 if (player.isSurvival()) {
                     if (this.getCount() - 1 <= 0) {
@@ -261,9 +257,7 @@ public class ItemBucket extends Item {
                 nether = true;
             }
 
-            player.getServer().getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 player.getLevel().setBlock(block, 0, targetBlock, true, true);
                 useBucket(player, ev.getItem());
                 level.addLevelSoundEvent(block, LevelSoundEventPacket.SOUND_BUCKET_EMPTY_POWDER_SNOW);
@@ -288,9 +282,7 @@ public class ItemBucket extends Item {
         }
 
         PlayerItemConsumeEvent event = new PlayerItemConsumeEvent(player, this);
-        Server.getInstance().getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             player.getInventory().sendContents(player);
             return false;
         }

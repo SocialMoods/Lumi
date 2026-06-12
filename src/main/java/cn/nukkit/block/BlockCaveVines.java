@@ -156,8 +156,7 @@ public class BlockCaveVines extends BlockTransparentMeta {
         BlockCaveVines head = withBerries ? this.getStateWithBerries(down) : this.getStateWithoutBerries(down);
 
         BlockGrowEvent event = new BlockGrowEvent(this, head);
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

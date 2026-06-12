@@ -2,7 +2,6 @@ package cn.nukkit.event.player;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Event;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.network.SourceInterface;
 
 import java.net.InetSocketAddress;
@@ -12,12 +11,6 @@ import java.net.InetSocketAddress;
  * Nukkit Project
  */
 public class PlayerCreationEvent extends Event {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final SourceInterface interfaz;
 

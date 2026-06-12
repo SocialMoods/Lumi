@@ -122,8 +122,7 @@ public class BlockCactus extends BlockTransparentMeta {
                         Block b = this.getLevel().getBlock(new Vector3(this.x, this.y + y, this.z));
                         if (b.getId() == AIR) {
                             BlockGrowEvent event = new BlockGrowEvent(b, Block.get(CACTUS));
-                            Server.getInstance().getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
+                            if (event.call()) {
                                 this.getLevel().setBlock(b, event.getNewState(), true, true);
                             }
                             break;

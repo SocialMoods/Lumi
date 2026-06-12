@@ -184,8 +184,7 @@ public class CommandBlockInventory implements Inventory {
         }
 
         InventoryOpenEvent ev = new InventoryOpenEvent(this, who);
-        who.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
         this.onOpen(who);

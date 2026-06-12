@@ -58,8 +58,7 @@ public class EnchantTransaction extends InventoryTransaction {
         }
         EnchantInventory inv = (EnchantInventory) getSource().getWindowById(Player.ENCHANT_WINDOW_ID);
         EnchantItemEvent ev = new EnchantItemEvent(inv, inputItem, outputItem, cost, source);
-        source.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             source.removeAllWindows(false);
             this.sendInventories();
             // Cancelled by plugin, means handled OK

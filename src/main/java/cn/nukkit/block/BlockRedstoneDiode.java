@@ -86,8 +86,7 @@ public abstract class BlockRedstoneDiode extends BlockFlowable implements Faceab
         } else if (type == Level.BLOCK_UPDATE_NORMAL || type == Level.BLOCK_UPDATE_REDSTONE) {
             // Redstone event
             RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
-            getLevel().getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return 0;
             }
             if (type == Level.BLOCK_UPDATE_NORMAL && this.getSide(BlockFace.DOWN).isTransparent() && !(this.down() instanceof BlockSlab)) {

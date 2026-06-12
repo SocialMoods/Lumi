@@ -80,8 +80,7 @@ public class BlockSweetBerryBush extends BlockFlowable {
             }
 
             BlockGrowEvent ev = new BlockGrowEvent(this, block);
-            this.getLevel().getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             }
 
@@ -101,9 +100,7 @@ public class BlockSweetBerryBush extends BlockFlowable {
         int amount = age - 1 + ThreadLocalRandom.current().nextInt(2);
 
         BlockHarvestEvent event = new BlockHarvestEvent(this, new BlockSweetBerryBush(1), new Item[]{new ItemSweetBerries(0, amount)});
-        this.getLevel().getServer().getPluginManager().callEvent(event);
-
-        if (!event.isCancelled()) {
+        if (event.call()) {
             this.getLevel().setBlock(this, event.getNewState(), true, true);
             Item[] drops = event.getDrops();
             if (drops != null) {
@@ -128,7 +125,7 @@ public class BlockSweetBerryBush extends BlockFlowable {
         } else if (type == Level.BLOCK_UPDATE_RANDOM) {
             if (this.getDamage() < 3 && ThreadLocalRandom.current().nextInt(5) == 0) {
                 BlockGrowEvent event = new BlockGrowEvent(this, Block.get(this.getId(), this.getDamage() + 1));
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.getLevel().setBlock(this, event.getNewState(), true, true);
                 }
             }

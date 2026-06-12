@@ -1,7 +1,6 @@
 package cn.nukkit.event.entity;
 
 import cn.nukkit.entity.EntityLiving;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.item.Item;
 
 /**
@@ -9,11 +8,6 @@ import cn.nukkit.item.Item;
  * Nukkit Project
  */
 public class EntityDeathEvent extends EntityEvent {
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private Item[] drops;
     private int experience;

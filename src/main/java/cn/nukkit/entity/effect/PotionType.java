@@ -111,9 +111,7 @@ public record PotionType(String name, String stringId, int id, int level, Potion
 
     public void applyEffects(Entity entity, boolean splash, double health) {
         PotionApplyEvent event = new PotionApplyEvent(this, this.getEffects(splash), entity);
-        Server.getInstance().getPluginManager().callEvent(event);
-
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return;
         }
 

@@ -85,9 +85,7 @@ public class EntityEnderPearl extends EntityProjectile {
                     Position spawnPos = add(0.5, 1, 0.5);
 
                     CreatureSpawnEvent ev = new CreatureSpawnEvent(NETWORK_ID, spawnPos, CreatureSpawnEvent.SpawnReason.ENDER_PEARL, this.shootingEntity);
-                    level.getServer().getPluginManager().callEvent(ev);
-
-                    if (ev.isCancelled()) {
+                    if (!ev.call()) {
                         return false;
                     }
 

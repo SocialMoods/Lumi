@@ -86,7 +86,7 @@ public class BlockEntityCampfire extends BlockEntitySpawnable implements Invento
                 if (burnTimeLeft <= 0) {
                     Item product = Item.get(recipe.getResult().getId(), recipe.getResult().getDamage(), item.getCount());
                     CampfireSmeltEvent event = new CampfireSmeltEvent(this, item, product);
-                    if (!event.isCancelled()) {
+                    if (event.call()) {
                         inventory.setItem(slot, Item.get(0));
                         ThreadLocalRandom random = ThreadLocalRandom.current();
                         this.level.dropItem(add(random.nextFloat(), 0.5, random.nextFloat()), event.getResult());

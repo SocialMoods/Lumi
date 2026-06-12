@@ -69,9 +69,7 @@ public class EntityBlueWitherSkull extends EntityWitherSkull implements EntityEx
         this.close();
 
         EntityExplosionPrimeEvent ev = new EntityExplosionPrimeEvent(this, 1.2);
-        this.server.getPluginManager().callEvent(ev);
-
-        if (!ev.isCancelled()) {
+        if (ev.call()) {
             Explosion explosion = new StrongExplosion(this, (float) ev.getForce(), this.shootingEntity);
             if (ev.isBlockBreaking() && this.level.getGameRules().getBoolean(GameRule.MOB_GRIEFING)) {
                 explosion.explodeA();

@@ -59,8 +59,7 @@ public class BlockMycelium extends BlockSolid {
             if (block.getId() == Block.DIRT && block.getDamage() == 0) {
                 if (block.up() instanceof BlockAir) {
                     BlockSpreadEvent ev = new BlockSpreadEvent(block, this, Block.get(MYCELIUM));
-                    Server.getInstance().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.getLevel().setBlock(block, ev.getNewState());
                     }
                 }

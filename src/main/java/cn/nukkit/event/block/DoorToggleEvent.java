@@ -3,19 +3,12 @@ package cn.nukkit.event.block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 
 /**
  * Event for door Interactions.
  * @author Snake1999 on 2016/1/22.
  */
 public class DoorToggleEvent extends BlockUpdateEvent implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private Player player;
 

@@ -31,43 +31,30 @@ public class BlockSculkVein extends BlockLichen {
     }
 
     @Override
-    public double getHardness() {
-        return 0;
-    }
-
-    @Override
     public double getResistance() {
         return 0.2;
     }
 
     @Override
-    public boolean canHarvestWithHand() {
-        return false;
-    }
-
-    @Override
     public Item[] getDrops(Item item) {
+        Item drop = toItem();
+        drop.setCount(getGrowthSides().length);
         if (item.hasEnchantment(Enchantment.ID_SILK_TOUCH)) {
             return new Item[]{
-                    this.toItem()
+                    drop
             };
         }
         return Item.EMPTY_ARRAY;
     }
 
     @Override
-    public WaterloggingType getWaterloggingType() {
-        return WaterloggingType.WHEN_PLACED_IN_WATER;
-    }
-
-    @Override
-    public boolean canPassThrough() {
+    public boolean canSilkTouch() {
         return true;
     }
 
     @Override
-    public boolean isSolid() {
-        return false;
+    public WaterloggingType getWaterloggingType() {
+        return WaterloggingType.WHEN_PLACED_IN_WATER;
     }
 
     @Override

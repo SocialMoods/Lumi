@@ -3,7 +3,6 @@ package cn.nukkit.event.server;
 import cn.nukkit.Nukkit;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginDescription;
 import cn.nukkit.utils.Binary;
@@ -19,12 +18,6 @@ import java.util.Map;
  * Nukkit Project
  */
 public class QueryRegenerateEvent extends ServerEvent {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private int timeout;
     private String serverName;

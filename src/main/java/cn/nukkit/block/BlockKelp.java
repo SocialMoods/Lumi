@@ -106,9 +106,7 @@ public class BlockKelp extends BlockFlowable {
             if (up instanceof BlockWater && (up.getDamage() == 0 || up.getDamage() == 8)) {
                 BlockKelp grown = new BlockKelp(age + 1);
                 BlockGrowEvent ev = new BlockGrowEvent(this, grown);
-                Server.getInstance().getPluginManager().callEvent(ev);
-
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     this.setDamage(25);
                     this.getLevel().setBlock(this, 0, this, true, true);
                     this.getLevel().setBlock(up, 1, new BlockWater(), true, false);

@@ -157,8 +157,7 @@ public class BlockBubbleColumn extends BlockTransparentMeta {
             Block up = up();
             if (up instanceof BlockWater && (up.getDamage() == 0 || up.getDamage() == 8)) {
                 BlockFromToEvent event = new BlockFromToEvent(this, up);
-                event.call();
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.getLevel().setBlock(up, 1, Block.get(WATER), true, false);
                     this.getLevel().setBlock(up, 0, Block.get(BUBBLE_COLUMN, this.getDamage()), true, true);
                 }
@@ -225,7 +224,7 @@ public class BlockBubbleColumn extends BlockTransparentMeta {
 
     private void fadeOut(Block water) {
         BlockFadeEvent event = new BlockFadeEvent(this, water.clone());
-        if (!event.isCancelled()) {
+        if (event.call()) {
             this.getLevel().setBlock(this, 1, Block.get(AIR), true, false);
             this.getLevel().setBlock(this, 0, event.getNewState(), true, true);
         }

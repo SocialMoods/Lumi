@@ -25,9 +25,8 @@ public class DropItemAction extends InventoryAction {
     @Override
     public boolean onPreExecute(Player source) {
         PlayerDropItemEvent ev;
-        source.getServer().getPluginManager().callEvent(ev = new PlayerDropItemEvent(source, this.targetItem));
-
-        if(ev.isCancelled()) {
+        ev = new PlayerDropItemEvent(source, this.targetItem);
+        if (!ev.call()) {
             source.stopAction();
         }
 

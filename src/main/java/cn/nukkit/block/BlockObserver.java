@@ -125,13 +125,12 @@ public class BlockObserver extends BlockSolidMeta implements Faceable {
         if (type == Level.BLOCK_UPDATE_SCHEDULED) {
             RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
             PluginManager pluginManager = level.getServer().getPluginManager();
-            pluginManager.callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return 0;
             }
 
             if (!isPowered()) {
-                pluginManager.callEvent(new BlockRedstoneEvent(this, 0, 15));
+                new BlockRedstoneEvent(this, 0, 15).call();
                 this.setPowered(true);
 
                 if (this.level.setBlock(this, this)) {
@@ -140,7 +139,7 @@ public class BlockObserver extends BlockSolidMeta implements Faceable {
                     this.level.scheduleUpdate(this, 2);
                 }
             } else {
-                pluginManager.callEvent(new BlockRedstoneEvent(this, 15, 0));
+                new BlockRedstoneEvent(this, 15, 0).call();
                 this.setPowered(false);
 
                 this.level.setBlock(this, this);
@@ -159,8 +158,7 @@ public class BlockObserver extends BlockSolidMeta implements Faceable {
         }
 
         RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
-        this.level.getServer().getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return;
         }
 

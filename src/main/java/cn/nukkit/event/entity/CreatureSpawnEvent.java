@@ -3,19 +3,12 @@ package cn.nukkit.event.entity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.Event;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.level.Position;
 import cn.nukkit.nbt.tag.CompoundTag;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class CreatureSpawnEvent extends Event implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     @Getter
     private final SpawnReason reason;

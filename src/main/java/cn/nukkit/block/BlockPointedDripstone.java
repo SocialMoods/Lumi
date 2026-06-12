@@ -85,8 +85,7 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
             AirUp = true;
         if (AirUp) {
             BlockFallEvent event = new BlockFallEvent(this);
-            event.call();
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 return;
             }
             BlockPointedDripstone block = (BlockPointedDripstone) blockUp;

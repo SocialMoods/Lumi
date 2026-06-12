@@ -2,7 +2,6 @@ package cn.nukkit.event.player;
 
 import cn.nukkit.Server;
 import cn.nukkit.entity.data.skin.Skin;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.utils.LoginChainData;
 
 import java.util.ArrayList;
@@ -16,12 +15,6 @@ import java.util.function.Consumer;
  * @author CreeperFace
  */
 public class PlayerAsyncPreLoginEvent extends PlayerEvent {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     private final String name;
     private final UUID uuid;

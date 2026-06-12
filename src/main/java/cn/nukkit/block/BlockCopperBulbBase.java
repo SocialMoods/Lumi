@@ -32,9 +32,7 @@ public abstract class BlockCopperBulbBase extends BlockSolidMeta implements Oxid
 
         if (type == Level.BLOCK_UPDATE_REDSTONE) {
             RedstoneUpdateEvent ev = new RedstoneUpdateEvent(this);
-            getLevel().getServer().getPluginManager().callEvent(ev);
-
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return 0;
             }
 

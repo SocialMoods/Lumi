@@ -136,8 +136,7 @@ public class BlockEntityLectern extends BlockEntitySpawnable {
         Item item = this.getBook();
         if (item != null && item.getId() != Item.AIR) {
             LecternDropBookEvent dropBookEvent = new LecternDropBookEvent(player, this, item);
-            this.getLevel().getServer().getPluginManager().callEvent(dropBookEvent);
-            if (dropBookEvent.isCancelled()) {
+            if (!dropBookEvent.call()) {
                 return false;
             }
 

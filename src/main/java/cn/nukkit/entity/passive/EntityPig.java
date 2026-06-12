@@ -59,9 +59,7 @@ public class EntityPig extends EntityCreature implements EntityClimateVariant {
         Entity ent = Entity.createEntity("ZombiePigman", this);
         if (ent != null) {
             CreatureSpawnEvent cse = new CreatureSpawnEvent(EntityZombiePigman.NETWORK_ID, this, ent.namedTag, CreatureSpawnEvent.SpawnReason.LIGHTNING, this);
-            this.getServer().getPluginManager().callEvent(cse);
-
-            if (cse.isCancelled()) {
+            if (!cse.call()) {
                 ent.close();
                 return;
             }

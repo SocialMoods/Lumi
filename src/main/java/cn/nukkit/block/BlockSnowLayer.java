@@ -92,8 +92,7 @@ public class BlockSnowLayer extends BlockFallableMeta {
         } else if (type == Level.BLOCK_UPDATE_RANDOM) {
             if (this.getLevel().getBlockLightAt((int) this.x, (int) this.y, (int) this.z) >= 10) {
                 BlockFadeEvent event = new BlockFadeEvent(this, (this.getDamage() & 0x7) > 0 ? get(SNOW_LAYER, this.getDamage() - 1) : get(AIR));
-                level.getServer().getPluginManager().callEvent(event);
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     level.setBlock(this, event.getNewState(), true);
                 }
                 return Level.BLOCK_UPDATE_NORMAL;

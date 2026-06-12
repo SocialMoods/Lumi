@@ -211,8 +211,7 @@ public abstract class EntityLiving extends Entity implements EntityDamageable {
             event.setCancelled();
         }
 
-        getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (!event.call()) {
             return false;
         }
 

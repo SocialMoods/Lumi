@@ -2,17 +2,11 @@ package cn.nukkit.event.player;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 
 /**
  * Called when the player logs in, before things have been set up
  */
 public class PlayerPreLoginEvent extends PlayerEvent implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     protected String kickMessage;
 

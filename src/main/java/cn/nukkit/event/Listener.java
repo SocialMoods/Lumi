@@ -42,5 +42,6 @@ package cn.nukkit.event;
  * @see cn.nukkit.event.Event
  * @since Nukkit 1.0 | Nukkit API 1.0.0
  */
+@Deprecated(forRemoval = false, since = "1.6.1")
 public interface Listener {
 }

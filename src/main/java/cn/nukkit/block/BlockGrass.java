@@ -92,8 +92,7 @@ public class BlockGrass extends BlockDirt {
             Block up = this.up();
             if ((up.isSolid() && !up.isTransparent()) || up instanceof BlockLiquid) {
                 BlockSpreadEvent ev = new BlockSpreadEvent(this, this, Block.get(BlockID.DIRT));
-                Server.getInstance().getPluginManager().callEvent(ev);
-                if (!ev.isCancelled()) {
+                if (ev.call()) {
                     this.getLevel().setBlock(this, ev.getNewState());
                 }
                 return 0;
@@ -107,8 +106,7 @@ public class BlockGrass extends BlockDirt {
                 up = block.up();
                 if (!up.isSolid() && up.isTransparent() && !(up instanceof BlockLiquid)) {
                     BlockSpreadEvent ev = new BlockSpreadEvent(block, this, Block.get(GRASS));
-                    Server.getInstance().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.getLevel().setBlock(block, ev.getNewState());
                     }
                 }

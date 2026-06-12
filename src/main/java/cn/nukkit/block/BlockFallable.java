@@ -28,9 +28,7 @@ public abstract class BlockFallable extends BlockSolidMeta {
         Block down = this.down();
         if (down.getId() == AIR || down instanceof BlockLiquid || down instanceof BlockFire) {
             BlockFallEvent event = new BlockFallEvent(this);
-            this.level.getServer().getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 return type;
             }
 

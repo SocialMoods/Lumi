@@ -49,7 +49,7 @@ public class BlockCoral extends BlockFlowable {
         } else if (type == Level.BLOCK_UPDATE_SCHEDULED) {
             if (!this.isDead() && !(this.getLevelBlockAtLayer(1) instanceof BlockWater)  && !(this.getLevelBlockAtLayer(1) instanceof BlockIceFrosted)) {
                 BlockFadeEvent event = new BlockFadeEvent(this, new BlockCoral(this.getDamage() | 0x8));
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     this.setDead(true);
                     this.getLevel().setBlock(this, event.getNewState(), true, true);
                 }

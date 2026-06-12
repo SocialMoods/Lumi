@@ -127,8 +127,7 @@ public class ItemBow extends ItemTool {
             entityShootBowEvent.setCancelled();
         }
 
-        Server.getInstance().getPluginManager().callEvent(entityShootBowEvent);
-        if (entityShootBowEvent.isCancelled()) {
+        if (!entityShootBowEvent.call()) {
             entityShootBowEvent.getProjectile().close();
             player.getInventory().sendContents(player);
             player.getOffhandInventory().sendContents(player);
@@ -160,8 +159,7 @@ public class ItemBow extends ItemTool {
             if (entityShootBowEvent.getProjectile() != null) {
                 EntityProjectile proj = entityShootBowEvent.getProjectile();
                 ProjectileLaunchEvent projectev = new ProjectileLaunchEvent(proj);
-                Server.getInstance().getPluginManager().callEvent(projectev);
-                if (projectev.isCancelled()) {
+                if (!projectev.call()) {
                     proj.close();
                 } else {
                     proj.spawnToAll();

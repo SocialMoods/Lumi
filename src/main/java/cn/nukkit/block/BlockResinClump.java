@@ -1,6 +1,8 @@
 package cn.nukkit.block;
 
 import cn.nukkit.block.data.BlockColor;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 
 public class BlockResinClump extends BlockLichen {
     public BlockResinClump() {
@@ -29,6 +31,20 @@ public class BlockResinClump extends BlockLichen {
     @Override
     public double getResistance() {
         return 0;
+    }
+
+    @Override
+    public Item[] getDrops(Item item) {
+        Item drop = toItem();
+        drop.setCount(getGrowthSides().length);
+        return new Item[]{
+                drop
+        };
+    }
+
+    @Override
+    public Item toItem() {
+        return new ItemBlock(Block.get(this.getId(), 0), 0);
     }
 
     @Override

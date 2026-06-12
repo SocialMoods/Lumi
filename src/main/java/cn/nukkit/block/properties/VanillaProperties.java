@@ -4,6 +4,7 @@ import cn.nukkit.block.customblock.properties.BlockProperty;
 import cn.nukkit.block.customblock.properties.BooleanBlockProperty;
 import cn.nukkit.block.customblock.properties.EnumBlockProperty;
 import cn.nukkit.block.properties.enums.CrackedState;
+import cn.nukkit.block.properties.enums.TurtleEggCount;
 import cn.nukkit.math.BlockFace;
 
 public interface VanillaProperties {
@@ -23,4 +24,6 @@ public interface VanillaProperties {
             new BlockFace[]{ BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH, BlockFace.NORTH }).ordinal(true);
 
     EnumBlockProperty<CrackedState> CRACKED_STATE = new EnumBlockProperty<>("cracked_state", false, CrackedState.class);
+
+    EnumBlockProperty<TurtleEggCount> TURTLE_EGG_COUNT = new EnumBlockProperty<>("turtle_egg_count", false, TurtleEggCount.class);
 }

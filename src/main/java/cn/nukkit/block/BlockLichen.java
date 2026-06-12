@@ -6,6 +6,8 @@ import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitRandom;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -50,10 +52,25 @@ public abstract class BlockLichen extends BlockTransparentMeta {
         if (!target.isSolid() && target instanceof BlockLichen) {
             return false;
         }
+        int currentMeta = 0;
+        if (block instanceof BlockLichen) {
+            currentMeta = block.getDamage();
+        }
 
-        if(block.getSide(face).isSolid(face)) {
-            growToSide(face);
-            return true;
+        setDamage(currentMeta | (0b000001 << face.getOpposite().getDUSWNEIndex()));
+
+        if (getDamage() == currentMeta) {
+            BlockFace[] sides = BlockFace.values();
+            Stream<BlockFace> faceStream = Arrays.stream(sides).filter(side ->
+                    block.getSide(side).isSolid(side) && !isGrowthToSide(side)
+            );
+            Optional<BlockFace> optionalFace = faceStream.findFirst();
+            if (optionalFace.isPresent()) {
+                growToSide(optionalFace.get());
+                return true;
+            }
+
+            return false;
         }
 
         getLevel().setBlock(this, this, true, true);
@@ -65,7 +82,7 @@ public abstract class BlockLichen extends BlockTransparentMeta {
         for (BlockFace side : BlockFace.values()) {
             final Block support = this.getSide(side);
             if (isGrowthToSide(side) && support != null && !support.isSolid()) {
-                //this.witherAtSide(side);
+                this.witherAtSide(side);
             }
         }
         return super.onUpdate(type);
@@ -77,28 +94,18 @@ public abstract class BlockLichen extends BlockTransparentMeta {
     }
 
     @Override
+    public double getResistance() {
+        return 1;
+    }
+
+    @Override
     public boolean canPassThrough() {
         return true;
     }
 
     @Override
-    public boolean canSilkTouch() {
-        return true;
-    }
-
-    @Override
-    public int getToolType() {
-        return ItemTool.TYPE_AXE;
-    }
-
-    @Override
-    public int getToolTier() {
-        return ItemTool.TIER_WOODEN;
-    }
-
-    @Override
-    public boolean canHarvest(Item item) {
-        return item.isAxe() || item.isShears();
+    public int getWaterloggingLevel() {
+        return 1;
     }
 
     @Override
@@ -138,6 +145,6 @@ public abstract class BlockLichen extends BlockTransparentMeta {
 
     @Override
     public Item toItem() {
-        return new ItemBlock(this);
+        return new ItemBlock(this, 0);
     }
 }

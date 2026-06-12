@@ -243,9 +243,7 @@ public class BlockEntityFurnace extends BlockEntitySpawnable implements Inventor
     protected void checkFuel(Item fuel) {
         FurnaceBurnEvent ev = new FurnaceBurnEvent(this, fuel, fuel.getFuelTime() == null ? 0 : fuel.getFuelTime());
 
-        this.server.getPluginManager().callEvent(ev);
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return;
         }
 
@@ -314,8 +312,7 @@ public class BlockEntityFurnace extends BlockEntitySpawnable implements Inventor
                     product = newProduct;
 
                     FurnaceSmeltEvent ev = new FurnaceSmeltEvent(this, raw, product, (float) Registries.RECIPE.getRecipeXp(smelt));
-                    this.server.getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         this.inventory.setResult(ev.getResult());
                         this.experience += ev.getXp();
                         raw.setCount(raw.getCount() - 1);

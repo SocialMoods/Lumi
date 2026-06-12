@@ -207,8 +207,7 @@ public class Explosion {
             List<Block> affectedBlocksList = new ArrayList<>(this.affectedBlocks);
             EntityExplodeEvent ev = new EntityExplodeEvent((Entity) this.what, this.source, affectedBlocksList, yield);
             ev.setIgnitions(fireIgnitions == null ? new LinkedHashSet<>(0) : fireIgnitions);
-            this.level.getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             } else {
                 yield = ev.getYield();
@@ -219,8 +218,7 @@ public class Explosion {
         } else if (this.what instanceof Block) {
             BlockExplodeEvent ev = new BlockExplodeEvent((Block) this.what, this.source, this.affectedBlocks,
                     fireIgnitions == null ? new LinkedHashSet<>(0) : fireIgnitions, yield, this.fireSpawnChance);
-            this.level.getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 return false;
             } else {
                 yield = ev.getYield();
@@ -311,15 +309,13 @@ public class Explosion {
                 long index = Hash.hashBlock((int) sideBlock.x, (int) sideBlock.y, (int) sideBlock.z);
                 if (!this.affectedBlocks.contains(sideBlock) && !updateBlocks.contains(index)) {
                     BlockUpdateEvent ev = new BlockUpdateEvent(this.level.getBlock(sideBlock));
-                    this.level.getServer().getPluginManager().callEvent(ev);
-                    if (!ev.isCancelled()) {
+                    if (ev.call()) {
                         ev.getBlock().onUpdate(Level.BLOCK_UPDATE_NORMAL);
                     }
                     Block layer1 = this.level.getBlock(sideBlock, 1);
                     if (!layer1.isAir()) {
                         ev = new BlockUpdateEvent(layer1);
-                        this.level.getServer().getPluginManager().callEvent(ev);
-                        if (!ev.isCancelled()) {
+                        if (ev.call()) {
                             ev.getBlock().onUpdate(Level.BLOCK_UPDATE_NORMAL);
                         }
                     }

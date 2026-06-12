@@ -80,8 +80,7 @@ public interface Oxidizable {
         if (random.nextFloat() < chance) {
             Block nextBlock = getStateWithOxidizationLevel(OxidizationLevel.values()[oxiLvl + 1]);
             BlockFadeEvent event = new BlockFadeEvent(block, nextBlock);
-            block.getLevel().getServer().getPluginManager().callEvent(event);
-            if (!event.isCancelled()) {
+            if (event.call()) {
                 block.getLevel().setBlock(block, event.getNewState());
             }
         }

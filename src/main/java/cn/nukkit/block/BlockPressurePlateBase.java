@@ -106,9 +106,7 @@ public abstract class BlockPressurePlateBase extends BlockFlowable {
                 ev = new EntityInteractEvent(entity, this);
             }
 
-            this.level.getServer().getPluginManager().callEvent(ev);
-
-            if (!ev.isCancelled()) {
+            if (ev.call()) {
                 updateState(power);
             }
         }
@@ -128,10 +126,10 @@ public abstract class BlockPressurePlateBase extends BlockFlowable {
 
             if (!isPowered && wasPowered) {
                 this.playOffSound();
-                this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 15, 0));
+                new BlockRedstoneEvent(this, 15, 0).call();
             } else if (isPowered && !wasPowered) {
                 this.playOnSound();
-                this.level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, 0, 15));
+                new BlockRedstoneEvent(this, 0, 15).call();
             }
         }
 

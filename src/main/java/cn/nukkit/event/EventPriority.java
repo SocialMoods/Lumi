@@ -1,48 +1,44 @@
 package cn.nukkit.event;
 
+import lombok.Getter;
+import org.densy.eventbus.api.EventPriorities;
+
 /**
+ * Event handler execution order.
+ *
  * @author MagicDroidX
  * Nukkit Project
  */
+@Getter
 public enum EventPriority {
-
     /**
-     * Event call is of very low importance and should be ran first, to allow
-     * other plugins to further customise the outcome
+     * Highest-priority handler. Runs first.
      */
-    LOWEST(0),
+    LOWEST(EventPriorities.FIRST),
     /**
-     * Event call is of low importance
+     * Runs early, but after {@link #LOWEST}.
      */
-    LOW(1),
+    LOW(EventPriorities.EARLY),
     /**
-     * Event call is neither important nor unimportant, and may be ran
-     * normally
+     * Default priority for most handlers.
      */
-    NORMAL(2),
+    NORMAL(EventPriorities.NORMAL),
     /**
-     * Event call is of high importance
+     * Runs after {@link #NORMAL}.
      */
-    HIGH(3),
+    HIGH(EventPriorities.LATE),
     /**
-     * Event call is critical and must have the final say in what happens
-     * to the event
+     * Runs late, just before {@link #MONITOR}.
      */
-    HIGHEST(4),
+    HIGHEST(EventPriorities.LAST),
     /**
-     * Event is listened to purely for monitoring the outcome of an event.
-     * 
-     * No modifications to the event should be made under this priority
+     * Monitoring handler. Use this for observing the final event state.
      */
-    MONITOR(5);
+    MONITOR(-1000);
 
     private final int slot;
 
     EventPriority(int slot) {
         this.slot = slot;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
+    }   
 }

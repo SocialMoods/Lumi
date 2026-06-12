@@ -137,9 +137,7 @@ public abstract class BlockVinesNether extends BlockTransparentMeta {
         growing.setVineAge(Math.min(getVineAge() + 1, getMaxVineAge()));
 
         BlockGrowEvent ev = new BlockGrowEvent(this, growing);
-        Server.getInstance().getPluginManager().callEvent(ev);
-
-        if (ev.isCancelled()) {
+        if (!ev.call()) {
             return false;
         }
 
@@ -178,9 +176,7 @@ public abstract class BlockVinesNether extends BlockTransparentMeta {
             growing.z = pos.z;
 
             BlockGrowEvent ev = new BlockGrowEvent(this, growing.clone());
-            Server.getInstance().getPluginManager().callEvent(ev);
-
-            if (ev.isCancelled()) {
+            if (!ev.call()) {
                 break;
             }
 

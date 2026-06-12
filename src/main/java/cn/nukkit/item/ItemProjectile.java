@@ -53,9 +53,7 @@ public abstract class ItemProjectile extends Item {
             this.onThrown(player, projectile);
 
             ProjectileLaunchEvent event = new ProjectileLaunchEvent(projectile);
-            event.call();
-
-            if (event.isCancelled()) {
+            if (!event.call()) {
                 projectile.close();
             } else {
                 if (!player.isCreative()) {

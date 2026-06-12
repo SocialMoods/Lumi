@@ -1,7 +1,6 @@
 package cn.nukkit.event.level;
 
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.level.Level;
 
 /**
@@ -10,14 +9,8 @@ import cn.nukkit.level.Level;
  */
 public class WeatherChangeEvent extends WeatherEvent implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
-
     private final boolean to;
     private int intensity;
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
 
     @Deprecated
     public WeatherChangeEvent(Level level, boolean to) {

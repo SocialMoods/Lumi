@@ -83,8 +83,7 @@ public class BlockMagma extends BlockSolid {
             Block up = up();
             if (up instanceof BlockWater && up.getDamage() == 0) {
                 BlockFormEvent event = new BlockFormEvent(up, Block.get(BUBBLE_COLUMN, BlockBubbleColumn.DIRECTION_DOWN));
-                event.call();
-                if (!event.isCancelled()) {
+                if (event.call()) {
                     if (event.getNewState().getWaterloggingType() != WaterloggingType.NO_WATERLOGGING) {
                         this.getLevel().setBlock(up, 1, Block.get(WATER), true, false);
                     }
