@@ -29,7 +29,7 @@ public abstract class Event implements org.densy.eventbus.api.Event {
      * @return {@code true} if the event was not cancelled after handling, otherwise {@code false}
      */
     public boolean call(EventBus eventBus) {
-        eventBus.call(this);
+        eventBus.callParents(this);
         return !this.cancelled;
     }
 
