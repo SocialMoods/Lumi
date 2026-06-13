@@ -9,7 +9,7 @@ plugins {
 }
 
 val isDevelopment: Boolean = System.getenv("DEVELOPMENT")?.toBooleanStrictOrNull() ?: true
-val releaseVersion = "1.6.1"
+val releaseVersion = "1.6.2"
 
 group = "com.koshakmine"
 version = if (isDevelopment) "$releaseVersion-SNAPSHOT" else releaseVersion
