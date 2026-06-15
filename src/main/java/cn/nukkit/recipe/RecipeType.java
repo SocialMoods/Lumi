@@ -6,8 +6,6 @@ public enum RecipeType {
     SHAPED(1),
     FURNACE(2),
     FURNACE_DATA(3),
-    BLAST_FURNACE(2),
-    BLAST_FURNACE_DATA(3),
     MULTI(4),
     SHULKER_BOX(5),
     SHAPELESS_CHEMISTRY(6),
@@ -16,11 +14,13 @@ public enum RecipeType {
     /**
      * @since v582
      */
+    BLAST_FURNACE(0),
+    SMOKER(0),
+
     SMITHING_TRIM(9),
     STONECUTTER(0),
     REPAIR(-1),
     CAMPFIRE(2),
-    CAMPFIRE_DATA(3),
     BREWING(0), //custom
     CONTAINER(0); //custom
 

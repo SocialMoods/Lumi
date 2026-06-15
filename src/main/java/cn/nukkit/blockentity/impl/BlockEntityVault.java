@@ -35,11 +35,11 @@ public class BlockEntityVault extends BlockEntitySpawnable {
     public static final double DEFAULT_DEACTIVATION_RANGE = 4.5d;
     public static final double DEFAULT_CONNECTED_PARTICLES_RANGE = 4.5d;
 
-    private String lootTable = DEFAULT_LOOT_TABLE;
-    private String overrideLootTableToDisplay = "";
-    private double activationRange = DEFAULT_ACTIVATION_RANGE;
-    private double deactivationRange = DEFAULT_DEACTIVATION_RANGE;
-    private Item keyItem = Item.get(ItemNamespaceId.TRIAL_KEY);
+    private String lootTable;
+    private String overrideLootTableToDisplay;
+    private double activationRange;
+    private double deactivationRange;
+    private Item keyItem ;
 
     private LinkedHashSet<String> rewardedPlayers;
     private List<Item> itemsToEject;
@@ -57,6 +57,16 @@ public class BlockEntityVault extends BlockEntitySpawnable {
         return getDefaultCompound(this, BlockEntityID.VAULT)
                 .putCompound(TAG_CONFIG, createConfigTag())
                 .putCompound(DATA, createSharedDataTag());
+    }
+
+    @Override
+    protected void initBlockEntity() {
+        lootTable = DEFAULT_LOOT_TABLE;
+        overrideLootTableToDisplay = "";
+        activationRange = DEFAULT_ACTIVATION_RANGE;
+        deactivationRange = DEFAULT_DEACTIVATION_RANGE;
+        keyItem = Item.get(ItemNamespaceId.TRIAL_KEY);
+        super.initBlockEntity();
     }
 
     private void ensureCollections() {

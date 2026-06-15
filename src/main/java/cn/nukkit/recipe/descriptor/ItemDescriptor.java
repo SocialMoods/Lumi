@@ -2,6 +2,7 @@ package cn.nukkit.recipe.descriptor;
 
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.BinaryStream;
+import cn.nukkit.utils.RecipeUtils;
 
 public abstract class ItemDescriptor implements Cloneable {
     public abstract boolean putRecipe(BinaryStream stream, int protocol);

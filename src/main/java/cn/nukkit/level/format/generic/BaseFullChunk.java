@@ -112,6 +112,15 @@ public abstract class BaseFullChunk implements FullChunk, ChunkManager {
         if (this.heightMap != null) {
             chunk.heightMap = this.getHeightMapArray().clone();
         }
+
+        if(this.tiles != null) {
+            chunk.tiles = this.tiles.clone();
+        }
+
+        if(this.tileList != null) {
+            chunk.tileList = this.tileList.clone();
+        }
+
         return chunk;
     }
 

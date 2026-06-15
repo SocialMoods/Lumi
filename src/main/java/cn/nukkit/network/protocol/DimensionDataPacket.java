@@ -34,7 +34,6 @@ public class DimensionDataPacket extends DataPacket {
 
     private static DimensionDefinition fromDimensionEnum(DimensionEnum dimension) {
         var dimensionData = dimension.getDimensionData();
-        System.out.println(dimensionData.getDimensionId());
         return new DimensionDefinition(
                 dimension.getIdentifier(),
                 // Bedrock dimension definitions use an open upper bound.

@@ -1,7 +1,7 @@
 package cn.nukkit.recipe;
 
-import cn.nukkit.item.Item;
+import cn.nukkit.recipe.descriptor.ItemDescriptor;
 
 public interface SmeltingRecipe extends Recipe {
-    Item getInput();
+    ItemDescriptor getInput();
 }

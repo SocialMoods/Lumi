@@ -3,25 +3,27 @@ package cn.nukkit.recipe.impl;
 import cn.nukkit.item.Item;
 import cn.nukkit.recipe.RecipeType;
 import cn.nukkit.recipe.SmeltingRecipe;
+import cn.nukkit.recipe.descriptor.DefaultDescriptor;
+import cn.nukkit.recipe.descriptor.ItemDescriptor;
 
 public class CampfireRecipe implements SmeltingRecipe {
 
     private final Item output;
 
-    private Item ingredient;
+    private ItemDescriptor ingredient;
 
-    public CampfireRecipe(Item result, Item ingredient) {
+    public CampfireRecipe(Item result, ItemDescriptor ingredient) {
         this.output = result.clone();
-        this.ingredient = ingredient.clone();
+        this.ingredient = ingredient;
     }
 
     public void setInput(Item item) {
-        this.ingredient = item.clone();
+        this.ingredient = new DefaultDescriptor(item.clone());
     }
 
     @Override
-    public Item getInput() {
-        return this.ingredient.clone();
+    public ItemDescriptor getInput() {
+        return this.ingredient;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class CampfireRecipe implements SmeltingRecipe {
 
     @Override
     public RecipeType getType() {
-        return this.ingredient.hasMeta() ? RecipeType.CAMPFIRE_DATA : RecipeType.CAMPFIRE;
+        return RecipeType.CAMPFIRE;
     }
 
     @Override

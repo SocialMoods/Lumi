@@ -7,6 +7,9 @@ import cn.nukkit.recipe.descriptor.ItemDescriptor;
 import cn.nukkit.recipe.descriptor.DefaultDescriptor;
 import cn.nukkit.recipe.descriptor.ItemTagDescriptor;
 import cn.nukkit.recipe.impl.*;
+import cn.nukkit.recipe.impl.furnace.BlastFurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.FurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.SmokerRecipe;
 import cn.nukkit.registry.Registries;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -89,60 +92,6 @@ public class RecipeParser {
                     case 4, 9 -> {
                     }
 
-                    case 3 -> {
-                        final String block = recipe.get("block").getAsString();
-                        final Item input = parseItem(recipe.get("input").getAsJsonObject()).getItem();
-                        double xp = 0;
-                        if (furnaceXp.has(input.getNamespaceId() + ":" + input.getDamage())) {
-                            xp = furnaceXp.get(input.getNamespaceId() + ":" + input.getDamage()).getAsDouble();
-                        }
-                        switch (block) {
-                            case "furnace", "deprecated" -> {
-                                FurnaceRecipe furnaceRecipe = new FurnaceRecipe(
-                                        parseItem(recipe.get("output").getAsJsonObject()).getItem(),
-                                        input
-                                );
-                                furnaceRecipe.setId(UUID.randomUUID());
-                                Registries.RECIPE.registerFurnaceRecipe(furnaceRecipe, xp);
-                            }
-
-                            case "blast_furnace" -> {
-                                BlastFurnaceRecipe blastFurnaceRecipe = new BlastFurnaceRecipe(
-                                        parseItem(recipe.get("output").getAsJsonObject()).getItem(),
-                                        input
-                                );
-                                blastFurnaceRecipe.setId(UUID.randomUUID());
-                                Registries.RECIPE.registerBlastFurnaceRecipe(blastFurnaceRecipe, xp);
-                            }
-
-                            case "campfire" -> {
-                                Registries.RECIPE.registerCampfireRecipe(new CampfireRecipe(
-                                        parseItem(recipe.get("output").getAsJsonObject()).getItem(),
-                                        input
-                                ), xp);
-                            }
-
-                            case "stonecutter" -> {
-                                final String id = recipe.get("id").getAsString();
-                                final Collection<Item> outputs = new ArrayList<>();
-
-                                recipe.getAsJsonArray("output").getAsJsonArray().forEach(item -> {
-                                    outputs.add(parseItem(item.getAsJsonObject()).getItem());
-                                });
-
-                                for (Item output : outputs) {
-                                    Registries.RECIPE.addStonecutterRecipe(new StonecutterRecipe(id, recipe.get("priority").getAsInt(), output, List.of(new DefaultDescriptor(input))));
-                                }
-                            }
-
-                            case "smoker", "soul_campfire" -> {
-                            }
-
-                            default -> log.warn("Not support block type: {}", block);
-                        }
-
-                    }
-
                     case 1 -> {
                         final String block = recipe.get("block").getAsString();
 
@@ -200,6 +149,8 @@ public class RecipeParser {
                         final String block = recipe.get("block").getAsString();
 
                         switch (block) {
+                            case "soul_campfire" -> {
+                            }
                             case "crafting_table", "deprecated" -> {
                                 final Collection<ItemDescriptor> inputs = new ArrayList<>();
 
@@ -208,7 +159,7 @@ public class RecipeParser {
                                 });
 
                                 String id = recipe.get("id").getAsString();
-                                if(!id.startsWith("paper_sulphur")) {
+                                if (!id.startsWith("paper_sulphur")) {
                                     Registries.RECIPE.registerShapelessRecipe(new ShapelessRecipe(
                                             id,
                                             recipe.get("priority").getAsInt(),
@@ -241,6 +192,58 @@ public class RecipeParser {
                             case "cartography_table" -> {
                             }
 
+                            case "smoker" -> {
+                                final ItemDescriptor descriptor = parseInput(recipe.getAsJsonArray("input").getAsJsonArray().get(0).getAsJsonObject());
+
+                                double xp = 0;
+                                if (descriptor instanceof DefaultDescriptor defaultDescriptor && furnaceXp.has(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage())) {
+                                    xp = furnaceXp.get(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage()).getAsDouble();
+                                }
+
+                                addSmoker(descriptor, parseItem(recipe.getAsJsonArray("output").getAsJsonArray().get(0).getAsJsonObject()).getItem(), xp);
+                            }
+
+                            case "campfire" -> {
+                                final ItemDescriptor descriptor = parseInput(recipe.getAsJsonArray("input").getAsJsonArray().get(0).getAsJsonObject());
+
+                                double xp = 0;
+                                if (descriptor instanceof DefaultDescriptor defaultDescriptor && furnaceXp.has(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage())) {
+                                    xp = furnaceXp.get(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage()).getAsDouble();
+                                }
+
+                                addCampfire(descriptor, parseItem(recipe.getAsJsonArray("output").getAsJsonArray().get(0).getAsJsonObject()).getItem(), xp);
+                            }
+
+                            case "blast_furnace" -> {
+                                final Item item = parseItem(recipe.getAsJsonArray("input").getAsJsonArray().get(0).getAsJsonObject()).getItem();
+
+                                double xp = 0;
+                                if (furnaceXp.has(item.getNamespaceId() + ":" + item.getDamage())) {
+                                    xp = furnaceXp.get(item.getNamespaceId() + ":" + item.getDamage()).getAsDouble();
+                                }
+
+                                addBlastFurnace(
+                                        new DefaultDescriptor(item),
+                                        parseItem(recipe.getAsJsonArray("output").getAsJsonArray().get(0).getAsJsonObject()).getItem(),
+                                        xp
+                                );
+                            }
+
+                            case "furnace" -> {
+                                final ItemDescriptor descriptor = parseInput(recipe.getAsJsonArray("input").getAsJsonArray().get(0).getAsJsonObject());
+
+                                double xp = 0;
+                                if (descriptor instanceof DefaultDescriptor defaultDescriptor && furnaceXp.has(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage())) {
+                                    xp = furnaceXp.get(defaultDescriptor.getItem().getNamespaceId() + ":" + defaultDescriptor.getItem().getDamage()).getAsDouble();
+                                }
+
+                                addFurnace(
+                                        descriptor,
+                                        parseItem(recipe.getAsJsonArray("output").getAsJsonArray().get(0).getAsJsonObject()).getItem(),
+                                        xp
+                                );
+                            }
+
                             default -> log.warn("Not support block type: {}", block);
                         }
                     }
@@ -249,9 +252,35 @@ public class RecipeParser {
                 }
             } catch (Exception e) {
                 if (!(e instanceof ComplexAliasException)) {
+                    e.printStackTrace();
                     log.error("Failed to load recipe {}, exception {}", recipe.get("id").toString(), e);
                 }
             }
         });
+    }
+
+    private static void addFurnace(ItemDescriptor input, Item output, double xp) {
+        FurnaceRecipe furnaceRecipe = new FurnaceRecipe(output, input);
+        furnaceRecipe.setId(UUID.randomUUID());
+        Registries.RECIPE.registerFurnaceRecipe(furnaceRecipe, xp);
+    }
+
+    private static void addBlastFurnace(ItemDescriptor input, Item output, double xp) {
+        BlastFurnaceRecipe blastFurnaceRecipe = new BlastFurnaceRecipe(output, input);
+        blastFurnaceRecipe.setId(UUID.randomUUID());
+        Registries.RECIPE.registerBlastFurnaceRecipe(blastFurnaceRecipe, xp);
+    }
+
+    private static void addSmoker(ItemDescriptor input, Item output, double xp) {
+        SmokerRecipe smokerRecipe = new SmokerRecipe(output, input);
+        smokerRecipe.setId(UUID.randomUUID());
+        Registries.RECIPE.registerSmokerRecipe(smokerRecipe, xp);
+    }
+
+    private static void addCampfire(ItemDescriptor input, Item output, double xp) {
+        Registries.RECIPE.registerCampfireRecipe(new CampfireRecipe(
+                output,
+                input
+        ), xp);
     }
 }
