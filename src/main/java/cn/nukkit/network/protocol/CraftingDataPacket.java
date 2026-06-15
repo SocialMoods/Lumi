@@ -10,6 +10,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.material.tags.ItemTags;
 import cn.nukkit.recipe.*;
 import cn.nukkit.recipe.impl.*;
+import cn.nukkit.recipe.impl.furnace.BlastFurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.FurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.SmokerRecipe;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -55,8 +58,14 @@ public class CraftingDataPacket extends DataPacket {
         }
     }
 
-    public void addFurnaceRecipe(FurnaceRecipe... recipe) {
-        Collections.addAll(entries, recipe);
+    public void addFurnaceRecipe(FurnaceRecipe... recipes) {
+        for (FurnaceRecipe recipe : recipes) {
+            if (protocol >= ProtocolInfo.v1_26_20_26) {
+                entries.add(recipe);
+            } else if (recipe.getType() == RecipeType.FURNACE && recipe.getInput() instanceof DefaultDescriptor) {
+                entries.add(recipe);
+            }
+        }
     }
 
     public void addBrewingRecipe(BrewingRecipe... recipe) {
@@ -180,19 +189,23 @@ public class CraftingDataPacket extends DataPacket {
 
                     this.putUnsignedVarInt(shaped.getNetworkId());
                     break;
+                case SMOKER:
+                case BLAST_FURNACE:
                 case FURNACE:
                 case FURNACE_DATA:
                     FurnaceRecipe furnace = (FurnaceRecipe) recipe;
                     if (protocol >= ProtocolInfo.v1_26_20_26) {
                         this.putString(furnace.getRecipeId());
                         this.putUnsignedVarInt(1); // Ingredients length
-                        new DefaultDescriptor(furnace.getInput()).putRecipe(this, protocol);
+                        furnace.getInput().putRecipe(this, protocol);
                         this.putUnsignedVarInt(1); // Results length
                         this.putSlot(protocol, furnace.getResult(), true);
                         this.putUUID(furnace.getId());
                         String craftingTag;
                         if (recipe instanceof BlastFurnaceRecipe) {
                             craftingTag = CRAFTING_TAG_BLAST_FURNACE;
+                        } else if(recipe instanceof SmokerRecipe) {
+                            craftingTag = CRAFTING_TAG_SMOKER;
                         } else {
                             craftingTag = CRAFTING_TAG_FURNACE;
                         }
@@ -201,20 +214,23 @@ public class CraftingDataPacket extends DataPacket {
                         this.putByte((byte) RecipeUnlockingRequirement.UnlockingContext.ALWAYS_UNLOCKED.ordinal());
                         this.putUnsignedVarInt(furnace.getNetworkId());
                     } else {
-                        Item input = furnace.getInput();
+                        Item input = ((DefaultDescriptor) furnace.getInput()).getItem();
+
                         int runtimeId = 0;
                         int damage = 0;
                         if (!input.hasMeta()) {
                             try {
                                 runtimeId = RuntimeItems.getMapping(protocol).toRuntime(input.getId(), 0).getRuntimeId();
                                 damage = 0x7fff;
-                            } catch (IllegalArgumentException ignored) {}
+                            } catch (IllegalArgumentException ignored) {
+                            }
                         } else {
                             try {
                                 RuntimeItemMapping.RuntimeEntry runtimeEntry = RuntimeItems.getMapping(protocol).toRuntime(input.getId(), input.getDamage());
                                 runtimeId = runtimeEntry.getRuntimeId();
                                 damage = runtimeEntry.isHasDamage() ? 0 : input.getDamage();
-                            } catch (IllegalArgumentException ignored) {}
+                            } catch (IllegalArgumentException ignored) {
+                            }
                         }
                         this.putVarInt(runtimeId);
                         if (recipe.getType() == RecipeType.FURNACE_DATA) {
