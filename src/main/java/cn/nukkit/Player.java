@@ -2264,7 +2264,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     @Override
     public boolean onUpdate(int currentTick) {
         if (!this.loggedIn) {
-            return false;
+            return true;
         }
 
         int tickDiff = currentTick - this.lastUpdate;
