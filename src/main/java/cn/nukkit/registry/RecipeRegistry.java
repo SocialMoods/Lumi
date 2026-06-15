@@ -3,6 +3,8 @@ package cn.nukkit.registry;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.material.ItemType;
+import cn.nukkit.item.material.tags.ItemTag;
 import cn.nukkit.network.protocol.BatchPacket;
 import cn.nukkit.network.protocol.CraftingDataPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
@@ -10,7 +12,11 @@ import cn.nukkit.recipe.CraftingRecipe;
 import cn.nukkit.recipe.descriptor.DefaultDescriptor;
 import cn.nukkit.recipe.descriptor.ItemDescriptor;
 import cn.nukkit.recipe.Recipe;
+import cn.nukkit.recipe.descriptor.ItemTagDescriptor;
 import cn.nukkit.recipe.impl.*;
+import cn.nukkit.recipe.impl.furnace.BlastFurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.FurnaceRecipe;
+import cn.nukkit.recipe.impl.furnace.SmokerRecipe;
 import cn.nukkit.recipe.impl.special.*;
 import cn.nukkit.recipe.parser.RecipeParser;
 import cn.nukkit.utils.RecipeUtils;
@@ -43,6 +49,7 @@ public class RecipeRegistry implements IRegistry<Integer, Recipe, Recipe> {
     private final Map<String, BrewingRecipe> BREWING = new HashMap<>();
     private final Map<String, ContainerRecipe> CONTAINER = new HashMap<>();
     private final Map<String, CampfireRecipe> CAMPFIRE = new HashMap<>();
+    private final Map<String, SmokerRecipe> SMOKER = new HashMap<>();
     private final Map<UUID, SmithingRecipe> SMITHING = new Object2ObjectOpenHashMap<>();
     private final Map<String, StonecutterRecipe> STONECUTTER = new HashMap<>();
     private final Object2DoubleOpenHashMap<Recipe> FURNACE_XP = new Object2DoubleOpenHashMap<>();
@@ -132,13 +139,40 @@ public class RecipeRegistry implements IRegistry<Integer, Recipe, Recipe> {
         buildPackets();
     }
 
+
+    private List<String> getHash(ItemDescriptor descriptor) {
+        if(descriptor instanceof DefaultDescriptor defaultDescriptor) {
+            return List.of(RecipeUtils.getItemHash(defaultDescriptor.getItem()));
+        }
+
+        final List<String> list = new ArrayList<>();
+        final ItemTag tag = ((ItemTagDescriptor) descriptor).getItemTag();
+
+        for(ItemType type : tag.getItemTypes()) {
+            list.add(RecipeUtils.getItemHash(type.createItem()));
+        }
+
+        return list;
+    }
+
     public void registerFurnaceRecipe(FurnaceRecipe recipe, double xp) {
-        FURNACE.put(RecipeUtils.getItemHash(recipe.getInput()), recipe);
+        for(String hash : getHash(recipe.getInput())) {
+            FURNACE.put(hash, recipe);
+        }
         FURNACE_XP.put(recipe, xp);
     }
 
     public void registerBlastFurnaceRecipe(BlastFurnaceRecipe recipe, double xp) {
-        BLAST_FURNACE.put(RecipeUtils.getItemHash(recipe.getInput()), recipe);
+        for(String hash : getHash(recipe.getInput())) {
+            BLAST_FURNACE.put(hash, recipe);
+        }
+        FURNACE_XP.put(recipe, xp);
+    }
+
+    public void registerSmokerRecipe(SmokerRecipe recipe, double xp) {
+        for(String hash : getHash(recipe.getInput())) {
+            SMOKER.put(hash, recipe);
+        }
         FURNACE_XP.put(recipe, xp);
     }
 
@@ -187,8 +221,9 @@ public class RecipeRegistry implements IRegistry<Integer, Recipe, Recipe> {
     }
 
     public void registerCampfireRecipe(CampfireRecipe recipe, double xp) {
-        Item input = recipe.getInput();
-        this.CAMPFIRE.put(RecipeUtils.getItemHash(input), recipe);
+        for(String hash : getHash(recipe.getInput())) {
+            CAMPFIRE.put(hash, recipe);
+        }
         FURNACE_XP.put(recipe, xp);
     }
 
@@ -200,6 +235,12 @@ public class RecipeRegistry implements IRegistry<Integer, Recipe, Recipe> {
     public FurnaceRecipe matchBlastFurnaceRecipe(Item input) {
         BlastFurnaceRecipe recipe = BLAST_FURNACE.get(RecipeUtils.getItemHash(input));
         if (recipe == null) recipe = BLAST_FURNACE.get(RecipeUtils.getItemHash(input, 0));
+        return recipe;
+    }
+
+    public SmokerRecipe matchSmokerRecipe(Item input) {
+        SmokerRecipe recipe = SMOKER.get(RecipeUtils.getItemHash(input));
+        if (recipe == null) recipe = SMOKER.get(RecipeUtils.getItemHash(input, 0));
         return recipe;
     }
 
@@ -326,6 +367,14 @@ public class RecipeRegistry implements IRegistry<Integer, Recipe, Recipe> {
             pk.protocol = protocol;
 
             for (FurnaceRecipe recipe : FURNACE.values()) {
+                pk.addFurnaceRecipe(recipe);
+            }
+
+            for (FurnaceRecipe recipe : BLAST_FURNACE.values()) {
+                pk.addFurnaceRecipe(recipe);
+            }
+
+            for (FurnaceRecipe recipe : SMOKER.values()) {
                 pk.addFurnaceRecipe(recipe);
             }
 

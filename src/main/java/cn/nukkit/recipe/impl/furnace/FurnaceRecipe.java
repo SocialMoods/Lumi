@@ -1,8 +1,10 @@
-package cn.nukkit.recipe.impl;
+package cn.nukkit.recipe.impl.furnace;
 
 import cn.nukkit.item.Item;
 import cn.nukkit.recipe.RecipeType;
 import cn.nukkit.recipe.SmeltingRecipe;
+import cn.nukkit.recipe.descriptor.DefaultDescriptor;
+import cn.nukkit.recipe.descriptor.ItemDescriptor;
 import cn.nukkit.registry.RecipeRegistry;
 import lombok.Getter;
 
@@ -20,16 +22,16 @@ public class FurnaceRecipe implements SmeltingRecipe {
 
     protected final Item output;
 
-    protected Item ingredient;
+    protected ItemDescriptor ingredient;
 
     @Getter
     private final int networkId;
 
-    public FurnaceRecipe(Item result, Item ingredient) {
+    public FurnaceRecipe(Item result, ItemDescriptor ingredient) {
         this(null, result, ingredient);
     }
 
-    public FurnaceRecipe(String recipeId, Item result, Item ingredient) {
+    public FurnaceRecipe(String recipeId, Item result, ItemDescriptor ingredient) {
         this.output = result.clone();
         this.ingredient = ingredient;
         this.recipeId = recipeId;
@@ -45,8 +47,8 @@ public class FurnaceRecipe implements SmeltingRecipe {
     }
 
     @Override
-    public Item getInput() {
-        return this.ingredient.clone();
+    public ItemDescriptor getInput() {
+        return this.ingredient;
     }
 
     @Override
@@ -56,11 +58,14 @@ public class FurnaceRecipe implements SmeltingRecipe {
 
     @Override
     public RecipeType getType() {
-        return this.ingredient.hasMeta() ? RecipeType.FURNACE_DATA : RecipeType.FURNACE;
+        if(ingredient instanceof DefaultDescriptor defaultDescriptor) {
+            return defaultDescriptor.getItem().hasMeta() ? RecipeType.FURNACE_DATA : RecipeType.FURNACE;
+        }
+        return RecipeType.FURNACE;
     }
 
-    public void setInput(Item item) {
-        this.ingredient = item.clone();
+    public void setInput(ItemDescriptor item) {
+        this.ingredient = item;
     }
 
     public void setId(UUID id) {
