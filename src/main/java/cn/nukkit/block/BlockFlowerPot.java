@@ -81,9 +81,7 @@ public class BlockFlowerPot extends BlockFlowable implements BlockEntityHolder<B
                 .putString("id", BlockEntity.FLOWER_POT)
                 .putInt("x", (int) this.x)
                 .putInt("y", (int) this.y)
-                .putInt("z", (int) this.z)
-                .putShort("item", 0)
-                .putInt("data", 0);
+                .putInt("z", (int) this.z);
         if (item.hasCustomBlockData()) {
             for (Tag aTag : item.getCustomBlockData().getAllTags()) {
                 nbt.put(aTag.getName(), aTag);
