@@ -151,7 +151,9 @@ public class RecipeParser {
                         switch (block) {
                             case "soul_campfire" -> {
                             }
-                            case "crafting_table", "deprecated" -> {
+                            case  "deprecated" -> {
+                            }
+                            case "crafting_table" -> {
                                 final Collection<ItemDescriptor> inputs = new ArrayList<>();
 
                                 recipe.getAsJsonArray("input").getAsJsonArray().forEach(item -> {
