@@ -963,7 +963,6 @@ public class BinaryStream {
         }
         int count = this.getLShort();
         int damage = (int) this.getUnsignedVarInt();
-        System.out.println(count + " " + damage);
 
         RuntimeItemMapping mapping = RuntimeItems.getMapping(protocolId);
         LegacyEntry legacyEntry = null;

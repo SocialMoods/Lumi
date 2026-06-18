@@ -169,7 +169,7 @@ public class InventoryTransactionPacket extends DataPacket {
                 UseItemOnEntityData useItemOnEntityData = (UseItemOnEntityData) this.transactionData;
 
                 this.putEntityRuntimeId(useItemOnEntityData.entityRuntimeId);
-                this.putUnsignedVarInt(useItemOnEntityData.actionType);
+                this.putTransactionActionType(useItemOnEntityData.actionType);
                 this.putVarInt(useItemOnEntityData.hotbarSlot);
                 if (this.protocol >= ProtocolInfo.v1_26_30) {
                     this.putNetworkItemStackDescriptor(protocol, useItemOnEntityData.itemInHand);
@@ -182,7 +182,7 @@ public class InventoryTransactionPacket extends DataPacket {
             case TYPE_RELEASE_ITEM:
                 ReleaseItemData releaseItemData = (ReleaseItemData) this.transactionData;
 
-                this.putUnsignedVarInt(releaseItemData.actionType);
+                this.putTransactionActionType(releaseItemData.actionType);
                 this.putVarInt(releaseItemData.hotbarSlot);
                 if (this.protocol >= ProtocolInfo.v1_26_30) {
                     this.putNetworkItemStackDescriptor(protocol, releaseItemData.itemInHand);
@@ -237,7 +237,7 @@ public class InventoryTransactionPacket extends DataPacket {
                 itemData.blockPos = this.getBlockVector3();
                 itemData.face = this.protocol >= ProtocolInfo.v1_26_30 ? BlockFace.fromIndex(this.getByte() & 0xff) : this.getBlockFace();
                 itemData.hotbarSlot = this.getVarInt();
-                itemData.itemInHand = this.getNetworkItemStackDescriptor(this.protocol);
+                itemData.itemInHand = this.protocol >= ProtocolInfo.v1_26_30 ? this.getNetworkItemStackDescriptor(this.protocol) : this.getSlot(this.protocol);
                 itemData.playerPos = this.getVector3f().asVector3();
                 itemData.clickPos = this.getVector3f();
                 itemData.blockRuntimeId = (int) this.getUnsignedVarInt();
@@ -256,7 +256,7 @@ public class InventoryTransactionPacket extends DataPacket {
                 useItemOnEntityData.entityRuntimeId = this.getEntityRuntimeId();
                 useItemOnEntityData.actionType = this.getTransactionActionType();
                 useItemOnEntityData.hotbarSlot = this.getVarInt();
-                useItemOnEntityData.itemInHand = this.getNetworkItemStackDescriptor(this.protocol);
+                useItemOnEntityData.itemInHand = this.protocol >= ProtocolInfo.v1_26_30 ? this.getNetworkItemStackDescriptor(this.protocol) : this.getSlot(this.protocol);
                 useItemOnEntityData.playerPos = this.getVector3f().asVector3();
                 useItemOnEntityData.clickPos = this.getVector3f().asVector3();
 
@@ -267,7 +267,7 @@ public class InventoryTransactionPacket extends DataPacket {
 
                 releaseItemData.actionType = this.getTransactionActionType();
                 releaseItemData.hotbarSlot = getVarInt();
-                releaseItemData.itemInHand = this.getNetworkItemStackDescriptor(this.protocol);
+                releaseItemData.itemInHand = this.protocol >= ProtocolInfo.v1_26_30 ? this.getNetworkItemStackDescriptor(this.protocol) : this.getSlot(this.protocol);
                 releaseItemData.headRot = this.getVector3f().asVector3();
 
                 this.transactionData = releaseItemData;

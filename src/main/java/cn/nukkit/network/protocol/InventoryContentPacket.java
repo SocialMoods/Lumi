@@ -67,13 +67,19 @@ public class InventoryContentPacket extends DataPacket {
         this.putUnsignedVarInt(this.inventoryId);
         this.putUnsignedVarInt(this.slots.length);
         for (Item slot : this.slots) {
-            this.putNetworkItemStackDescriptor(protocol, slot);
+            if (this.protocol >= ProtocolInfo.v1_26_30) {
+                this.putNetworkItemStackDescriptor(protocol, slot);
+            } else {
+                this.putSlot(protocol, slot);
+            }
         }
         if (this.protocol >= ProtocolInfo.v1_21_30) {
             this.putByte((byte) this.containerNameData.getContainer().getId());
             this.putOptionalNull(this.containerNameData.getDynamicId(), this::putLInt);
-            if (this.protocol >= ProtocolInfo.v1_21_40) {
-                this.putNetworkItemStackDescriptor(this.protocol, this.storageItem);
+            if (this.protocol >= ProtocolInfo.v1_26_30) {
+                this.putNetworkItemStackDescriptor(protocol, this.storageItem);
+            } else if (this.protocol >= ProtocolInfo.v1_21_40) {
+                this.putSlot(protocol, this.storageItem);
             } else {
                 this.putUnsignedVarInt(this.dynamicContainerSize);
             }
