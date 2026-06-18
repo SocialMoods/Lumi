@@ -958,9 +958,6 @@ public class BinaryStream {
         Integer id = null;
         String stringId = null;
         short runtimeId = (short) this.getLShort(); // signed short
-        if (runtimeId == 0) {
-            return Item.get(Item.AIR, 0, 0);
-        }
         int count = this.getLShort();
         int damage = (int) this.getUnsignedVarInt();
 
@@ -1073,6 +1070,10 @@ public class BinaryStream {
             } finally {
                 buf.release();
             }
+        }
+
+        if (runtimeId == 0) {
+            return Item.AIR_ITEM.clone();
         }
 
         Item item;
