@@ -28,12 +28,12 @@ public class MobArmorEquipmentPacket extends DataPacket {
     public void decode() {
         this.eid = this.getEntityRuntimeId();
         this.slots = new Item[4];
-        this.slots[0] = this.getSlot(this.protocol);
-        this.slots[1] = this.getSlot(this.protocol);
-        this.slots[2] = this.getSlot(this.protocol);
-        this.slots[3] = this.getSlot(this.protocol);
+        this.slots[0] = this.getNetworkItemStackDescriptor(this.protocol);
+        this.slots[1] = this.getNetworkItemStackDescriptor(this.protocol);
+        this.slots[2] = this.getNetworkItemStackDescriptor(this.protocol);
+        this.slots[3] = this.getNetworkItemStackDescriptor(this.protocol);
         if (this.protocol >= ProtocolInfo.v1_21_20) {
-            this.body = this.getSlot(this.protocol);
+            this.body = this.getNetworkItemStackDescriptor(this.protocol);
         }
     }
 
@@ -41,12 +41,12 @@ public class MobArmorEquipmentPacket extends DataPacket {
     public void encode() {
         this.reset();
         this.putEntityRuntimeId(this.eid);
-        this.putSlot(protocol, this.slots[0]);
-        this.putSlot(protocol, this.slots[1]);
-        this.putSlot(protocol, this.slots[2]);
-        this.putSlot(protocol, this.slots[3]);
+        this.putNetworkItemStackDescriptor(protocol, this.slots[0]);
+        this.putNetworkItemStackDescriptor(protocol, this.slots[1]);
+        this.putNetworkItemStackDescriptor(protocol, this.slots[2]);
+        this.putNetworkItemStackDescriptor(protocol, this.slots[3]);
         if (this.protocol >= ProtocolInfo.v1_21_20) {
-            this.putSlot(protocol, this.body);
+            this.putNetworkItemStackDescriptor(protocol, this.body);
         }
     }
 }

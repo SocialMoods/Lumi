@@ -41,11 +41,12 @@ public class InventoryContentPacket extends DataPacket {
     /**
      * @since v748
      */
-    public Item storageItem;
+    public Item storageItem = Item.AIR_ITEM.clone();
 
     @Override
     public DataPacket clean() {
         this.slots = Item.EMPTY_ARRAY;
+        this.storageItem = Item.AIR_ITEM.clone();
         return super.clean();
     }
 
@@ -66,13 +67,13 @@ public class InventoryContentPacket extends DataPacket {
         this.putUnsignedVarInt(this.inventoryId);
         this.putUnsignedVarInt(this.slots.length);
         for (Item slot : this.slots) {
-            this.putSlot(protocol, slot);
+            this.putNetworkItemStackDescriptor(protocol, slot);
         }
         if (this.protocol >= ProtocolInfo.v1_21_30) {
             this.putByte((byte) this.containerNameData.getContainer().getId());
             this.putOptionalNull(this.containerNameData.getDynamicId(), this::putLInt);
             if (this.protocol >= ProtocolInfo.v1_21_40) {
-                this.putSlot(this.protocol, this.storageItem);
+                this.putNetworkItemStackDescriptor(this.protocol, this.storageItem);
             } else {
                 this.putUnsignedVarInt(this.dynamicContainerSize);
             }

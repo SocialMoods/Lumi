@@ -277,6 +277,10 @@ public class BinaryStream {
         this.put(new byte[]{b});
     }
 
+    public void putByte(int b) {
+        putByte((byte) b);
+    }
+
     /**
      * Reads a list of Attributes from the stream.
      *
@@ -951,35 +955,45 @@ public class BinaryStream {
             return this.getSlot(protocolId);
         }
 
+        Integer id = null;
+        String stringId = null;
         short runtimeId = (short) this.getLShort(); // signed short
         if (runtimeId == 0) {
             return Item.get(Item.AIR, 0, 0);
         }
         int count = this.getLShort();
         int damage = (int) this.getUnsignedVarInt();
+        System.out.println(count + " " + damage);
 
         RuntimeItemMapping mapping = RuntimeItems.getMapping(protocolId);
-
-        Integer id = null;
-        String stringId = null;
         LegacyEntry legacyEntry = null;
-        try {
-            legacyEntry = mapping.fromRuntime(runtimeId);
-            id = legacyEntry.getLegacyId();
-            if (legacyEntry.isHasDamage()) {
-                damage = legacyEntry.getDamage();
-            }
-        } catch (IllegalArgumentException e) {
 
-        }
+        if (runtimeId != 0) {
+            try {
+                stringId = mapping.getNamespacedIdByNetworkId(runtimeId);
+                if(stringId == null) {
+                    legacyEntry = mapping.fromRuntime(runtimeId);
+                    id = legacyEntry.getLegacyId();
+                    if (legacyEntry.isHasDamage()) {
+                        damage = legacyEntry.getDamage();
+                    }
+                }
+            } catch (IllegalArgumentException e) {
 
-        if (id == null || !Utils.hasItemOrBlock(id)) {
-            stringId = mapping.getNamespacedIdByNetworkId(runtimeId);
-            if (stringId == null) {
-                throw new IllegalArgumentException("Unknown item: runtimeID=" + runtimeId + " protocol=" + protocolId);
             }
-            stringId = stringId + ":" + damage;
-            id = null;
+
+            if (id == null || !Utils.hasItemOrBlock(id)) {
+                if (stringId == null) {
+                    stringId = mapping.getNamespacedIdByNetworkId(runtimeId);
+                }
+                if (stringId == null) {
+                    throw new IllegalArgumentException("Unknown item: runtimeID=" + runtimeId + " protocol=" + protocolId);
+                }
+                stringId = stringId + ":" + damage;
+                id = null;
+            }
+        } else {
+            id = 0;
         }
 
         if (this.getBoolean()) { // hasNetId
