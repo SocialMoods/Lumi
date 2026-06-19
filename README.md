@@ -19,7 +19,7 @@ Lumi is a server software based on [Nukkit-MOT](https://github.com/MemoriesOfTim
 ### How to install?
 1. Install java 21 or higher (recommended is Azul Zulu 21)
 2. Download the .jar file from [Lumi Downloads](https://dl.lumi.su)
-3. Write a command to run: `java -jar Lumi-1.6.3.jar`
+3. Write a command to run: `java -jar Lumi-1.6.4.jar`
 
 ### Plugin Development
 To develop your own plugin we recommend to check this [template](https://github.com/LuminiaDev/ExamplePlugin)
@@ -43,7 +43,7 @@ Adding dependency:
 <dependency>
     <groupId>com.koshakmine</groupId>
     <artifactId>Lumi</artifactId>
-    <version>1.6.3-SNAPSHOT</version>
+    <version>1.6.4-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -58,7 +58,7 @@ maven {
 
 Adding dependency:
 ```kts
-compileOnly("com.koshakmine:Lumi:1.6.3-SNAPSHOT")
+compileOnly("com.koshakmine:Lumi:1.6.4-SNAPSHOT")
 ```
 
 ## Credits
