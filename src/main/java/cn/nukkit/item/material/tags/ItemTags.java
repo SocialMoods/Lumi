@@ -122,6 +122,30 @@ public final class ItemTags {
 
     public static final ItemTag STONE_TOOL_MATERIALS = register("minecraft:stone_tool_materials", new LazyItemTag("minecraft:stone_tool_materials"));
 
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_BOUNCY = register("minecraft:sulfur_cube_archetype_bouncy", new LazyItemTag("minecraft:sulfur_cube_archetype_bouncy"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_EXPLOSIVE = register("minecraft:sulfur_cube_archetype_explosive", new LazyItemTag("minecraft:sulfur_cube_archetype_explosive"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_FAST_FLAT = register("minecraft:sulfur_cube_archetype_fast_flat", new LazyItemTag("minecraft:sulfur_cube_archetype_fast_flat"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_FAST_SLIDING = register("minecraft:sulfur_cube_archetype_fast_sliding", new LazyItemTag("minecraft:sulfur_cube_archetype_fast_sliding"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_HIGH_RESISTANCE = register("minecraft:sulfur_cube_archetype_high_resistance", new LazyItemTag("minecraft:sulfur_cube_archetype_high_resistance"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_HOT = register("minecraft:sulfur_cube_archetype_hot", new LazyItemTag("minecraft:sulfur_cube_archetype_hot"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_LIGHT = register("minecraft:sulfur_cube_archetype_light", new LazyItemTag("minecraft:sulfur_cube_archetype_light"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_REGULAR = register("minecraft:sulfur_cube_archetype_regular", new LazyItemTag("minecraft:sulfur_cube_archetype_regular"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY = register("minecraft:sulfur_cube_archetype_slow_bouncy", new LazyItemTag("minecraft:sulfur_cube_archetype_slow_bouncy"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_SLOW_FLAT = register("minecraft:sulfur_cube_archetype_slow_flat", new LazyItemTag("minecraft:sulfur_cube_archetype_slow_flat"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_SLOW_SLIDING = register("minecraft:sulfur_cube_archetype_slow_sliding", new LazyItemTag("minecraft:sulfur_cube_archetype_slow_sliding"));
+
+    public static final ItemTag SULFUR_CUBE_ARCHETYPE_STICKY = register("minecraft:sulfur_cube_archetype_sticky", new LazyItemTag("minecraft:sulfur_cube_archetype_sticky"));
+
     public static final ItemTag TRANSFORM_MATERIALS = register("minecraft:transform_materials", new LazyItemTag("minecraft:transform_materials"));
 
     public static final ItemTag TRANSFORM_TEMPLATES = register("minecraft:transform_templates", new LazyItemTag("minecraft:transform_templates"));

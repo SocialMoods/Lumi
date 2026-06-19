@@ -44,9 +44,9 @@ public class BlockEntityVault extends BlockEntitySpawnable {
     private LinkedHashSet<String> rewardedPlayers;
     private List<Item> itemsToEject;
 
-    private Item displayItem = Item.get(ItemNamespaceId.AIR);
+    private Item displayItem;
     private LinkedHashSet<String> connectedPlayers;
-    private double connectedParticlesRange = DEFAULT_CONNECTED_PARTICLES_RANGE;
+    private double connectedParticlesRange;
 
     public BlockEntityVault(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -66,6 +66,8 @@ public class BlockEntityVault extends BlockEntitySpawnable {
         activationRange = DEFAULT_ACTIVATION_RANGE;
         deactivationRange = DEFAULT_DEACTIVATION_RANGE;
         keyItem = Item.get(ItemNamespaceId.TRIAL_KEY);
+        displayItem = Item.get(ItemNamespaceId.AIR);
+        connectedParticlesRange = DEFAULT_CONNECTED_PARTICLES_RANGE;
         super.initBlockEntity();
     }
 

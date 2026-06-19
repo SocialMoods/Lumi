@@ -539,7 +539,7 @@ public class Network {
                 .registerPacket(ProtocolInfo.CLIENTBOUND_TEXTURE_SHIFT_PACKET, ClientboundTextureShiftPacket.class, ClientboundTextureShiftPacket::new)
                 .registerPacket(ProtocolInfo.VOXEL_SHAPES_PACKET, VoxelShapesPacket.class, VoxelShapesPacket::new)
                 .registerPacket(ProtocolInfo.CAMERA_SPLINE_PACKET, CameraSplinePacket.class, CameraSplinePacket::new)
-                .registerPacket(ProtocolInfo.CAMERA_AIM_ASSIST_ACTOR_PRIORITY_PACKET, CameraAimAssistActorPriorityPacket.class, CameraSplinePacket::new)
+                .registerPacket(ProtocolInfo.CAMERA_AIM_ASSIST_ACTOR_PRIORITY_PACKET, CameraAimAssistActorPriorityPacket.class, CameraAimAssistActorPriorityPacket::new)
                 // v944 packets
                 .registerPacket(ProtocolInfo.RESOURCE_PACKS_READY_FOR_VALIDATION_PACKET, ResourcePacksReadyForValidationPacket.class, ResourcePacksReadyForValidationPacket::new)
                 .registerPacket(ProtocolInfo.LOCATOR_BAR_PACKET, LocatorBarPacket.class, LocatorBarPacket::new)
@@ -549,7 +549,11 @@ public class Network {
                 .registerPacket(ProtocolInfo.CLIENTBOUND_ATTRIBUTE_LAYER_SYNC_PACKET, ClientboundAttributeLayerSyncPacket.class, ClientboundAttributeLayerSyncPacket::new)
                 // v975 packets
                 .registerPacket(ProtocolInfo.SERVER_STORE_INFO_PACKET, ServerStoreInfoPacket.class, ServerStoreInfoPacket::new)
-                .registerPacket(ProtocolInfo.SERVER_PRESENCE_INFO_PACKET, ServerPresenceInfoPacket.class, ServerStoreInfoPacket::new)
+                .registerPacket(ProtocolInfo.SERVER_PRESENCE_INFO_PACKET, ServerPresenceInfoPacket.class, ServerPresenceInfoPacket::new)
+                // v1001 packets
+                .registerPacket(ProtocolInfo.CLIENTBOUND_UPDATE_SOUND_DATA_PACKET, ClientboundUpdateSoundDataPacket.class, ClientboundUpdateSoundDataPacket::new)
+                .registerPacket(ProtocolInfo.SEND_PARTY_DESTINATION_COOKIE_PACKET, SendPartyDestinationCookiePacket.class, SendPartyDestinationCookiePacket::new)
+                .registerPacket(ProtocolInfo.PARTY_DESTINATION_COOKIE_RESPONSE_PACKET, PartyDestinationCookieResponsePacket.class, PartyDestinationCookieResponsePacket::new)
                 .build();
 
         this.packetPoolCurrent = this.packetPool.toBuilder()

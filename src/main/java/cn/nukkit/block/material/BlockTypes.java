@@ -19,6 +19,8 @@ public final class BlockTypes {
 
     public static final BlockType ACACIA_CHEST_BOAT = register("minecraft:acacia_chest_boat", 684);
 
+    public static final BlockType ACACIA_DOOR = register("minecraft:acacia_door", 595);
+
     public static final BlockType ACACIA_DOUBLE_SLAB = register("minecraft:acacia_double_slab", -812);
 
     public static final BlockType ACACIA_FENCE = register("minecraft:acacia_fence", -575);
@@ -147,7 +149,7 @@ public final class BlockTypes {
 
     public static final BlockType BANNER = register("minecraft:banner", 606);
 
-    public static final BlockType BANNER_PATTERN = register("minecraft:banner_pattern", 839);
+    public static final BlockType BANNER_PATTERN = register("minecraft:banner_pattern", 842);
 
     public static final BlockType BARREL = register("minecraft:barrel", -203);
 
@@ -176,6 +178,8 @@ public final class BlockTypes {
     public static final BlockType BIRCH_BUTTON = register("minecraft:birch_button", -141);
 
     public static final BlockType BIRCH_CHEST_BOAT = register("minecraft:birch_chest_boat", 681);
+
+    public static final BlockType BIRCH_DOOR = register("minecraft:birch_door", 593);
 
     public static final BlockType BIRCH_DOUBLE_SLAB = register("minecraft:birch_double_slab", -810);
 
@@ -277,7 +281,7 @@ public final class BlockTypes {
 
     public static final BlockType BLUE_WOOL = register("minecraft:blue_wool", -563);
 
-    public static final BlockType BOAT = register("minecraft:boat", 837);
+    public static final BlockType BOAT = register("minecraft:boat", 840);
 
     public static final BlockType BONE_BLOCK = register("minecraft:bone_block", 216);
 
@@ -365,7 +369,7 @@ public final class BlockTypes {
 
     public static final BlockType CANDLE_CAKE = register("minecraft:candle_cake", -429);
 
-    public static final BlockType CARPET = register("minecraft:carpet", 794);
+    public static final BlockType CARPET = register("minecraft:carpet", 796);
 
     public static final BlockType CARROT = register("minecraft:carrot", 308);
 
@@ -397,7 +401,7 @@ public final class BlockTypes {
 
     public static final BlockType CHEMICAL_HEAT = register("minecraft:chemical_heat", 192);
 
-    public static final BlockType CHEMISTRY_TABLE = register("minecraft:chemistry_table", 831);
+    public static final BlockType CHEMISTRY_TABLE = register("minecraft:chemistry_table", 834);
 
     public static final BlockType CHERRY_BUTTON = register("minecraft:cherry_button", -530);
 
@@ -451,6 +455,8 @@ public final class BlockTypes {
 
     public static final BlockType CHISELED_BOOKSHELF = register("minecraft:chiseled_bookshelf", -526);
 
+    public static final BlockType CHISELED_CINNABAR = register("minecraft:chiseled_cinnabar", -1124);
+
     public static final BlockType CHISELED_COPPER = register("minecraft:chiseled_copper", -760);
 
     public static final BlockType CHISELED_DEEPSLATE = register("minecraft:chiseled_deepslate", -395);
@@ -469,6 +475,8 @@ public final class BlockTypes {
 
     public static final BlockType CHISELED_STONE_BRICKS = register("minecraft:chiseled_stone_bricks", -870);
 
+    public static final BlockType CHISELED_SULFUR = register("minecraft:chiseled_sulfur", -1107);
+
     public static final BlockType CHISELED_TUFF = register("minecraft:chiseled_tuff", -753);
 
     public static final BlockType CHISELED_TUFF_BRICKS = register("minecraft:chiseled_tuff_bricks", -759);
@@ -478,6 +486,26 @@ public final class BlockTypes {
     public static final BlockType CHORUS_FRUIT = register("minecraft:chorus_fruit", 597);
 
     public static final BlockType CHORUS_PLANT = register("minecraft:chorus_plant", 240);
+
+    public static final BlockType CINNABAR = register("minecraft:cinnabar", -1109);
+
+    public static final BlockType CINNABAR_BRICK_DOUBLE_SLAB = register("minecraft:cinnabar_brick_double_slab", -1121);
+
+    public static final BlockType CINNABAR_BRICK_SLAB = register("minecraft:cinnabar_brick_slab", -1120);
+
+    public static final BlockType CINNABAR_BRICK_STAIRS = register("minecraft:cinnabar_brick_stairs", -1122);
+
+    public static final BlockType CINNABAR_BRICK_WALL = register("minecraft:cinnabar_brick_wall", -1123);
+
+    public static final BlockType CINNABAR_BRICKS = register("minecraft:cinnabar_bricks", -1119);
+
+    public static final BlockType CINNABAR_DOUBLE_SLAB = register("minecraft:cinnabar_double_slab", -1111);
+
+    public static final BlockType CINNABAR_SLAB = register("minecraft:cinnabar_slab", -1110);
+
+    public static final BlockType CINNABAR_STAIRS = register("minecraft:cinnabar_stairs", -1112);
+
+    public static final BlockType CINNABAR_WALL = register("minecraft:cinnabar_wall", -1113);
 
     public static final BlockType CLAY = register("minecraft:clay", 82);
 
@@ -519,7 +547,7 @@ public final class BlockTypes {
 
     public static final BlockType COLORED_TORCH_BLUE = register("minecraft:colored_torch_blue", 204);
 
-    public static final BlockType COLORED_TORCH_BP = register("minecraft:colored_torch_bp", 835);
+    public static final BlockType COLORED_TORCH_BP = register("minecraft:colored_torch_bp", 838);
 
     public static final BlockType COLORED_TORCH_GREEN = register("minecraft:colored_torch_green", -963);
 
@@ -527,7 +555,7 @@ public final class BlockTypes {
 
     public static final BlockType COLORED_TORCH_RED = register("minecraft:colored_torch_red", 202);
 
-    public static final BlockType COLORED_TORCH_RG = register("minecraft:colored_torch_rg", 834);
+    public static final BlockType COLORED_TORCH_RG = register("minecraft:colored_torch_rg", 837);
 
     public static final BlockType COMMAND_BLOCK = register("minecraft:command_block", 137);
 
@@ -543,9 +571,9 @@ public final class BlockTypes {
 
     public static final BlockType COMPOUND_CREATOR = register("minecraft:compound_creator", 238);
 
-    public static final BlockType CONCRETE = register("minecraft:concrete", 820);
+    public static final BlockType CONCRETE = register("minecraft:concrete", 822);
 
-    public static final BlockType CONCRETE_POWDER = register("minecraft:concrete_powder", 821);
+    public static final BlockType CONCRETE_POWDER = register("minecraft:concrete_powder", 823);
 
     public static final BlockType CONDUIT = register("minecraft:conduit", -157);
 
@@ -591,13 +619,13 @@ public final class BlockTypes {
 
     public static final BlockType COPPER_TRAPDOOR = register("minecraft:copper_trapdoor", -792);
 
-    public static final BlockType CORAL = register("minecraft:coral", 816);
+    public static final BlockType CORAL = register("minecraft:coral", 818);
 
-    public static final BlockType CORAL_BLOCK = register("minecraft:coral_block", 798);
+    public static final BlockType CORAL_BLOCK = register("minecraft:coral_block", 800);
 
-    public static final BlockType CORAL_FAN = register("minecraft:coral_fan", 807);
+    public static final BlockType CORAL_FAN = register("minecraft:coral_fan", 809);
 
-    public static final BlockType CORAL_FAN_DEAD = register("minecraft:coral_fan_dead", 808);
+    public static final BlockType CORAL_FAN_DEAD = register("minecraft:coral_fan_dead", 810);
 
     public static final BlockType CORNFLOWER = register("minecraft:cornflower", -838);
 
@@ -622,6 +650,8 @@ public final class BlockTypes {
     public static final BlockType CREEPER_HEAD = register("minecraft:creeper_head", -968);
 
     public static final BlockType CRIMSON_BUTTON = register("minecraft:crimson_button", -260);
+
+    public static final BlockType CRIMSON_DOOR = register("minecraft:crimson_door", 659);
 
     public static final BlockType CRIMSON_DOUBLE_SLAB = register("minecraft:crimson_double_slab", -266);
 
@@ -710,6 +740,8 @@ public final class BlockTypes {
     public static final BlockType DARK_OAK_BUTTON = register("minecraft:dark_oak_button", -142);
 
     public static final BlockType DARK_OAK_CHEST_BOAT = register("minecraft:dark_oak_chest_boat", 685);
+
+    public static final BlockType DARK_OAK_DOOR = register("minecraft:dark_oak_door", 596);
 
     public static final BlockType DARK_OAK_DOUBLE_SLAB = register("minecraft:dark_oak_double_slab", -813);
 
@@ -895,7 +927,7 @@ public final class BlockTypes {
 
     public static final BlockType DOUBLE_CUT_COPPER_SLAB = register("minecraft:double_cut_copper_slab", -368);
 
-    public static final BlockType DOUBLE_PLANT = register("minecraft:double_plant", 814);
+    public static final BlockType DOUBLE_PLANT = register("minecraft:double_plant", 816);
 
     public static final BlockType DRAGON_BREATH = register("minecraft:dragon_breath", 599);
 
@@ -1177,7 +1209,7 @@ public final class BlockTypes {
 
     public static final BlockType END_BRICKS = register("minecraft:end_bricks", 206);
 
-    public static final BlockType END_CRYSTAL = register("minecraft:end_crystal", 841);
+    public static final BlockType END_CRYSTAL = register("minecraft:end_crystal", 844);
 
     public static final BlockType END_GATEWAY = register("minecraft:end_gateway", 209);
 
@@ -1295,7 +1327,7 @@ public final class BlockTypes {
 
     public static final BlockType GLISTERING_MELON_SLICE = register("minecraft:glistering_melon_slice", 467);
 
-    public static final BlockType GLOW_BERRIES = register("minecraft:glow_berries", 842);
+    public static final BlockType GLOW_BERRIES = register("minecraft:glow_berries", 845);
 
     public static final BlockType GLOW_LICHEN = register("minecraft:glow_lichen", -411);
 
@@ -1467,9 +1499,9 @@ public final class BlockTypes {
 
     public static final BlockType HARD_RED_STAINED_GLASS_PANE = register("minecraft:hard_red_stained_glass_pane", -671);
 
-    public static final BlockType HARD_STAINED_GLASS = register("minecraft:hard_stained_glass", 832);
+    public static final BlockType HARD_STAINED_GLASS = register("minecraft:hard_stained_glass", 835);
 
-    public static final BlockType HARD_STAINED_GLASS_PANE = register("minecraft:hard_stained_glass_pane", 833);
+    public static final BlockType HARD_STAINED_GLASS_PANE = register("minecraft:hard_stained_glass_pane", 836);
 
     public static final BlockType HARD_WHITE_STAINED_GLASS = register("minecraft:hard_white_stained_glass", 254);
 
@@ -1543,6 +1575,8 @@ public final class BlockTypes {
 
     public static final BlockType IRON_CHESTPLATE = register("minecraft:iron_chestplate", 376);
 
+    public static final BlockType IRON_DOOR = register("minecraft:iron_door", 404);
+
     public static final BlockType IRON_HELMET = register("minecraft:iron_helmet", 375);
 
     public static final BlockType IRON_HOE = register("minecraft:iron_hoe", 363);
@@ -1565,13 +1599,9 @@ public final class BlockTypes {
 
     public static final BlockType IRON_TRAPDOOR = register("minecraft:iron_trapdoor", 167);
 
-    public static final BlockType ACACIA_DOOR = register("minecraft:acacia_door", 196);
-
     public static final BlockType BED = register("minecraft:bed", 26);
 
     public static final BlockType BEETROOT = register("minecraft:beetroot", 244);
-
-    public static final BlockType BIRCH_DOOR = register("minecraft:birch_door", 194);
 
     public static final BlockType BREWING_STAND = register("minecraft:brewing_stand", 117);
 
@@ -1583,10 +1613,6 @@ public final class BlockTypes {
 
     public static final BlockType CAULDRON = register("minecraft:cauldron", 118);
 
-    public static final BlockType CRIMSON_DOOR = register("minecraft:crimson_door", -244);
-
-    public static final BlockType DARK_OAK_DOOR = register("minecraft:dark_oak_door", 197);
-
     public static final BlockType FLOWER_POT = register("minecraft:flower_pot", 140);
 
     public static final BlockType FRAME = register("minecraft:frame", 199);
@@ -1595,13 +1621,7 @@ public final class BlockTypes {
 
     public static final BlockType HOPPER = register("minecraft:hopper", 154);
 
-    public static final BlockType IRON_DOOR = register("minecraft:iron_door", 71);
-
-    public static final BlockType JUNGLE_DOOR = register("minecraft:jungle_door", 195);
-
     public static final BlockType KELP = register("minecraft:kelp", -138);
-
-    public static final BlockType MANGROVE_DOOR = register("minecraft:mangrove_door", -493);
 
     public static final BlockType NETHER_SPROUTS = register("minecraft:nether_sprouts", -238);
 
@@ -1611,13 +1631,7 @@ public final class BlockTypes {
 
     public static final BlockType SOUL_CAMPFIRE = register("minecraft:soul_campfire", -290);
 
-    public static final BlockType SPRUCE_DOOR = register("minecraft:spruce_door", 193);
-
-    public static final BlockType WARPED_DOOR = register("minecraft:warped_door", -245);
-
     public static final BlockType WHEAT = register("minecraft:wheat", 59);
-
-    public static final BlockType WOODEN_DOOR = register("minecraft:wooden_door", 64);
 
     public static final BlockType JIGSAW = register("minecraft:jigsaw", -211);
 
@@ -1626,6 +1640,8 @@ public final class BlockTypes {
     public static final BlockType JUNGLE_BUTTON = register("minecraft:jungle_button", -143);
 
     public static final BlockType JUNGLE_CHEST_BOAT = register("minecraft:jungle_chest_boat", 682);
+
+    public static final BlockType JUNGLE_DOOR = register("minecraft:jungle_door", 594);
 
     public static final BlockType JUNGLE_DOUBLE_SLAB = register("minecraft:jungle_double_slab", -811);
 
@@ -1693,15 +1709,15 @@ public final class BlockTypes {
 
     public static final BlockType LEATHER_LEGGINGS = register("minecraft:leather_leggings", 369);
 
-    public static final BlockType LEAVES = register("minecraft:leaves", 810);
+    public static final BlockType LEAVES = register("minecraft:leaves", 812);
 
-    public static final BlockType LEAVES2 = register("minecraft:leaves2", 811);
+    public static final BlockType LEAVES2 = register("minecraft:leaves2", 813);
 
     public static final BlockType LECTERN = register("minecraft:lectern", -194);
 
     public static final BlockType LEVER = register("minecraft:lever", 69);
 
-    public static final BlockType LIGHT_BLOCK = register("minecraft:light_block", 836);
+    public static final BlockType LIGHT_BLOCK = register("minecraft:light_block", 839);
 
     public static final BlockType LIGHT_BLOCK_0 = register("minecraft:light_block_0", -215);
 
@@ -1859,6 +1875,8 @@ public final class BlockTypes {
 
     public static final BlockType MANGROVE_CHEST_BOAT = register("minecraft:mangrove_chest_boat", 686);
 
+    public static final BlockType MANGROVE_DOOR = register("minecraft:mangrove_door", 675);
+
     public static final BlockType MANGROVE_DOUBLE_SLAB = register("minecraft:mangrove_double_slab", -499);
 
     public static final BlockType MANGROVE_FENCE = register("minecraft:mangrove_fence", -491);
@@ -1913,7 +1931,7 @@ public final class BlockTypes {
 
     public static final BlockType MOB_SPAWNER = register("minecraft:mob_spawner", 52);
 
-    public static final BlockType MONSTER_EGG = register("minecraft:monster_egg", 819);
+    public static final BlockType MONSTER_EGG = register("minecraft:monster_egg", 821);
 
     public static final BlockType MOSS_BLOCK = register("minecraft:moss_block", -320);
 
@@ -2247,7 +2265,7 @@ public final class BlockTypes {
 
     public static final BlockType PITCHER_PLANT = register("minecraft:pitcher_plant", -612);
 
-    public static final BlockType PLANKS = register("minecraft:planks", 815);
+    public static final BlockType PLANKS = register("minecraft:planks", 817);
 
     public static final BlockType PLAYER_HEAD = register("minecraft:player_head", -967);
 
@@ -2291,6 +2309,16 @@ public final class BlockTypes {
 
     public static final BlockType POLISHED_BLACKSTONE_WALL = register("minecraft:polished_blackstone_wall", -297);
 
+    public static final BlockType POLISHED_CINNABAR = register("minecraft:polished_cinnabar", -1114);
+
+    public static final BlockType POLISHED_CINNABAR_DOUBLE_SLAB = register("minecraft:polished_cinnabar_double_slab", -1116);
+
+    public static final BlockType POLISHED_CINNABAR_SLAB = register("minecraft:polished_cinnabar_slab", -1115);
+
+    public static final BlockType POLISHED_CINNABAR_STAIRS = register("minecraft:polished_cinnabar_stairs", -1117);
+
+    public static final BlockType POLISHED_CINNABAR_WALL = register("minecraft:polished_cinnabar_wall", -1118);
+
     public static final BlockType POLISHED_DEEPSLATE = register("minecraft:polished_deepslate", -383);
 
     public static final BlockType POLISHED_DEEPSLATE_DOUBLE_SLAB = register("minecraft:polished_deepslate_double_slab", -397);
@@ -2317,6 +2345,16 @@ public final class BlockTypes {
 
     public static final BlockType POLISHED_GRANITE_STAIRS = register("minecraft:polished_granite_stairs", -172);
 
+    public static final BlockType POLISHED_SULFUR = register("minecraft:polished_sulfur", -1097);
+
+    public static final BlockType POLISHED_SULFUR_DOUBLE_SLAB = register("minecraft:polished_sulfur_double_slab", -1099);
+
+    public static final BlockType POLISHED_SULFUR_SLAB = register("minecraft:polished_sulfur_slab", -1098);
+
+    public static final BlockType POLISHED_SULFUR_STAIRS = register("minecraft:polished_sulfur_stairs", -1100);
+
+    public static final BlockType POLISHED_SULFUR_WALL = register("minecraft:polished_sulfur_wall", -1101);
+
     public static final BlockType POLISHED_TUFF = register("minecraft:polished_tuff", -748);
 
     public static final BlockType POLISHED_TUFF_DOUBLE_SLAB = register("minecraft:polished_tuff_double_slab", -750);
@@ -2338,6 +2376,8 @@ public final class BlockTypes {
     public static final BlockType POTATO = register("minecraft:potato", 309);
 
     public static final BlockType POTATOES = register("minecraft:potatoes", 142);
+
+    public static final BlockType POTENT_SULFUR = register("minecraft:potent_sulfur", -1108);
 
     public static final BlockType POTION = register("minecraft:potion", 459);
 
@@ -2459,7 +2499,7 @@ public final class BlockTypes {
 
     public static final BlockType RED_CONCRETE_POWDER = register("minecraft:red_concrete_powder", -722);
 
-    public static final BlockType RED_FLOWER = register("minecraft:red_flower", 813);
+    public static final BlockType RED_FLOWER = register("minecraft:red_flower", 815);
 
     public static final BlockType RED_GLAZED_TERRACOTTA = register("minecraft:red_glazed_terracotta", 234);
 
@@ -2557,7 +2597,7 @@ public final class BlockTypes {
 
     public static final BlockType SANDSTONE_WALL = register("minecraft:sandstone_wall", -975);
 
-    public static final BlockType SAPLING = register("minecraft:sapling", 809);
+    public static final BlockType SAPLING = register("minecraft:sapling", 811);
 
     public static final BlockType SCAFFOLDING = register("minecraft:scaffolding", -165);
 
@@ -2587,7 +2627,7 @@ public final class BlockTypes {
 
     public static final BlockType SHROOMLIGHT = register("minecraft:shroomlight", -230);
 
-    public static final BlockType SHULKER_BOX = register("minecraft:shulker_box", 824);
+    public static final BlockType SHULKER_BOX = register("minecraft:shulker_box", 826);
 
     public static final BlockType SHULKER_SHELL = register("minecraft:shulker_shell", 605);
 
@@ -2661,7 +2701,7 @@ public final class BlockTypes {
 
     public static final BlockType SPARKLER = register("minecraft:sparkler", 643);
 
-    public static final BlockType SPAWN_EGG = register("minecraft:spawn_egg", 840);
+    public static final BlockType SPAWN_EGG = register("minecraft:spawn_egg", 843);
 
     public static final BlockType SPIDER_EYE = register("minecraft:spider_eye", 307);
 
@@ -2674,6 +2714,8 @@ public final class BlockTypes {
     public static final BlockType SPRUCE_BUTTON = register("minecraft:spruce_button", -144);
 
     public static final BlockType SPRUCE_CHEST_BOAT = register("minecraft:spruce_chest_boat", 683);
+
+    public static final BlockType SPRUCE_DOOR = register("minecraft:spruce_door", 592);
 
     public static final BlockType SPRUCE_DOUBLE_SLAB = register("minecraft:spruce_double_slab", -809);
 
@@ -2711,9 +2753,9 @@ public final class BlockTypes {
 
     public static final BlockType SPYGLASS = register("minecraft:spyglass", 667);
 
-    public static final BlockType STAINED_GLASS = register("minecraft:stained_glass", 822);
+    public static final BlockType STAINED_GLASS = register("minecraft:stained_glass", 824);
 
-    public static final BlockType STAINED_GLASS_PANE = register("minecraft:stained_glass_pane", 823);
+    public static final BlockType STAINED_GLASS_PANE = register("minecraft:stained_glass_pane", 825);
 
     public static final BlockType STAINED_HARDENED_CLAY = register("minecraft:stained_hardened_clay", 744);
 
@@ -2755,7 +2797,7 @@ public final class BlockTypes {
 
     public static final BlockType STONE_SWORD = register("minecraft:stone_sword", 343);
 
-    public static final BlockType STONEBRICK = register("minecraft:stonebrick", 797);
+    public static final BlockType STONEBRICK = register("minecraft:stonebrick", 799);
 
     public static final BlockType STONECUTTER = register("minecraft:stonecutter", 245);
 
@@ -2813,6 +2855,28 @@ public final class BlockTypes {
 
     public static final BlockType SUGAR_CANE = register("minecraft:sugar_cane", 417);
 
+    public static final BlockType SULFUR = register("minecraft:sulfur", -1092);
+
+    public static final BlockType SULFUR_BRICK_DOUBLE_SLAB = register("minecraft:sulfur_brick_double_slab", -1104);
+
+    public static final BlockType SULFUR_BRICK_SLAB = register("minecraft:sulfur_brick_slab", -1103);
+
+    public static final BlockType SULFUR_BRICK_STAIRS = register("minecraft:sulfur_brick_stairs", -1105);
+
+    public static final BlockType SULFUR_BRICK_WALL = register("minecraft:sulfur_brick_wall", -1106);
+
+    public static final BlockType SULFUR_BRICKS = register("minecraft:sulfur_bricks", -1102);
+
+    public static final BlockType SULFUR_DOUBLE_SLAB = register("minecraft:sulfur_double_slab", -1094);
+
+    public static final BlockType SULFUR_SLAB = register("minecraft:sulfur_slab", -1093);
+
+    public static final BlockType SULFUR_SPIKE = register("minecraft:sulfur_spike", -1125);
+
+    public static final BlockType SULFUR_STAIRS = register("minecraft:sulfur_stairs", -1095);
+
+    public static final BlockType SULFUR_WALL = register("minecraft:sulfur_wall", -1096);
+
     public static final BlockType SUNFLOWER = register("minecraft:sunflower", 175);
 
     public static final BlockType SUSPICIOUS_GRAVEL = register("minecraft:suspicious_gravel", -573);
@@ -2829,7 +2893,7 @@ public final class BlockTypes {
 
     public static final BlockType TALL_GRASS = register("minecraft:tall_grass", -864);
 
-    public static final BlockType TALLGRASS = register("minecraft:tallgrass", 817);
+    public static final BlockType TALLGRASS = register("minecraft:tallgrass", 819);
 
     public static final BlockType TARGET = register("minecraft:target", -239);
 
@@ -2922,6 +2986,8 @@ public final class BlockTypes {
     public static final BlockType WALL_SIGN = register("minecraft:wall_sign", 68);
 
     public static final BlockType WARPED_BUTTON = register("minecraft:warped_button", -261);
+
+    public static final BlockType WARPED_DOOR = register("minecraft:warped_door", 660);
 
     public static final BlockType WARPED_DOUBLE_SLAB = register("minecraft:warped_double_slab", -267);
 
@@ -3169,6 +3235,8 @@ public final class BlockTypes {
 
     public static final BlockType WOODEN_BUTTON = register("minecraft:wooden_button", 143);
 
+    public static final BlockType WOODEN_DOOR = register("minecraft:wooden_door", 391);
+
     public static final BlockType WOODEN_HOE = register("minecraft:wooden_hoe", 361);
 
     public static final BlockType WOODEN_PICKAXE = register("minecraft:wooden_pickaxe", 341);
@@ -3179,7 +3247,7 @@ public final class BlockTypes {
 
     public static final BlockType WOODEN_SWORD = register("minecraft:wooden_sword", 339);
 
-    public static final BlockType WOOL = register("minecraft:wool", 793);
+    public static final BlockType WOOL = register("minecraft:wool", 795);
 
     public static final BlockType WRITABLE_BOOK = register("minecraft:writable_book", 550);
 

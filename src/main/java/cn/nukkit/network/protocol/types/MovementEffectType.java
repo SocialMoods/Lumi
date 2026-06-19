@@ -11,7 +11,11 @@ public enum MovementEffectType {
     /**
      * @since 898
      */
-    DOLPHIN_BOOST(1);
+    DOLPHIN_BOOST(1),
+    /**
+     * @since 1001
+     */
+    GEYSER_BOOST(2);
 
     private final int id;
 
