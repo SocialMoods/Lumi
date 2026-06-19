@@ -61,7 +61,7 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
                 this.grow();
             }
 
-            drippingLiquid();
+            //drippingLiquid();
         }
         boolean hanging = getPropertyValue(HANGING);
         if (!hanging) {
@@ -78,7 +78,7 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
         if (!hanging) return;
         boolean AirUp = false;
         Block blockUp = this.clone();
-        while (blockUp.getSide(BlockFace.UP).getId() == POINTED_DRIPSTONE) {
+        while (blockUp.getSide(BlockFace.UP).getId() == getId()) {
             blockUp = blockUp.getSide(BlockFace.UP);
         }
         if (!blockUp.getSide(BlockFace.UP).isSolid())
@@ -90,7 +90,7 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
             }
             BlockPointedDripstone block = (BlockPointedDripstone) blockUp;
             block.drop(new CompoundTag().putBoolean("BreakOnGround", true));
-            while (block.getSide(BlockFace.DOWN).getId()== POINTED_DRIPSTONE) {
+            while (block.getSide(BlockFace.DOWN).getId()== getId()) {
                 block = (BlockPointedDripstone) block.getSide(BlockFace.DOWN);
                 block.drop(new CompoundTag().putBoolean("BreakOnGround", true));
             }
@@ -112,9 +112,9 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
           3   no    no
           4   no    yes
         */
-        int state = (Objects.equals(upBlockID, POINTED_DRIPSTONE)) ?
-                (Objects.equals(downBlockID, POINTED_DRIPSTONE) ? 1 : 2) :
-                (!Objects.equals(downBlockID, POINTED_DRIPSTONE) ? 3 : 4
+        int state = (Objects.equals(upBlockID, getId())) ?
+                (Objects.equals(downBlockID, getId()) ? 1 : 2) :
+                (!Objects.equals(downBlockID, getId()) ? 3 : 4
                 );
         boolean hanging = false;
         switch (state) {
@@ -239,14 +239,14 @@ public class BlockPointedDripstone extends BlockFallable implements BlockPropert
         if (hanging) {
             for (int j = y + 1; j < getLevel().getDimensionData().getMaxHeight(); ++j) {
                 int blockId = level.getBlockIdAt(x, j, z);
-                if (!Objects.equals(blockId, POINTED_DRIPSTONE)) {
+                if (!Objects.equals(blockId, getId())) {
                     return j - y - 1;
                 }
             }
         } else {
             for (int j = y - 1; j > getLevel().getDimensionData().getMinHeight(); --j) {
                 int blockId = level.getBlockIdAt(x, j, z);
-                if (!Objects.equals(blockId, POINTED_DRIPSTONE)) {
+                if (!Objects.equals(blockId, getId())) {
                     return y - j - 1;
                 }
             }

@@ -146,6 +146,16 @@ public enum Sound {
 
     BLOCK_CHORUSFLOWER_GROW("block.chorusflower.grow"),
 
+    BLOCK_CINNABAR_BREAK("block.cinnabar.break"),
+
+    BLOCK_CINNABAR_FALL("block.cinnabar.fall"),
+
+    BLOCK_CINNABAR_HIT("block.cinnabar.hit"),
+
+    BLOCK_CINNABAR_PLACE("block.cinnabar.place"),
+
+    BLOCK_CINNABAR_STEP("block.cinnabar.step"),
+
     BLOCK_CLICK("block.click"),
 
     BLOCK_COMPOSTER_EMPTY("block.composter.empty"),
@@ -174,9 +184,13 @@ public enum Sound {
 
     BLOCK_COPPER_GOLEM_STATUE_BREAK("block.copper_golem_statue.break"),
 
+    BLOCK_COPPER_GOLEM_STATUE_FALL("block.copper_golem_statue.fall"),
+
     BLOCK_COPPER_GOLEM_STATUE_HIT("block.copper_golem_statue.hit"),
 
     BLOCK_COPPER_GOLEM_STATUE_PLACE("block.copper_golem_statue.place"),
+
+    BLOCK_COPPER_GOLEM_STATUE_STEP("block.copper_golem_statue.step"),
 
     BLOCK_CREAKING_HEART_AMBIENT("block.creaking_heart.ambient"),
 
@@ -328,6 +342,26 @@ public enum Sound {
 
     BLOCK_PALE_HANGING_MOSS_AMBIENT("block.pale_hanging_moss.ambient"),
 
+    BLOCK_POTENT_SULFUR_AMBIENT("block.potent_sulfur.ambient"),
+
+    BLOCK_POTENT_SULFUR_BREAK("block.potent_sulfur.break"),
+
+    BLOCK_POTENT_SULFUR_FALL("block.potent_sulfur.fall"),
+
+    BLOCK_POTENT_SULFUR_GEYSER_CONTINUOUS_ERUPTION_ACTIVE("block.potent_sulfur.geyser_continuous_eruption_active"),
+
+    BLOCK_POTENT_SULFUR_GEYSER_CONTINUOUS_ERUPTION_START("block.potent_sulfur.geyser_continuous_eruption_start"),
+
+    BLOCK_POTENT_SULFUR_GEYSER_ERUPTION_ACTIVE("block.potent_sulfur.geyser_eruption_active"),
+
+    BLOCK_POTENT_SULFUR_GEYSER_ERUPTION_START("block.potent_sulfur.geyser_eruption_start"),
+
+    BLOCK_POTENT_SULFUR_HIT("block.potent_sulfur.hit"),
+
+    BLOCK_POTENT_SULFUR_PLACE("block.potent_sulfur.place"),
+
+    BLOCK_POTENT_SULFUR_STEP("block.potent_sulfur.step"),
+
     BLOCK_RESIN_BREAK("block.resin.break"),
 
     BLOCK_RESIN_FALL("block.resin.fall"),
@@ -385,6 +419,16 @@ public enum Sound {
     BLOCK_SNIFFER_EGG_HATCH("block.sniffer_egg.hatch"),
 
     BLOCK_STONECUTTER_USE("block.stonecutter.use"),
+
+    BLOCK_SULFUR_BREAK("block.sulfur.break"),
+
+    BLOCK_SULFUR_FALL("block.sulfur.fall"),
+
+    BLOCK_SULFUR_HIT("block.sulfur.hit"),
+
+    BLOCK_SULFUR_PLACE("block.sulfur.place"),
+
+    BLOCK_SULFUR_STEP("block.sulfur.step"),
 
     BLOCK_SWEET_BERRY_BUSH_BREAK("block.sweet_berry_bush.break"),
 
@@ -1102,6 +1146,10 @@ public enum Sound {
 
     ITEM_SPYGLASS_USE("item.spyglass.use"),
 
+    ITEM_SULFUR_CUBE_EMPTY("item.sulfur_cube.empty"),
+
+    ITEM_SULFUR_CUBE_FILL("item.sulfur_cube.fill"),
+
     ITEM_TRIDENT_HIT("item.trident.hit"),
 
     ITEM_TRIDENT_HIT_GROUND("item.trident.hit_ground"),
@@ -1420,6 +1468,8 @@ public enum Sound {
 
     MOB_BABY_PIG_DEATH("mob.baby_pig.death"),
 
+    MOB_BABY_PIG_EAT("mob.baby_pig.eat"),
+
     MOB_BABY_PIG_HURT("mob.baby_pig.hurt"),
 
     MOB_BABY_PIG_STEP("mob.baby_pig.step"),
@@ -1461,6 +1511,8 @@ public enum Sound {
     MOB_BEE_STING("mob.bee.sting"),
 
     MOB_BIG_PIG_DEATH("mob.big_pig.death"),
+
+    MOB_BIG_PIG_EAT("mob.big_pig.eat"),
 
     MOB_BIG_PIG_HURT("mob.big_pig.hurt"),
 
@@ -2060,6 +2112,8 @@ public enum Sound {
 
     MOB_MINI_PIG_DEATH("mob.mini_pig.death"),
 
+    MOB_MINI_PIG_EAT("mob.mini_pig.eat"),
+
     MOB_MINI_PIG_HURT("mob.mini_pig.hurt"),
 
     MOB_MINI_PIG_SAY("mob.mini_pig.say"),
@@ -2179,6 +2233,8 @@ public enum Sound {
     MOB_PIG_BOOST("mob.pig.boost"),
 
     MOB_PIG_DEATH("mob.pig.death"),
+
+    MOB_PIG_EAT("mob.pig.eat"),
 
     MOB_PIG_SAY("mob.pig.say"),
 
@@ -2401,6 +2457,76 @@ public enum Sound {
     MOB_STRIDER_STEP_LAVA("mob.strider.step_lava"),
 
     MOB_STRIDER_TEMPT("mob.strider.tempt"),
+
+    MOB_SULFUR_CUBE_ABSORB("mob.sulfur_cube.absorb"),
+
+    MOB_SULFUR_CUBE_BOUNCE("mob.sulfur_cube.bounce"),
+
+    MOB_SULFUR_CUBE_BOUNCY_HIT("mob.sulfur_cube.bouncy.hit"),
+
+    MOB_SULFUR_CUBE_BOUNCY_PUSH("mob.sulfur_cube.bouncy.push"),
+
+    MOB_SULFUR_CUBE_DEATH("mob.sulfur_cube.death"),
+
+    MOB_SULFUR_CUBE_EJECT("mob.sulfur_cube.eject"),
+
+    MOB_SULFUR_CUBE_EXPLOSIVE_HIT("mob.sulfur_cube.explosive.hit"),
+
+    MOB_SULFUR_CUBE_EXPLOSIVE_PUSH("mob.sulfur_cube.explosive.push"),
+
+    MOB_SULFUR_CUBE_FAST_FLAT_HIT("mob.sulfur_cube.fast_flat.hit"),
+
+    MOB_SULFUR_CUBE_FAST_FLAT_PUSH("mob.sulfur_cube.fast_flat.push"),
+
+    MOB_SULFUR_CUBE_FAST_SLIDING_HIT("mob.sulfur_cube.fast_sliding.hit"),
+
+    MOB_SULFUR_CUBE_FAST_SLIDING_PUSH("mob.sulfur_cube.fast_sliding.push"),
+
+    MOB_SULFUR_CUBE_HIGH_RESISTANCE_HIT("mob.sulfur_cube.high_resistance.hit"),
+
+    MOB_SULFUR_CUBE_HIGH_RESISTANCE_PUSH("mob.sulfur_cube.high_resistance.push"),
+
+    MOB_SULFUR_CUBE_HOT_HIT("mob.sulfur_cube.hot.hit"),
+
+    MOB_SULFUR_CUBE_HOT_PUSH("mob.sulfur_cube.hot.push"),
+
+    MOB_SULFUR_CUBE_HURT("mob.sulfur_cube.hurt"),
+
+    MOB_SULFUR_CUBE_JUMP("mob.sulfur_cube.jump"),
+
+    MOB_SULFUR_CUBE_LANDING("mob.sulfur_cube.landing"),
+
+    MOB_SULFUR_CUBE_LIGHT_HIT("mob.sulfur_cube.light.hit"),
+
+    MOB_SULFUR_CUBE_LIGHT_PUSH("mob.sulfur_cube.light.push"),
+
+    MOB_SULFUR_CUBE_REGULAR_HIT("mob.sulfur_cube.regular.hit"),
+
+    MOB_SULFUR_CUBE_REGULAR_PUSH("mob.sulfur_cube.regular.push"),
+
+    MOB_SULFUR_CUBE_SLOW_BOUNCY_HIT("mob.sulfur_cube.slow_bouncy.hit"),
+
+    MOB_SULFUR_CUBE_SLOW_BOUNCY_PUSH("mob.sulfur_cube.slow_bouncy.push"),
+
+    MOB_SULFUR_CUBE_SLOW_FLAT_HIT("mob.sulfur_cube.slow_flat.hit"),
+
+    MOB_SULFUR_CUBE_SLOW_FLAT_PUSH("mob.sulfur_cube.slow_flat.push"),
+
+    MOB_SULFUR_CUBE_SLOW_SLIDING_HIT("mob.sulfur_cube.slow_sliding.hit"),
+
+    MOB_SULFUR_CUBE_SLOW_SLIDING_PUSH("mob.sulfur_cube.slow_sliding.push"),
+
+    MOB_SULFUR_CUBE_SMALL_DEATH("mob.sulfur_cube.small.death"),
+
+    MOB_SULFUR_CUBE_SMALL_HURT("mob.sulfur_cube.small.hurt"),
+
+    MOB_SULFUR_CUBE_SMALL_JUMP("mob.sulfur_cube.small.jump"),
+
+    MOB_SULFUR_CUBE_SMALL_LANDING("mob.sulfur_cube.small.landing"),
+
+    MOB_SULFUR_CUBE_STICKY_HIT("mob.sulfur_cube.sticky.hit"),
+
+    MOB_SULFUR_CUBE_STICKY_PUSH("mob.sulfur_cube.sticky.push"),
 
     MOB_TADPOLE_CONVERT_TO_FROG("mob.tadpole.convert_to_frog"),
 
@@ -2766,9 +2892,13 @@ public enum Sound {
 
     MUSIC_OVERWORLD_MESA("music.overworld.mesa"),
 
+    MUSIC_OVERWORLD_OLD_GROWTH_TAIGA("music.overworld.old_growth_taiga"),
+
     MUSIC_OVERWORLD_SNOWY_SLOPES("music.overworld.snowy_slopes"),
 
     MUSIC_OVERWORLD_STONY_PEAKS("music.overworld.stony_peaks"),
+
+    MUSIC_OVERWORLD_SULFUR_CAVES("music.overworld.sulfur_caves"),
 
     NOTE_BANJO("note.banjo"),
 
@@ -3129,6 +3259,8 @@ public enum Sound {
     RECORD_5("record.5"),
 
     RECORD_BLOCKS("record.blocks"),
+
+    RECORD_BOUNCE("record.bounce"),
 
     RECORD_CAT("record.cat"),
 
