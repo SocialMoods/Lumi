@@ -967,16 +967,12 @@ public class BinaryStream {
         if (runtimeId != 0) {
             try {
                 stringId = mapping.getNamespacedIdByNetworkId(runtimeId);
-                if(stringId == null) {
-                    legacyEntry = mapping.fromRuntime(runtimeId);
-                    id = legacyEntry.getLegacyId();
-                    if (legacyEntry.isHasDamage()) {
-                        damage = legacyEntry.getDamage();
-                    }
+                legacyEntry = mapping.fromRuntime(runtimeId);
+                id = legacyEntry.getLegacyId();
+                if (legacyEntry.isHasDamage()) {
+                    damage = legacyEntry.getDamage();
                 }
-            } catch (IllegalArgumentException e) {
-
-            }
+            } catch (IllegalArgumentException ignore) {}
 
             if (id == null || !Utils.hasItemOrBlock(id)) {
                 if (stringId == null) {
