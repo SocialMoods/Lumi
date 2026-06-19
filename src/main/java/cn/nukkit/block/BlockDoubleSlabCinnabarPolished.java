@@ -47,18 +47,14 @@ public class BlockDoubleSlabCinnabarPolished extends BlockSolidMeta {
 
     @Override
     public Item toItem() {
-        return new ItemBlock(Block.get(POLISHED_CINNABAR_SLAB), this.getDamage() & 0x07);
+        return new ItemBlock(Block.get(POLISHED_CINNABAR_SLAB));
     }
 
     @Override
     public Item[] getDrops(Item item) {
-        if (item.isPickaxe() && item.getTier() >= ItemTool.TIER_WOODEN) {
-            Item slab = toItem();
-            slab.setCount(2);
-            return new Item[]{ slab };
-        } else {
-            return Item.EMPTY_ARRAY;
-        }
+        return new Item[]{
+                new ItemBlock(Block.get(POLISHED_CINNABAR_SLAB), 0, 2)
+        };
     }
 
     @Override
