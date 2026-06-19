@@ -47,18 +47,14 @@ public class BlockDoubleSlabSulfur extends BlockSolidMeta {
 
     @Override
     public Item toItem() {
-        return new ItemBlock(Block.get(SULFUR_SLAB), this.getDamage() & 0x07);
+        return new ItemBlock(Block.get(SULFUR_SLAB));
     }
 
     @Override
     public Item[] getDrops(Item item) {
-        if (item.isPickaxe() && item.getTier() >= ItemTool.TIER_WOODEN) {
-            Item slab = toItem();
-            slab.setCount(2);
-            return new Item[]{ slab };
-        } else {
-            return Item.EMPTY_ARRAY;
-        }
+        return new Item[]{
+                new ItemBlock(Block.get(SULFUR_SLAB), 0, 2)
+        };
     }
 
     @Override

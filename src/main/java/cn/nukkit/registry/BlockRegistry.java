@@ -1072,6 +1072,7 @@ public class BlockRegistry implements IRegistry<Integer, Block, Class<? extends 
         register(CINNABAR_BRICK_STAIRS, BlockStairsCinnabarBrick.class); //1377
         register(CINNABAR_BRICK_WALL, BlockWallCinnabarBrick.class); //1378
         register(CHISELED_CINNABAR, BlockCinnabarChiseled.class); //1379
+        register(SULFUR_SPIKE, BlockSulfurSpike.class); //1380
 
         IntStream idStream = IntStream.range(0, Block.MAX_BLOCK_ID);
         idStream.parallel().forEach(id -> {

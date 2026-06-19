@@ -170,7 +170,7 @@ public final class ItemTypes {
 
     public static final ItemType BANNER = register("minecraft:banner", 606);
 
-    public static final ItemType BANNER_PATTERN = register("minecraft:banner_pattern", 839);
+    public static final ItemType BANNER_PATTERN = register("minecraft:banner_pattern", 842);
 
     public static final ItemType BARREL = register("minecraft:barrel", -203);
 
@@ -332,7 +332,7 @@ public final class ItemTypes {
 
     public static final ItemType BOARD = register("minecraft:board", 635);
 
-    public static final ItemType BOAT = register("minecraft:boat", 837);
+    public static final ItemType BOAT = register("minecraft:boat", 840);
 
     public static final ItemType BOGGED_SPAWN_EGG = register("minecraft:bogged_spawn_egg", 496);
 
@@ -464,7 +464,7 @@ public final class ItemTypes {
 
     public static final ItemType CANDLE_CAKE = register("minecraft:candle_cake", -429);
 
-    public static final ItemType CARPET = register("minecraft:carpet", 794);
+    public static final ItemType CARPET = register("minecraft:carpet", 796);
 
     public static final ItemType CARROT = register("minecraft:carrot", 308);
 
@@ -504,7 +504,7 @@ public final class ItemTypes {
 
     public static final ItemType CHEMICAL_HEAT = register("minecraft:chemical_heat", 192);
 
-    public static final ItemType CHEMISTRY_TABLE = register("minecraft:chemistry_table", 831);
+    public static final ItemType CHEMISTRY_TABLE = register("minecraft:chemistry_table", 834);
 
     public static final ItemType CHERRY_BOAT = register("minecraft:cherry_boat", 691);
 
@@ -562,6 +562,8 @@ public final class ItemTypes {
 
     public static final ItemType CHISELED_BOOKSHELF = register("minecraft:chiseled_bookshelf", -526);
 
+    public static final ItemType CHISELED_CINNABAR = register("minecraft:chiseled_cinnabar", -1124);
+
     public static final ItemType CHISELED_COPPER = register("minecraft:chiseled_copper", -760);
 
     public static final ItemType CHISELED_DEEPSLATE = register("minecraft:chiseled_deepslate", -395);
@@ -580,6 +582,8 @@ public final class ItemTypes {
 
     public static final ItemType CHISELED_STONE_BRICKS = register("minecraft:chiseled_stone_bricks", -870);
 
+    public static final ItemType CHISELED_SULFUR = register("minecraft:chiseled_sulfur", -1107);
+
     public static final ItemType CHISELED_TUFF = register("minecraft:chiseled_tuff", -753);
 
     public static final ItemType CHISELED_TUFF_BRICKS = register("minecraft:chiseled_tuff_bricks", -759);
@@ -589,6 +593,26 @@ public final class ItemTypes {
     public static final ItemType CHORUS_FRUIT = register("minecraft:chorus_fruit", 597);
 
     public static final ItemType CHORUS_PLANT = register("minecraft:chorus_plant", 240);
+
+    public static final ItemType CINNABAR = register("minecraft:cinnabar", -1109);
+
+    public static final ItemType CINNABAR_BRICK_DOUBLE_SLAB = register("minecraft:cinnabar_brick_double_slab", -1121);
+
+    public static final ItemType CINNABAR_BRICK_SLAB = register("minecraft:cinnabar_brick_slab", -1120);
+
+    public static final ItemType CINNABAR_BRICK_STAIRS = register("minecraft:cinnabar_brick_stairs", -1122);
+
+    public static final ItemType CINNABAR_BRICK_WALL = register("minecraft:cinnabar_brick_wall", -1123);
+
+    public static final ItemType CINNABAR_BRICKS = register("minecraft:cinnabar_bricks", -1119);
+
+    public static final ItemType CINNABAR_DOUBLE_SLAB = register("minecraft:cinnabar_double_slab", -1111);
+
+    public static final ItemType CINNABAR_SLAB = register("minecraft:cinnabar_slab", -1110);
+
+    public static final ItemType CINNABAR_STAIRS = register("minecraft:cinnabar_stairs", -1112);
+
+    public static final ItemType CINNABAR_WALL = register("minecraft:cinnabar_wall", -1113);
 
     public static final ItemType CLAY = register("minecraft:clay", 82);
 
@@ -640,7 +664,7 @@ public final class ItemTypes {
 
     public static final ItemType COLORED_TORCH_BLUE = register("minecraft:colored_torch_blue", 204);
 
-    public static final ItemType COLORED_TORCH_BP = register("minecraft:colored_torch_bp", 835);
+    public static final ItemType COLORED_TORCH_BP = register("minecraft:colored_torch_bp", 838);
 
     public static final ItemType COLORED_TORCH_GREEN = register("minecraft:colored_torch_green", -963);
 
@@ -648,7 +672,7 @@ public final class ItemTypes {
 
     public static final ItemType COLORED_TORCH_RED = register("minecraft:colored_torch_red", 202);
 
-    public static final ItemType COLORED_TORCH_RG = register("minecraft:colored_torch_rg", 834);
+    public static final ItemType COLORED_TORCH_RG = register("minecraft:colored_torch_rg", 837);
 
     public static final ItemType COMMAND_BLOCK = register("minecraft:command_block", 137);
 
@@ -664,9 +688,9 @@ public final class ItemTypes {
 
     public static final ItemType COMPOUND_CREATOR = register("minecraft:compound_creator", 238);
 
-    public static final ItemType CONCRETE = register("minecraft:concrete", 820);
+    public static final ItemType CONCRETE = register("minecraft:concrete", 822);
 
-    public static final ItemType CONCRETE_POWDER = register("minecraft:concrete_powder", 821);
+    public static final ItemType CONCRETE_POWDER = register("minecraft:concrete_powder", 823);
 
     public static final ItemType CONDUIT = register("minecraft:conduit", -157);
 
@@ -740,13 +764,13 @@ public final class ItemTypes {
 
     public static final ItemType COPPER_TRAPDOOR = register("minecraft:copper_trapdoor", -792);
 
-    public static final ItemType CORAL = register("minecraft:coral", 816);
+    public static final ItemType CORAL = register("minecraft:coral", 818);
 
-    public static final ItemType CORAL_BLOCK = register("minecraft:coral_block", 798);
+    public static final ItemType CORAL_BLOCK = register("minecraft:coral_block", 800);
 
-    public static final ItemType CORAL_FAN = register("minecraft:coral_fan", 807);
+    public static final ItemType CORAL_FAN = register("minecraft:coral_fan", 809);
 
-    public static final ItemType CORAL_FAN_DEAD = register("minecraft:coral_fan_dead", 808);
+    public static final ItemType CORAL_FAN_DEAD = register("minecraft:coral_fan_dead", 810);
 
     public static final ItemType CORNFLOWER = register("minecraft:cornflower", -838);
 
@@ -1072,15 +1096,15 @@ public final class ItemTypes {
 
     public static final ItemType DOUBLE_CUT_COPPER_SLAB = register("minecraft:double_cut_copper_slab", -368);
 
-    public static final ItemType DOUBLE_PLANT = register("minecraft:double_plant", 814);
+    public static final ItemType DOUBLE_PLANT = register("minecraft:double_plant", 816);
 
-    public static final ItemType DOUBLE_STONE_BLOCK_SLAB = register("minecraft:double_stone_block_slab", 803);
+    public static final ItemType DOUBLE_STONE_BLOCK_SLAB = register("minecraft:double_stone_block_slab", 805);
 
-    public static final ItemType DOUBLE_STONE_BLOCK_SLAB2 = register("minecraft:double_stone_block_slab2", 804);
+    public static final ItemType DOUBLE_STONE_BLOCK_SLAB2 = register("minecraft:double_stone_block_slab2", 806);
 
-    public static final ItemType DOUBLE_STONE_BLOCK_SLAB3 = register("minecraft:double_stone_block_slab3", 805);
+    public static final ItemType DOUBLE_STONE_BLOCK_SLAB3 = register("minecraft:double_stone_block_slab3", 807);
 
-    public static final ItemType DOUBLE_STONE_BLOCK_SLAB4 = register("minecraft:double_stone_block_slab4", 806);
+    public static final ItemType DOUBLE_STONE_BLOCK_SLAB4 = register("minecraft:double_stone_block_slab4", 808);
 
     public static final ItemType DRAGON_BREATH = register("minecraft:dragon_breath", 599);
 
@@ -1102,7 +1126,7 @@ public final class ItemTypes {
 
     public static final ItemType DUNE_ARMOR_TRIM_SMITHING_TEMPLATE = register("minecraft:dune_armor_trim_smithing_template", 725);
 
-    public static final ItemType DYE = register("minecraft:dye", 838);
+    public static final ItemType DYE = register("minecraft:dye", 841);
 
     public static final ItemType ECHO_SHARD = register("minecraft:echo_shard", 689);
 
@@ -1370,7 +1394,7 @@ public final class ItemTypes {
 
     public static final ItemType END_BRICKS = register("minecraft:end_bricks", 206);
 
-    public static final ItemType END_CRYSTAL = register("minecraft:end_crystal", 841);
+    public static final ItemType END_CRYSTAL = register("minecraft:end_crystal", 844);
 
     public static final ItemType END_GATEWAY = register("minecraft:end_gateway", 209);
 
@@ -1444,7 +1468,7 @@ public final class ItemTypes {
 
     public static final ItemType FEATHER = register("minecraft:feather", 359);
 
-    public static final ItemType FENCE = register("minecraft:fence", 796);
+    public static final ItemType FENCE = register("minecraft:fence", 798);
 
     public static final ItemType FENCE_GATE = register("minecraft:fence_gate", 107);
 
@@ -1528,7 +1552,7 @@ public final class ItemTypes {
 
     public static final ItemType GLOBE_BANNER_PATTERN = register("minecraft:globe_banner_pattern", 627);
 
-    public static final ItemType GLOW_BERRIES = register("minecraft:glow_berries", 842);
+    public static final ItemType GLOW_BERRIES = register("minecraft:glow_berries", 845);
 
     public static final ItemType GLOW_FRAME = register("minecraft:glow_frame", 665);
 
@@ -1736,9 +1760,9 @@ public final class ItemTypes {
 
     public static final ItemType HARD_RED_STAINED_GLASS_PANE = register("minecraft:hard_red_stained_glass_pane", -671);
 
-    public static final ItemType HARD_STAINED_GLASS = register("minecraft:hard_stained_glass", 832);
+    public static final ItemType HARD_STAINED_GLASS = register("minecraft:hard_stained_glass", 835);
 
-    public static final ItemType HARD_STAINED_GLASS_PANE = register("minecraft:hard_stained_glass_pane", 833);
+    public static final ItemType HARD_STAINED_GLASS_PANE = register("minecraft:hard_stained_glass_pane", 836);
 
     public static final ItemType HARD_WHITE_STAINED_GLASS = register("minecraft:hard_white_stained_glass", 254);
 
@@ -1944,15 +1968,15 @@ public final class ItemTypes {
 
     public static final ItemType LEATHER_LEGGINGS = register("minecraft:leather_leggings", 369);
 
-    public static final ItemType LEAVES = register("minecraft:leaves", 810);
+    public static final ItemType LEAVES = register("minecraft:leaves", 812);
 
-    public static final ItemType LEAVES2 = register("minecraft:leaves2", 811);
+    public static final ItemType LEAVES2 = register("minecraft:leaves2", 813);
 
     public static final ItemType LECTERN = register("minecraft:lectern", -194);
 
     public static final ItemType LEVER = register("minecraft:lever", 69);
 
-    public static final ItemType LIGHT_BLOCK = register("minecraft:light_block", 836);
+    public static final ItemType LIGHT_BLOCK = register("minecraft:light_block", 839);
 
     public static final ItemType LIGHT_BLOCK_0 = register("minecraft:light_block_0", -215);
 
@@ -2098,9 +2122,9 @@ public final class ItemTypes {
 
     public static final ItemType LODESTONE_COMPASS = register("minecraft:lodestone_compass", 645);
 
-    public static final ItemType LOG = register("minecraft:log", 795);
+    public static final ItemType LOG = register("minecraft:log", 797);
 
-    public static final ItemType LOG2 = register("minecraft:log2", 818);
+    public static final ItemType LOG2 = register("minecraft:log2", 820);
 
     public static final ItemType LOOM = register("minecraft:loom", -204);
 
@@ -2208,7 +2232,7 @@ public final class ItemTypes {
 
     public static final ItemType MOJANG_BANNER_PATTERN = register("minecraft:mojang_banner_pattern", 623);
 
-    public static final ItemType MONSTER_EGG = register("minecraft:monster_egg", 819);
+    public static final ItemType MONSTER_EGG = register("minecraft:monster_egg", 821);
 
     public static final ItemType MOOSHROOM_SPAWN_EGG = register("minecraft:mooshroom_spawn_egg", 473);
 
@@ -2268,17 +2292,19 @@ public final class ItemTypes {
 
     public static final ItemType MUSIC_DISC_BLOCKS = register("minecraft:music_disc_blocks", 575);
 
+    public static final ItemType MUSIC_DISC_BOUNCE = register("minecraft:music_disc_bounce", 833);
+
     public static final ItemType MUSIC_DISC_CAT = register("minecraft:music_disc_cat", 574);
 
     public static final ItemType MUSIC_DISC_CHIRP = register("minecraft:music_disc_chirp", 576);
 
-    public static final ItemType MUSIC_DISC_CREATOR = register("minecraft:music_disc_creator", 826);
+    public static final ItemType MUSIC_DISC_CREATOR = register("minecraft:music_disc_creator", 828);
 
-    public static final ItemType MUSIC_DISC_CREATOR_MUSIC_BOX = register("minecraft:music_disc_creator_music_box", 827);
+    public static final ItemType MUSIC_DISC_CREATOR_MUSIC_BOX = register("minecraft:music_disc_creator_music_box", 829);
 
     public static final ItemType MUSIC_DISC_FAR = register("minecraft:music_disc_far", 577);
 
-    public static final ItemType MUSIC_DISC_LAVA_CHICKEN = register("minecraft:music_disc_lava_chicken", 830);
+    public static final ItemType MUSIC_DISC_LAVA_CHICKEN = register("minecraft:music_disc_lava_chicken", 832);
 
     public static final ItemType MUSIC_DISC_MALL = register("minecraft:music_disc_mall", 578);
 
@@ -2288,7 +2314,7 @@ public final class ItemTypes {
 
     public static final ItemType MUSIC_DISC_PIGSTEP = register("minecraft:music_disc_pigstep", 662);
 
-    public static final ItemType MUSIC_DISC_PRECIPICE = register("minecraft:music_disc_precipice", 828);
+    public static final ItemType MUSIC_DISC_PRECIPICE = register("minecraft:music_disc_precipice", 830);
 
     public static final ItemType MUSIC_DISC_RELIC = register("minecraft:music_disc_relic", 742);
 
@@ -2296,7 +2322,7 @@ public final class ItemTypes {
 
     public static final ItemType MUSIC_DISC_STRAD = register("minecraft:music_disc_strad", 581);
 
-    public static final ItemType MUSIC_DISC_TEARS = register("minecraft:music_disc_tears", 829);
+    public static final ItemType MUSIC_DISC_TEARS = register("minecraft:music_disc_tears", 831);
 
     public static final ItemType MUSIC_DISC_WAIT = register("minecraft:music_disc_wait", 584);
 
@@ -2616,7 +2642,7 @@ public final class ItemTypes {
 
     public static final ItemType PITCHER_POD = register("minecraft:pitcher_pod", 326);
 
-    public static final ItemType PLANKS = register("minecraft:planks", 815);
+    public static final ItemType PLANKS = register("minecraft:planks", 817);
 
     public static final ItemType PLAYER_HEAD = register("minecraft:player_head", -967);
 
@@ -2664,6 +2690,16 @@ public final class ItemTypes {
 
     public static final ItemType POLISHED_BLACKSTONE_WALL = register("minecraft:polished_blackstone_wall", -297);
 
+    public static final ItemType POLISHED_CINNABAR = register("minecraft:polished_cinnabar", -1114);
+
+    public static final ItemType POLISHED_CINNABAR_DOUBLE_SLAB = register("minecraft:polished_cinnabar_double_slab", -1116);
+
+    public static final ItemType POLISHED_CINNABAR_SLAB = register("minecraft:polished_cinnabar_slab", -1115);
+
+    public static final ItemType POLISHED_CINNABAR_STAIRS = register("minecraft:polished_cinnabar_stairs", -1117);
+
+    public static final ItemType POLISHED_CINNABAR_WALL = register("minecraft:polished_cinnabar_wall", -1118);
+
     public static final ItemType POLISHED_DEEPSLATE = register("minecraft:polished_deepslate", -383);
 
     public static final ItemType POLISHED_DEEPSLATE_DOUBLE_SLAB = register("minecraft:polished_deepslate_double_slab", -397);
@@ -2690,6 +2726,16 @@ public final class ItemTypes {
 
     public static final ItemType POLISHED_GRANITE_STAIRS = register("minecraft:polished_granite_stairs", -172);
 
+    public static final ItemType POLISHED_SULFUR = register("minecraft:polished_sulfur", -1097);
+
+    public static final ItemType POLISHED_SULFUR_DOUBLE_SLAB = register("minecraft:polished_sulfur_double_slab", -1099);
+
+    public static final ItemType POLISHED_SULFUR_SLAB = register("minecraft:polished_sulfur_slab", -1098);
+
+    public static final ItemType POLISHED_SULFUR_STAIRS = register("minecraft:polished_sulfur_stairs", -1100);
+
+    public static final ItemType POLISHED_SULFUR_WALL = register("minecraft:polished_sulfur_wall", -1101);
+
     public static final ItemType POLISHED_TUFF = register("minecraft:polished_tuff", -748);
 
     public static final ItemType POLISHED_TUFF_DOUBLE_SLAB = register("minecraft:polished_tuff_double_slab", -750);
@@ -2711,6 +2757,8 @@ public final class ItemTypes {
     public static final ItemType POTATO = register("minecraft:potato", 309);
 
     public static final ItemType POTATOES = register("minecraft:potatoes", 142);
+
+    public static final ItemType POTENT_SULFUR = register("minecraft:potent_sulfur", -1108);
 
     public static final ItemType POTION = register("minecraft:potion", 459);
 
@@ -2860,7 +2908,7 @@ public final class ItemTypes {
 
     public static final ItemType RED_DYE = register("minecraft:red_dye", 428);
 
-    public static final ItemType RED_FLOWER = register("minecraft:red_flower", 813);
+    public static final ItemType RED_FLOWER = register("minecraft:red_flower", 815);
 
     public static final ItemType RED_GLAZED_TERRACOTTA = register("minecraft:red_glazed_terracotta", 234);
 
@@ -2968,7 +3016,7 @@ public final class ItemTypes {
 
     public static final ItemType SANDSTONE_WALL = register("minecraft:sandstone_wall", -975);
 
-    public static final ItemType SAPLING = register("minecraft:sapling", 809);
+    public static final ItemType SAPLING = register("minecraft:sapling", 811);
 
     public static final ItemType SCAFFOLDING = register("minecraft:scaffolding", -165);
 
@@ -3010,7 +3058,7 @@ public final class ItemTypes {
 
     public static final ItemType SHROOMLIGHT = register("minecraft:shroomlight", -230);
 
-    public static final ItemType SHULKER_BOX = register("minecraft:shulker_box", 824);
+    public static final ItemType SHULKER_BOX = register("minecraft:shulker_box", 826);
 
     public static final ItemType SHULKER_SHELL = register("minecraft:shulker_shell", 605);
 
@@ -3110,7 +3158,7 @@ public final class ItemTypes {
 
     public static final ItemType SPARKLER = register("minecraft:sparkler", 643);
 
-    public static final ItemType SPAWN_EGG = register("minecraft:spawn_egg", 840);
+    public static final ItemType SPAWN_EGG = register("minecraft:spawn_egg", 843);
 
     public static final ItemType SPIDER_EYE = register("minecraft:spider_eye", 307);
 
@@ -3170,9 +3218,9 @@ public final class ItemTypes {
 
     public static final ItemType SQUID_SPAWN_EGG = register("minecraft:squid_spawn_egg", 483);
 
-    public static final ItemType STAINED_GLASS = register("minecraft:stained_glass", 822);
+    public static final ItemType STAINED_GLASS = register("minecraft:stained_glass", 824);
 
-    public static final ItemType STAINED_GLASS_PANE = register("minecraft:stained_glass_pane", 823);
+    public static final ItemType STAINED_GLASS_PANE = register("minecraft:stained_glass_pane", 825);
 
     public static final ItemType STAINED_HARDENED_CLAY = register("minecraft:stained_hardened_clay", 744);
 
@@ -3190,13 +3238,13 @@ public final class ItemTypes {
 
     public static final ItemType STONE_AXE = register("minecraft:stone_axe", 346);
 
-    public static final ItemType STONE_BLOCK_SLAB = register("minecraft:stone_block_slab", 799);
+    public static final ItemType STONE_BLOCK_SLAB = register("minecraft:stone_block_slab", 801);
 
-    public static final ItemType STONE_BLOCK_SLAB2 = register("minecraft:stone_block_slab2", 800);
+    public static final ItemType STONE_BLOCK_SLAB2 = register("minecraft:stone_block_slab2", 802);
 
-    public static final ItemType STONE_BLOCK_SLAB3 = register("minecraft:stone_block_slab3", 801);
+    public static final ItemType STONE_BLOCK_SLAB3 = register("minecraft:stone_block_slab3", 803);
 
-    public static final ItemType STONE_BLOCK_SLAB4 = register("minecraft:stone_block_slab4", 802);
+    public static final ItemType STONE_BLOCK_SLAB4 = register("minecraft:stone_block_slab4", 804);
 
     public static final ItemType STONE_BRICK_DOUBLE_SLAB = register("minecraft:stone_brick_double_slab", -881);
 
@@ -3224,7 +3272,7 @@ public final class ItemTypes {
 
     public static final ItemType STONE_SWORD = register("minecraft:stone_sword", 343);
 
-    public static final ItemType STONEBRICK = register("minecraft:stonebrick", 797);
+    public static final ItemType STONEBRICK = register("minecraft:stonebrick", 799);
 
     public static final ItemType STONECUTTER = register("minecraft:stonecutter", 245);
 
@@ -3290,6 +3338,32 @@ public final class ItemTypes {
 
     public static final ItemType SUGAR_CANE = register("minecraft:sugar_cane", 417);
 
+    public static final ItemType SULFUR = register("minecraft:sulfur", -1092);
+
+    public static final ItemType SULFUR_BRICK_DOUBLE_SLAB = register("minecraft:sulfur_brick_double_slab", -1104);
+
+    public static final ItemType SULFUR_BRICK_SLAB = register("minecraft:sulfur_brick_slab", -1103);
+
+    public static final ItemType SULFUR_BRICK_STAIRS = register("minecraft:sulfur_brick_stairs", -1105);
+
+    public static final ItemType SULFUR_BRICK_WALL = register("minecraft:sulfur_brick_wall", -1106);
+
+    public static final ItemType SULFUR_BRICKS = register("minecraft:sulfur_bricks", -1102);
+
+    public static final ItemType SULFUR_CUBE_BUCKET = register("minecraft:sulfur_cube_bucket", 794);
+
+    public static final ItemType SULFUR_CUBE_SPAWN_EGG = register("minecraft:sulfur_cube_spawn_egg", 793);
+
+    public static final ItemType SULFUR_DOUBLE_SLAB = register("minecraft:sulfur_double_slab", -1094);
+
+    public static final ItemType SULFUR_SLAB = register("minecraft:sulfur_slab", -1093);
+
+    public static final ItemType SULFUR_SPIKE = register("minecraft:sulfur_spike", -1125);
+
+    public static final ItemType SULFUR_STAIRS = register("minecraft:sulfur_stairs", -1095);
+
+    public static final ItemType SULFUR_WALL = register("minecraft:sulfur_wall", -1096);
+
     public static final ItemType SUNFLOWER = register("minecraft:sunflower", 175);
 
     public static final ItemType SUSPICIOUS_GRAVEL = register("minecraft:suspicious_gravel", -573);
@@ -3310,7 +3384,7 @@ public final class ItemTypes {
 
     public static final ItemType TALL_GRASS = register("minecraft:tall_grass", -864);
 
-    public static final ItemType TALLGRASS = register("minecraft:tallgrass", 817);
+    public static final ItemType TALLGRASS = register("minecraft:tallgrass", 819);
 
     public static final ItemType TARGET = register("minecraft:target", -239);
 
@@ -3702,7 +3776,7 @@ public final class ItemTypes {
 
     public static final ItemType WOLF_SPAWN_EGG = register("minecraft:wolf_spawn_egg", 472);
 
-    public static final ItemType WOOD = register("minecraft:wood", 825);
+    public static final ItemType WOOD = register("minecraft:wood", 827);
 
     public static final ItemType WOODEN_AXE = register("minecraft:wooden_axe", 342);
 
@@ -3718,13 +3792,13 @@ public final class ItemTypes {
 
     public static final ItemType WOODEN_SHOVEL = register("minecraft:wooden_shovel", 340);
 
-    public static final ItemType WOODEN_SLAB = register("minecraft:wooden_slab", 812);
+    public static final ItemType WOODEN_SLAB = register("minecraft:wooden_slab", 814);
 
     public static final ItemType WOODEN_SPEAR = register("minecraft:wooden_spear", 263);
 
     public static final ItemType WOODEN_SWORD = register("minecraft:wooden_sword", 339);
 
-    public static final ItemType WOOL = register("minecraft:wool", 793);
+    public static final ItemType WOOL = register("minecraft:wool", 795);
 
     public static final ItemType WRITABLE_BOOK = register("minecraft:writable_book", 550);
 

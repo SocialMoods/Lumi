@@ -16,4 +16,9 @@ public class ItemBundle extends StringItemBase {
     public boolean isSupportedOn(int protocolId) {
         return protocolId >= ProtocolInfo.v1_21_40;
     }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
 }

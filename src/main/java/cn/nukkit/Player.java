@@ -27,7 +27,6 @@ import cn.nukkit.entity.data.property.EntityProperty;
 import cn.nukkit.entity.data.skin.Skin;
 import cn.nukkit.entity.effect.EffectType;
 import cn.nukkit.entity.item.*;
-import cn.nukkit.entity.mob.EntityWolf;
 import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.entity.projectile.EntityThrownTrident;
@@ -376,7 +375,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     protected boolean needSendInventory;
     protected boolean needSendHeldItem;
     private boolean needSendRotation;
-    private boolean dimensionFix560;
+    private boolean needDimensionChangeACK;
     private boolean needSendUpdateClientInputLocksPacket;
 
     /**
@@ -1054,8 +1053,10 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             ((BlockEntitySpawnable) blockEntity).spawnTo(this);
         }
 
-        if (this.dimensionFix560) {
-            this.dimensionFix560 = false;
+        if (this.needDimensionChangeACK) {
+            this.needDimensionChangeACK = false;
+
+            this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
 
             PlayerActionPacket playerActionPacket = new PlayerActionPacket();
             playerActionPacket.action = PlayerActionPacket.ACTION_DIMENSION_CHANGE_SUCCESS;
@@ -4971,7 +4972,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         chunkPublisherUpdatePacket.radius = this.chunkRadius << 4;
         this.dataPacket(chunkPublisherUpdatePacket);
 
-        this.dimensionFix560 = true;
+        this.needDimensionChangeACK = true;
     }
 
     @Override

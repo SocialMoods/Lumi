@@ -1,9 +1,11 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.inventory.transaction.data.UseItemData;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector2f;
 import cn.nukkit.math.Vector3f;
 import cn.nukkit.network.protocol.types.*;
+import cn.nukkit.network.protocol.types.inventory.itemstack.request.ItemStackRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,7 +37,8 @@ public class PlayerAuthInputPacket extends DataPacket {
     private Vector3f vrGazeDirection;
     private long tick;
     private Vector3f delta;
-    // private ItemStackRequest itemStackRequest;
+    private InventoryTransactionPacket itemUseTransaction;
+    private ItemStackRequest itemStackRequest;
     private Map<PlayerActionType, PlayerBlockActionData> blockActionData = new EnumMap<>(PlayerActionType.class);
     /**
      * @since v748
@@ -96,9 +99,12 @@ public class PlayerAuthInputPacket extends DataPacket {
         this.tick = this.getUnsignedVarLong();
         this.delta = this.getVector3f();
 
+        if (this.inputData.contains(AuthInputAction.PERFORM_ITEM_INTERACTION)) {
+            this.itemUseTransaction = this.readItemUseTransaction();
+        }
+
         if (this.inputData.contains(AuthInputAction.PERFORM_ITEM_STACK_REQUEST)) {
-            // TODO: this.itemStackRequest = readItemStackRequest(buf, protocolVersion);
-            // We are safe to leave this for later, since it is only sent with ServerAuthInventories
+            this.itemStackRequest = this.readItemStackRequest(this.protocol);
         }
 
         if (this.inputData.contains(AuthInputAction.PERFORM_BLOCK_ACTIONS)) {
@@ -137,6 +143,54 @@ public class PlayerAuthInputPacket extends DataPacket {
         if (protocol >= ProtocolInfo.v1_21_50) {
             this.rawMoveVector = this.getVector2f();
         }
+    }
+
+    private InventoryTransactionPacket readItemUseTransaction() {
+        InventoryTransactionPacket packet = new InventoryTransactionPacket();
+        packet.protocol = this.protocol;
+        packet.transactionType = InventoryTransactionPacket.TYPE_USE_ITEM;
+        packet.setBuffer(this.getBufferUnsafe());
+        packet.setCount(this.getCount());
+        packet.setOffset(this.getOffset());
+        packet.legacyRequestId = packet.getVarInt();
+
+        if (packet.legacyRequestId < -1 && (packet.legacyRequestId & 1) == 0) {
+            int legacySlotsCount = Math.min((int) packet.getUnsignedVarInt(), 256);
+            for (int i = 0; i < legacySlotsCount; i++) {
+                packet.getByte();
+                int slotCount = (int) packet.getUnsignedVarInt();
+                packet.get(slotCount);
+            }
+        }
+
+        int actionCount = Math.min((int) packet.getUnsignedVarInt(), 4096);
+        packet.actions = new NetworkInventoryAction[actionCount];
+        for (int i = 0; i < packet.actions.length; i++) {
+            packet.actions[i] = new NetworkInventoryAction().read(packet, false);
+        }
+
+        UseItemData itemData = new UseItemData();
+        itemData.actionType = (int) packet.getUnsignedVarInt();
+        if (packet.protocol >= ProtocolInfo.v1_21_20) {
+            itemData.triggerType = (int) packet.getUnsignedVarInt();
+        }
+        itemData.blockPos = packet.getBlockVector3();
+        itemData.face = packet.getBlockFace();
+        itemData.hotbarSlot = packet.getVarInt();
+        itemData.itemInHand = packet.getSlot(packet.protocol);
+        itemData.playerPos = packet.getVector3f().asVector3();
+        itemData.clickPos = packet.getVector3f();
+        itemData.blockRuntimeId = (int) packet.getUnsignedVarInt();
+        if (packet.protocol >= ProtocolInfo.v1_21_20) {
+            itemData.clientInteractPrediction = (int) packet.getUnsignedVarInt();
+        }
+        if (packet.protocol >= ProtocolInfo.v1_26_10) {
+            itemData.clientCooldownState = (byte) packet.getByte();
+        }
+
+        packet.transactionData = itemData;
+        this.setOffset(packet.getOffset());
+        return packet;
     }
 
     @Override
