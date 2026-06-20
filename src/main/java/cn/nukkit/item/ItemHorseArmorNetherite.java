@@ -13,6 +13,11 @@ public class ItemHorseArmorNetherite extends StringItemBase {
     }
 
     @Override
+    public boolean isLavaResistant() {
+        return true;
+    }
+
+    @Override
     public boolean isSupportedOn(int protocolId) {
         return protocolId >= ProtocolInfo.v1_21_130;
     }

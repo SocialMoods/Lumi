@@ -18,6 +18,11 @@ public class ItemIngotNetherite extends Item implements ItemTrimMaterial {
     }
 
     @Override
+    public boolean isLavaResistant() {
+        return true;
+    }
+
+    @Override
     public ItemTrimMaterialType getMaterial() {
         return ItemTrimMaterialType.MATERIAL_NETHERITE;
     }

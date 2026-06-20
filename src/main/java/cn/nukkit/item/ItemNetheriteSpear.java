@@ -20,4 +20,9 @@ public class ItemNetheriteSpear extends ItemSpear {
     public int getAttackDamage() {
         return 6;
     }
+
+    @Override
+    public boolean isLavaResistant() {
+        return true;
+    }
 }

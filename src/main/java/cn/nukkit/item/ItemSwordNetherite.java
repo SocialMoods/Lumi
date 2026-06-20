@@ -1,7 +1,5 @@
 package cn.nukkit.item;
 
-import cn.nukkit.network.protocol.ProtocolInfo;
-
 public class ItemSwordNetherite extends ItemTool {
 
     public ItemSwordNetherite() {
@@ -34,5 +32,10 @@ public class ItemSwordNetherite extends ItemTool {
     @Override
     public int getMaxDurability() {
         return ItemTool.DURABILITY_NETHERITE;
+    }
+
+    @Override
+    public boolean isLavaResistant() {
+        return true;
     }
 }
