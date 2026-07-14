@@ -17,6 +17,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.types.ExperimentData;
 import cn.nukkit.network.protocol.types.PlayerBlockActionData;
 import cn.nukkit.network.session.NetworkPlayerSession;
+import cn.nukkit.resourcepacks.ResourcePack;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.LoginChainData;
 import com.google.common.cache.Cache;
@@ -204,6 +205,14 @@ public final class PlayerHandle {
 
     public void setShouldPack(boolean value) {
         player.shouldPack = value;
+    }
+
+    public void queueResourcePackChunk(ResourcePack resourcePack, int chunkIndex) {
+        player.queueResourcePackChunk(resourcePack, chunkIndex);
+    }
+
+    public Map<UUID, Player.PendingResourcePack> getPendingResourcePacks() {
+        return player.pendingResourcePacks;
     }
 
     public List<ExperimentData> getExperiments() {
