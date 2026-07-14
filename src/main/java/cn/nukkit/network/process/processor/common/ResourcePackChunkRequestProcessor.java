@@ -31,12 +31,13 @@ public class ResourcePackChunkRequestProcessor extends DataPacketProcessor<Resou
             return;
         }
 
-        ResourcePackChunkDataPacket dataPacket = new ResourcePackChunkDataPacket();
-        dataPacket.packId = resourcePack.getPackId();
-        dataPacket.chunkIndex = pk.chunkIndex;
-        dataPacket.data = resourcePack.getPackChunk(RESOURCE_PACK_CHUNK_SIZE * pk.chunkIndex, RESOURCE_PACK_CHUNK_SIZE);
-        dataPacket.progress = (long) RESOURCE_PACK_CHUNK_SIZE * pk.chunkIndex;
-        player.dataPacket(dataPacket);
+        int chunkCount = (resourcePack.getPackSize() + RESOURCE_PACK_CHUNK_SIZE - 1) / RESOURCE_PACK_CHUNK_SIZE;
+        if (pk.chunkIndex < 0 || pk.chunkIndex >= chunkCount) {
+            player.close("", "disconnectionScreen.resourcePack");
+            return;
+        }
+
+        playerHandle.queueResourcePackChunk(resourcePack, pk.chunkIndex);
     }
 
     @Override

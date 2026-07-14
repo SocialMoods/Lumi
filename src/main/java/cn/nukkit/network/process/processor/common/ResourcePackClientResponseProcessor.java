@@ -34,6 +34,8 @@ public class ResourcePackClientResponseProcessor extends DataPacketProcessor<Res
                     return;
                 }
 
+                handle.getPendingResourcePacks().clear();
+
                 handle.setShouldPack(true);
 
                 Set<String> uniqueIds = new LinkedHashSet<>();
