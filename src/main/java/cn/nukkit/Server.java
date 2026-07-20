@@ -335,6 +335,8 @@ public class Server {
 
         Registries.FUEL.init();
         Registries.DISPENSE_BEHAVIOR.init();
+        Registries.TRIM_MATERIAL.init();
+        Registries.TRIM_PATTERN.init();
 
         this.commandMap = new SimpleCommandMap(this);
 

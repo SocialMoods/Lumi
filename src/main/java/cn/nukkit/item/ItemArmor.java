@@ -1,12 +1,12 @@
 package cn.nukkit.item;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.item.trim.ItemTrimMaterialType;
-import cn.nukkit.item.trim.ItemTrimPatternType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
+import cn.nukkit.network.protocol.types.TrimMaterial;
+import cn.nukkit.network.protocol.types.TrimPattern;
 
 /**
  * @author MagicDroidX
@@ -133,24 +133,15 @@ abstract public class ItemArmor extends Item implements ItemDurable {
         return this.isHelmet();
     }
 
-    /**
-     * @deprecated
-     * use {@link #setArmorTrim(ItemTrimPatternType, ItemTrimMaterialType)} instead
-     */
-    @Deprecated
-    public void setTrim(ItemTrimPatternType pattern, ItemTrimMaterialType material) {
-        this.setArmorTrim(pattern, material);
-    }
-
-    public ItemArmor  setArmorTrim(ItemTrimPatternType pattern, ItemTrimMaterialType material) {
+    public ItemArmor setArmorTrim(TrimPattern pattern, TrimMaterial material) {
         CompoundTag tag = this.getNamedTag();
         if (tag == null) {
             tag = new CompoundTag();
         }
 
         this.setCompoundTag(tag.putCompound("Trim", new CompoundTag()
-                .putString("Pattern", pattern.getTrimPattern())
-                .putString("Material", material.getMaterialName())));
+                .putString("Pattern", pattern.patternId())
+                .putString("Material", material.materialId())));
 
         return this;
     }

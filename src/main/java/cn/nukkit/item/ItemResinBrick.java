@@ -1,7 +1,8 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
 import cn.nukkit.network.protocol.ProtocolInfo;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 public class ItemResinBrick extends StringItemBase implements ItemTrimMaterial {
     public ItemResinBrick() {
@@ -14,7 +15,7 @@ public class ItemResinBrick extends StringItemBase implements ItemTrimMaterial {
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_RESIN;
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_RESIN;
     }
 }

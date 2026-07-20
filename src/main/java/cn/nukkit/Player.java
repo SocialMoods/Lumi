@@ -49,7 +49,6 @@ import cn.nukkit.inventory.transaction.*;
 import cn.nukkit.item.*;
 import cn.nukkit.item.customitem.CustomItemDefinition;
 import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.item.trim.TrimFactory;
 import cn.nukkit.lang.CommandOutputContainer;
 import cn.nukkit.lang.LangCode;
 import cn.nukkit.lang.TextContainer;
@@ -2904,8 +2903,9 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
             // BDS sends armor trim templates and materials before the CraftingDataPacket
             TrimDataPacket trimDataPacket = new TrimDataPacket();
-            trimDataPacket.getMaterials().addAll(TrimFactory.trimMaterials);
-            trimDataPacket.getPatterns().addAll(TrimFactory.trimPatterns);
+            trimDataPacket.getMaterials().addAll(Registries.TRIM_MATERIAL.getAll());
+            trimDataPacket.getPatterns().addAll(Registries.TRIM_PATTERN.getAll());
+
             this.dataPacket(trimDataPacket);
             if (this.protocol < ProtocolInfo.v1_21_60) {
                 this.sendRecipeList();

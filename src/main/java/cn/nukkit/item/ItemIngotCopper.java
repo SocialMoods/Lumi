@@ -1,6 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 /**
  * @author MagicDroidX
@@ -13,7 +14,7 @@ public class ItemIngotCopper extends StringItemBase implements ItemTrimMaterial 
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_COPPER;
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_COPPER;
     }
 }

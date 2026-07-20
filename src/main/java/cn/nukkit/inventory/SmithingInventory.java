@@ -20,14 +20,11 @@ package cn.nukkit.inventory;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.*;
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
 import cn.nukkit.level.Position;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 import cn.nukkit.recipe.impl.SmithingRecipe;
 import cn.nukkit.registry.Registries;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -134,19 +131,19 @@ public class SmithingInventory extends FakeBlockUIComponent {
 
     public Item getTrimOutPutItem() {
         Item input = this.getEquipment().clone();
-        ItemTrimMaterialType material = resolveTrimMaterial(this.getIngredient());
+        TrimMaterial material = resolveTrimMaterial(this.getIngredient());
         if (material != null && this.getTemplate() instanceof ItemTrimPattern) {
             if (isTrimmableArmor(input)) {
                 ItemArmor trimmedArmor = (ItemArmor) input.clone();
-                ItemTrimPattern pattern = (ItemTrimPattern) this.getTemplate();
-                return trimmedArmor.setArmorTrim(pattern.getPattern(), material);
+                ItemTrimPattern patternItem = (ItemTrimPattern) this.getTemplate();
+                return trimmedArmor.setArmorTrim(patternItem.getPattern(), material);
             }
         }
         return Item.AIR_ITEM.clone();
     }
 
     @Nullable
-    private ItemTrimMaterialType resolveTrimMaterial(Item item) {
+    private TrimMaterial resolveTrimMaterial(Item item) {
         if (item instanceof ItemTrimMaterial trimMaterial) {
             return trimMaterial.getMaterial();
         }

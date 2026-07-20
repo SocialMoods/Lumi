@@ -1,7 +1,8 @@
 package cn.nukkit.item;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 /**
  * @author MagicDroidX
@@ -23,7 +24,7 @@ public class ItemRedstone extends Item implements ItemTrimMaterial {
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_REDSTONE;
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_REDSTONE;
     }
 }
