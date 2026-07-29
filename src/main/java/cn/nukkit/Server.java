@@ -394,6 +394,7 @@ public class Server {
         }
 
         Registries.BLOCK.initCustomBlocks();
+        GlobalBlockPalette.downgradePalettes();
 
         LevelProviderManager.addProvider(this, LevelDBProvider.class);
 
