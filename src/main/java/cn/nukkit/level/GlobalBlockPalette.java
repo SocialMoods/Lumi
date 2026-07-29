@@ -2,22 +2,23 @@ package cn.nukkit.level;
 
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.nbt.NBTIO;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.item.Item;
 import cn.nukkit.network.protocol.ProtocolInfo;
-import it.unimi.dsi.fastutil.ints.Int2IntMap;
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import it.unimi.dsi.fastutil.Function;
+import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.*;
-import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.GZIPInputStream;
 
 @Log4j2
 public class GlobalBlockPalette {
@@ -70,6 +71,143 @@ public class GlobalBlockPalette {
             throw new IllegalStateException("BlockPalette was already generated!");
         }
         initialized = true;
+    }
+
+    private static int getLegacyId(String id) {
+        Block block = Item.get(id).getBlock();
+        return block.getId() << Block.DATA_BITS | block.getDamage();
+    }
+
+    private static String getIdentifier(int id, int meta) {
+        return Block.get(id, meta).getIdentifier();
+    }
+
+    private static String getIdentifier(int mapId) {
+        return getIdentifier(mapId >> Block.DATA_BITS, mapId & Block.DATA_MASK);
+    }
+
+    private interface MappingFunction {
+        int map(JsonObject description, int originalId, int originalMeta);
+    }
+
+    private static final Int2ObjectMap<Int2ObjectMap<Item>> DOWNGRADES = new Int2ObjectOpenHashMap<>();
+
+    public static Item getDowngradeItemBlock(int protocolId, int id) {
+        final Int2ObjectMap<Item> set = DOWNGRADES.get(protocolId);
+        if(set == null) return null;
+        return set.get(id);
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private enum MappingType {
+        DEFAULT((json, orgId, orgMeta) -> {
+            int legacyId = getId(json);
+            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | (json.has("meta") ? json.get("meta").getAsInt() : 0);
+        }),
+        SAVE_META((json, orgId, orgMeta) -> {
+            int legacyId = getId(json);
+            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | orgMeta;
+        });
+
+        private final MappingFunction function;
+
+        private static int getId(JsonObject json) {
+            return getLegacyId(json.get("id").getAsString());
+        }
+    }
+
+    public static void downgradePalettes() {
+        try {
+            final JsonObject mapping = new JsonParser().parse(new String(GlobalBlockPalette.class.getClassLoader().getResourceAsStream("internal/downgrade_palette.json").readAllBytes())).getAsJsonObject();
+            final Set<BlockPalette> paletteList = getAllPalette();
+
+            final AtomicInteger preProtocol = new AtomicInteger(0);
+
+            getAllNoneBlocks(key -> mapping.has(key.toString())).forEach((namespace, list) -> {
+                for (BlockPalette palette : paletteList) {
+                    final int legacyId = getLegacyId(namespace);
+                    if (palette.getLegacyToRuntimeIdMap().containsKey(legacyId)) {
+                        break;
+                    }
+
+                    final JsonElement description = mapping.get(namespace);
+                    final JsonObject json;
+
+                    if (description instanceof JsonObject jsonObject) {
+                        json = jsonObject;
+                    } else {
+                        json = new JsonObject();
+                        json.addProperty("id", description.getAsString());
+                    }
+
+                    MappingFunction function = (json.has("type") ? MappingType.valueOf(json.get("type").getAsString().toUpperCase()) : MappingType.DEFAULT).getFunction();
+
+                    list.forEach(mapId -> {
+                        final int id = mapId >> Block.DATA_BITS;
+                        final int meta = mapId & Block.DATA_MASK;
+
+                        final int legacyIdMapping = function.map(json, id, meta);
+
+                        palette.registerState(id, meta, palette.getRuntimeId(legacyIdMapping >> Block.DATA_BITS, legacyIdMapping & Block.DATA_MASK));
+                    });
+
+                    {
+                        int orgId = list.getFirst() >> Block.DATA_BITS;
+                        int id = function.map(json, orgId, 0) >> Block.DATA_BITS;
+                        Item item = Block.get(id).toItem();
+
+                        for(int protocol = preProtocol.get();protocol < palette.getProtocol();protocol++) {
+                            DOWNGRADES.computeIfAbsent(protocol, (k) -> new Int2ObjectArrayMap<>()).put(orgId, item);
+                        }
+                    }
+
+                    preProtocol.set(palette.getProtocol());
+
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Map<String, IntList> getAllNoneBlocks(Function<String, Boolean> has) {
+        final Int2IntMap firstMap = GlobalBlockPalette.getPaletteByProtocol(ProtocolInfo.v1_20_0).getLegacyToRuntimeIdMap();
+        final Int2IntMap lastMap = GlobalBlockPalette.getPaletteByProtocol(ProtocolInfo.CURRENT_PROTOCOL).getLegacyToRuntimeIdMap();
+        final IntList noneBlocks = new IntArrayList();
+        final Map<String, IntList> ids = new HashMap<>();
+
+        for(var entry : lastMap.int2IntEntrySet()) {
+            int legacyId = entry.getIntKey();
+
+            if(!firstMap.containsKey(legacyId)) {
+                noneBlocks.add(legacyId);
+            }
+        }
+
+        for(int legacyId : noneBlocks) {
+            int id = legacyId >> Block.DATA_BITS;
+            int meta = legacyId & Block.DATA_MASK;
+
+            try {
+                String namespace = getIdentifier(id, meta);
+                if(has.apply(namespace)) {
+                    ids.computeIfAbsent(namespace, key -> new IntArrayList()).add(legacyId);
+                }
+            } catch (Throwable ignore) {}
+        }
+
+        return ids;
+    }
+
+    private static Set<BlockPalette> getAllPalette() {
+        final Set<BlockPalette> paletteList = new ObjectArraySet<>();
+
+        for(int protocol : ProtocolInfo.SUPPORTED_PROTOCOLS) {
+            paletteList.add(GlobalBlockPalette.getPaletteByProtocol(protocol));
+        }
+
+        return paletteList;
     }
 
     public static BlockPalette getPaletteByProtocol(int protocol) {

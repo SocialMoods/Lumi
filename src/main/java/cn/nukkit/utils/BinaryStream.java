@@ -658,6 +658,9 @@ public class BinaryStream {
             return;
         }
 
+        boolean isBlock = item instanceof ItemBlock;
+        Item mappingItem = isBlock ? GlobalBlockPalette.getDowngradeItemBlock(protocolId, item.getBlockId()) : null;
+
         RuntimeItemMapping mapping = RuntimeItems.getMapping(protocolId);
         boolean isErrorItem = false;
         boolean isStringItem = item instanceof StringItem;
@@ -672,18 +675,33 @@ public class BinaryStream {
             isErrorItem = true;
         }
 
-        if (!item.isSupportedOn(protocolId) || isErrorItem) {
+        if (mappingItem != null || !item.isSupportedOn(protocolId) || isErrorItem) {
             Item originItem = item;
-            String downgradedIdentifier = RuntimeItems.downgradeIdentifier(item.getIdentifier(), protocolId);
-            if(downgradedIdentifier != null) {
-                String[] parts = downgradedIdentifier.split("-");
-                String identifier = parts[0];
-                int damage = parts.length > 1 ? Integer.parseInt(parts[1]) : originItem.getDamage();
-                item = Item.get(identifier, damage, originItem.getCount());
+            if(mappingItem == null) {
+                String downgradedIdentifier = RuntimeItems.downgradeIdentifier(item.getIdentifier(), protocolId);
+                if (downgradedIdentifier != null) {
+                    String[] parts = downgradedIdentifier.split("-");
+                    String identifier = parts[0];
+                    int damage = parts.length > 1 ? Integer.parseInt(parts[1]) : originItem.getDamage();
+                    item = Item.get(identifier, damage, originItem.getCount());
+                } else {
+                    item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
+                }
             } else {
+                item = mappingItem;
+            }
+
+            try {
+                if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
+                    throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
+                } else {
+                    mapping.toRuntime(item.getId(), item.getDamage());
+                }
+            } catch (Exception e) {
                 item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
             }
 
+            item.setCount(originItem.getCount());
             CompoundTag compoundTag = originItem.getNamedTag();
             if (compoundTag != null) {
                 item.setNamedTag(new CompoundTag().putCompound(MV_ORIGIN_NBT, compoundTag));
@@ -697,7 +715,6 @@ public class BinaryStream {
 
         int id = item.getId();
         int meta = item.getDamage();
-        boolean isBlock = item instanceof ItemBlock;
         boolean isDurable = item instanceof ItemDurable;
 
         int runtimeId;
