@@ -25,6 +25,7 @@ public class GlobalBlockPalette {
     private static boolean initialized;
 
     private static final Int2ObjectMap<BlockPalette> PALETTES = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<Int2ObjectMap<Item>> DOWNGRADES = new Int2ObjectOpenHashMap<>();
     private static final int[] PROTOCOLS = new int[] {
             ProtocolInfo.v1_20_0_23,
             ProtocolInfo.v1_20_10_21,
@@ -82,49 +83,17 @@ public class GlobalBlockPalette {
         return Block.get(id, meta).getIdentifier();
     }
 
-    private static String getIdentifier(int mapId) {
-        return getIdentifier(mapId >> Block.DATA_BITS, mapId & Block.DATA_MASK);
-    }
-
-    private interface MappingFunction {
-        int map(JsonObject description, int originalId, int originalMeta);
-    }
-
-    private static final Int2ObjectMap<Int2ObjectMap<Item>> DOWNGRADES = new Int2ObjectOpenHashMap<>();
-
-    public static Item getDowngradeItemBlock(int protocolId, int id) {
-        final Int2ObjectMap<Item> set = DOWNGRADES.get(protocolId);
-        if(set == null) return null;
-        return set.get(id);
-    }
-
-    @AllArgsConstructor
-    @Getter
-    private enum MappingType {
-        DEFAULT((json, orgId, orgMeta) -> {
-            int legacyId = getId(json);
-            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | (json.has("meta") ? json.get("meta").getAsInt() : 0);
-        }),
-        SAVE_META((json, orgId, orgMeta) -> {
-            int legacyId = getId(json);
-            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | orgMeta;
-        });
-
-        private final MappingFunction function;
-
-        private static int getId(JsonObject json) {
-            return getLegacyId(json.get("id").getAsString());
-        }
-    }
-
     public static void downgradePalettes() {
         try {
             final JsonObject mapping = new JsonParser().parse(new String(GlobalBlockPalette.class.getClassLoader().getResourceAsStream("internal/downgrade_palette.json").readAllBytes())).getAsJsonObject();
             final Set<BlockPalette> paletteList = getAllPalette();
 
-            final AtomicInteger preProtocol = new AtomicInteger(0);
+            int preProtocol = 0;
 
-            getAllNoneBlocks(key -> mapping.has(key.toString())).forEach((namespace, list) -> {
+            for(Map.Entry<String, IntList> entry : getAllNoneBlocks(key -> mapping.has(key.toString())).entrySet()) {
+                final String namespace = entry.getKey();
+                final IntList list = entry.getValue();
+
                 for (BlockPalette palette : paletteList) {
                     final int legacyId = getLegacyId(namespace);
                     if (palette.getLegacyToRuntimeIdMap().containsKey(legacyId)) {
@@ -157,15 +126,15 @@ public class GlobalBlockPalette {
                         int id = function.map(json, orgId, 0) >> Block.DATA_BITS;
                         Item item = Block.get(id).toItem();
 
-                        for(int protocol = preProtocol.get();protocol < palette.getProtocol();protocol++) {
+                        for(int protocol = preProtocol;protocol < palette.getProtocol();protocol++) {
                             DOWNGRADES.computeIfAbsent(protocol, (k) -> new Int2ObjectArrayMap<>()).put(orgId, item);
                         }
                     }
 
-                    preProtocol.set(palette.getProtocol());
+                    preProtocol = palette.getProtocol();
 
                 }
-            });
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -232,6 +201,12 @@ public class GlobalBlockPalette {
         return getPaletteByProtocol(protocolId).getLegacyFullId(runtimeId);
     }
 
+    public static Item getDowngradedItemBlock(int protocolId, int id) {
+        final Int2ObjectMap<Item> set = DOWNGRADES.get(protocolId);
+        if(set == null) return null;
+        return set.get(id);
+    }
+
     @Deprecated
     public static int getOrCreateRuntimeId(int legacyId) throws NoSuchElementException {
         Server.mvw("GlobalBlockPalette#getOrCreateRuntimeId(int)");
@@ -257,5 +232,28 @@ public class GlobalBlockPalette {
         private int data;
         private int runtimeID;
         private String name;
+    }
+
+    private interface MappingFunction {
+        int map(JsonObject description, int originalId, int originalMeta);
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private enum MappingType {
+        DEFAULT((json, orgId, orgMeta) -> {
+            int legacyId = getId(json);
+            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | (json.has("meta") ? json.get("meta").getAsInt() : 0);
+        }),
+        SAVE_META((json, orgId, orgMeta) -> {
+            int legacyId = getId(json);
+            return (legacyId >> Block.DATA_BITS) << Block.DATA_BITS | orgMeta;
+        });
+
+        private final MappingFunction function;
+
+        private static int getId(JsonObject json) {
+            return getLegacyId(json.get("id").getAsString());
+        }
     }
 }

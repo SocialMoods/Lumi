@@ -23,7 +23,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.network.LittleEndianByteBufInputStream;
-import cn.nukkit.network.LittleEndianByteBufOutputStream;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.types.EntityLink;
 import cn.nukkit.network.protocol.types.ScriptDebugShapeType;
@@ -36,8 +35,6 @@ import cn.nukkit.network.protocol.types.inventory.itemstack.request.action.*;
 import com.google.common.base.Preconditions;
 import io.netty.buffer.AbstractByteBufAllocator;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import lombok.SneakyThrows;
 import org.cloudburstmc.nbt.NBTOutputStream;
 import org.cloudburstmc.nbt.NbtUtils;
@@ -659,7 +656,7 @@ public class BinaryStream {
         }
 
         boolean isBlock = item instanceof ItemBlock;
-        Item mappingItem = isBlock ? GlobalBlockPalette.getDowngradeItemBlock(protocolId, item.getBlockId()) : null;
+        Item mappingItem = isBlock ? GlobalBlockPalette.getDowngradedItemBlock(protocolId, item.getBlockId()) : null;
 
         RuntimeItemMapping mapping = RuntimeItems.getMapping(protocolId);
         boolean isErrorItem = false;
