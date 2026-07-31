@@ -22,7 +22,6 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
-import cn.nukkit.network.LittleEndianByteBufInputStream;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.types.EntityLink;
 import cn.nukkit.network.protocol.types.ScriptDebugShapeType;
@@ -33,8 +32,6 @@ import cn.nukkit.network.protocol.types.inventory.itemstack.request.ItemStackReq
 import cn.nukkit.network.protocol.types.inventory.itemstack.request.TextProcessingEventOrigin;
 import cn.nukkit.network.protocol.types.inventory.itemstack.request.action.*;
 import com.google.common.base.Preconditions;
-import io.netty.buffer.AbstractByteBufAllocator;
-import io.netty.buffer.ByteBuf;
 import lombok.SneakyThrows;
 import org.cloudburstmc.nbt.NBTOutputStream;
 import org.cloudburstmc.nbt.NbtUtils;
@@ -513,24 +510,22 @@ public class BinaryStream {
         this.getVarInt();// blockRuntimeId
         //TODO 在1.21.30会得到错误数据
 
-        byte[] bytes = this.getByteArray();
-        ByteBuf buf = AbstractByteBufAllocator.DEFAULT.ioBuffer(bytes.length);
-        buf.writeBytes(bytes);
+        BinaryStream stream = new BinaryStream(this.getByteArray());
 
         byte[] nbt = new byte[0];
         String[] canPlace;
         String[] canBreak;
 
-        try (LittleEndianByteBufInputStream stream = new LittleEndianByteBufInputStream(buf)) {
-            int nbtSize = stream.readShort();
+        try {
+            int nbtSize = stream.getLShort();
 
             CompoundTag compoundTag = null;
             if (nbtSize > 0) {
-                compoundTag = NBTIO.read(stream, ByteOrder.LITTLE_ENDIAN);
+                compoundTag = readItemUserDataNbt(stream);
             } else if (nbtSize == -1) {
-                int tagCount = stream.readUnsignedByte();
+                int tagCount = stream.getByte();
                 if (tagCount != 1) throw new IllegalArgumentException("Expected 1 tag but got " + tagCount);
-                compoundTag = NBTIO.read(stream, ByteOrder.LITTLE_ENDIAN);
+                compoundTag = readItemUserDataNbt(stream);
             }
 
             if (compoundTag != null && !compoundTag.getAllTags().isEmpty()) {
@@ -554,29 +549,29 @@ public class BinaryStream {
                 }
             }
 
-            int canPlaceCount = stream.readInt();
+            int canPlaceCount = stream.getLInt();
             if (canPlaceCount > 4096) {
                 throw new RuntimeException("Too many CanPlaceOn blocks: " + canPlaceCount);
             }
 
             canPlace = new String[canPlaceCount];
             for (int i = 0; i < canPlace.length; i++) {
-                canPlace[i] = stream.readUTF();
+                canPlace[i] = getItemUserDataString(stream);
             }
 
-            int canBreakCount = stream.readInt();
+            int canBreakCount = stream.getLInt();
             if (canBreakCount > 4096) {
                 throw new RuntimeException("Too many CanDestroy blocks: " + canBreakCount);
             }
 
             canBreak = new String[canBreakCount];
             for (int i = 0; i < canBreak.length; i++) {
-                canBreak[i] = stream.readUTF();
+                canBreak[i] = getItemUserDataString(stream);
             }
 
             if (id != null) {
                 if (id == ItemID.SHIELD) {
-                    stream.readLong();
+                    stream.getLLong();
                 }
 
                 if (compoundTag != null && compoundTag.contains(MV_ORIGIN_ID) && compoundTag.contains(MV_ORIGIN_META)) {
@@ -598,8 +593,6 @@ public class BinaryStream {
             }
         } catch (IOException e) {
             throw new IllegalStateException("Unable to read item user data", e);
-        } finally {
-            buf.release();
         }
 
         Item item;
@@ -834,6 +827,20 @@ public class BinaryStream {
         return values;
     }
 
+    private static CompoundTag readItemUserDataNbt(BinaryStream stream) throws IOException {
+        int remaining = stream.getCount() - stream.getOffset();
+        ByteArrayInputStream input = new ByteArrayInputStream(
+                stream.getBufferUnsafe(), stream.getOffset(), remaining);
+        CompoundTag tag = NBTIO.read(input, ByteOrder.LITTLE_ENDIAN);
+        stream.skip(remaining - input.available());
+        return tag;
+    }
+
+    private static String getItemUserDataString(BinaryStream stream) {
+        int length = stream.getLShort();
+        return new String(stream.get(length), StandardCharsets.UTF_8);
+    }
+
     public void putNetworkItemStackDescriptor(int protocolId, Item item) {
         if (protocolId < ProtocolInfo.v1_26_20_26) {
             this.putSlot(protocolId, item);
@@ -1013,22 +1020,19 @@ public class BinaryStream {
         String[] canPlace = null;
         String[] canBreak = null;
 
-        byte[] bytes = this.getByteArray();
+        BinaryStream stream = new BinaryStream(this.getByteArray());
 
-        if (bytes.length != 0) {
-            ByteBuf buf = AbstractByteBufAllocator.DEFAULT.ioBuffer(bytes.length);
-            buf.writeBytes(bytes);
-
-            try (LittleEndianByteBufInputStream stream = new LittleEndianByteBufInputStream(buf)) {
-                int nbtSize = stream.readShort();
+        if (stream.getCount() != 0) {
+            try {
+                int nbtSize = stream.getLShort();
 
                 CompoundTag compoundTag = null;
                 if (nbtSize > 0) {
-                    compoundTag = NBTIO.read(stream, ByteOrder.LITTLE_ENDIAN);
+                    compoundTag = readItemUserDataNbt(stream);
                 } else if (nbtSize == -1) {
-                    int tagCount = stream.readUnsignedByte();
+                    int tagCount = stream.getByte();
                     if (tagCount != 1) throw new IllegalArgumentException("Expected 1 tag but got " + tagCount);
-                    compoundTag = NBTIO.read(stream, ByteOrder.LITTLE_ENDIAN);
+                    compoundTag = readItemUserDataNbt(stream);
                 }
 
                 if (compoundTag != null && !compoundTag.getAllTags().isEmpty()) {
@@ -1044,28 +1048,28 @@ public class BinaryStream {
                     }
                 }
 
-                int canPlaceCount = stream.readInt();
+                int canPlaceCount = stream.getLInt();
                 if (canPlaceCount > 4096) {
                     throw new RuntimeException("Too many CanPlaceOn blocks: " + canPlaceCount);
                 }
 
                 canPlace = new String[canPlaceCount];
                 for (int i = 0; i < canPlace.length; i++) {
-                    canPlace[i] = stream.readUTF();
+                    canPlace[i] = getItemUserDataString(stream);
                 }
 
-                int canBreakCount = stream.readInt();
+                int canBreakCount = stream.getLInt();
                 if (canBreakCount > 4096) {
                     throw new RuntimeException("Too many CanDestroy blocks: " + canBreakCount);
                 }
 
                 canBreak = new String[canBreakCount];
                 for (int i = 0; i < canBreak.length; i++) {
-                    canBreak[i] = stream.readUTF();
+                    canBreak[i] = getItemUserDataString(stream);
                 }
 
                 if (id != null && id == ItemID.SHIELD) {
-                    stream.readLong();
+                    stream.getLLong();
                 }
 
                 if (compoundTag != null && compoundTag.contains(MV_ORIGIN_ID) && compoundTag.contains(MV_ORIGIN_META)) {
@@ -1077,8 +1081,6 @@ public class BinaryStream {
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("Unable to read item user data", e);
-            } finally {
-                buf.release();
             }
         }
 
@@ -1355,7 +1357,7 @@ public class BinaryStream {
     }
 
     public void putColor(Color color) {
-       this.putLInt(color.getRGB());
+        this.putLInt(color.getRGB());
     }
 
     public Color getColor() {
