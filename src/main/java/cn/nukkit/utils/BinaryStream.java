@@ -517,7 +517,7 @@ public class BinaryStream {
         String[] canBreak;
 
         try {
-            int nbtSize = stream.getLShort();
+            int nbtSize = (short) stream.getLShort();
 
             CompoundTag compoundTag = null;
             if (nbtSize > 0) {
@@ -1024,7 +1024,7 @@ public class BinaryStream {
 
         if (stream.getCount() != 0) {
             try {
-                int nbtSize = stream.getLShort();
+                int nbtSize = (short) stream.getLShort();
 
                 CompoundTag compoundTag = null;
                 if (nbtSize > 0) {
