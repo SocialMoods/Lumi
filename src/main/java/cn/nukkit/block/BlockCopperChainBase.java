@@ -3,6 +3,7 @@ package cn.nukkit.block;
 import cn.nukkit.Player;
 import cn.nukkit.block.properties.enums.OxidizationLevel;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.ItemTool;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,6 +62,11 @@ public abstract class BlockCopperChainBase extends BlockChain implements Oxidiza
     @Override
     public boolean isWaxed() {
         return false;
+    }
+
+    @Override
+    public Item toItem() {
+        return new ItemBlock(this, 0);
     }
 
     protected int getCopperId(boolean waxed, @Nullable OxidizationLevel oxidizationLevel) {
