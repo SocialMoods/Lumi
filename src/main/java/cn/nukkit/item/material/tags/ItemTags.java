@@ -98,6 +98,8 @@ public final class ItemTags {
 
     public static final ItemTag METAL_NUGGETS = register("minecraft:metal_nuggets", new LazyItemTag("minecraft:metal_nuggets"));
 
+    public static final ItemTag MUSHROOMS_FOR_STEW = register("minecraft:mushrooms_for_stew", new LazyItemTag("minecraft:mushrooms_for_stew"));
+
     public static final ItemTag MUSIC_DISC = register("minecraft:music_disc", new LazyItemTag("minecraft:music_disc"));
 
     public static final ItemTag NAUTILUS_ARMOR = register("minecraft:nautilus_armor", new LazyItemTag("minecraft:nautilus_armor"));

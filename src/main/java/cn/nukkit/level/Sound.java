@@ -430,6 +430,18 @@ public enum Sound {
 
     BLOCK_SULFUR_STEP("block.sulfur.step"),
 
+    BLOCK_SULFUR_SPIKE_BREAK("block.sulfur_spike.break"),
+
+    BLOCK_SULFUR_SPIKE_FALL("block.sulfur_spike.fall"),
+
+    BLOCK_SULFUR_SPIKE_HIT("block.sulfur_spike.hit"),
+
+    BLOCK_SULFUR_SPIKE_LAND("block.sulfur_spike.land"),
+
+    BLOCK_SULFUR_SPIKE_PLACE("block.sulfur_spike.place"),
+
+    BLOCK_SULFUR_SPIKE_STEP("block.sulfur_spike.step"),
+
     BLOCK_SWEET_BERRY_BUSH_BREAK("block.sweet_berry_bush.break"),
 
     BLOCK_SWEET_BERRY_BUSH_HURT("block.sweet_berry_bush.hurt"),
@@ -2880,6 +2892,8 @@ public enum Sound {
 
     MUSIC_OVERWORLD_FOREST("music.overworld.forest"),
 
+    MUSIC_OVERWORLD_FROZEN_PEAKS("music.overworld.frozen_peaks"),
+
     MUSIC_OVERWORLD_GROVE("music.overworld.grove"),
 
     MUSIC_OVERWORLD_JAGGED_PEAKS("music.overworld.jagged_peaks"),
@@ -2890,6 +2904,8 @@ public enum Sound {
 
     MUSIC_OVERWORLD_LUSH_CAVES("music.overworld.lush_caves"),
 
+    MUSIC_OVERWORLD_MEADOW("music.overworld.meadow"),
+
     MUSIC_OVERWORLD_MESA("music.overworld.mesa"),
 
     MUSIC_OVERWORLD_OLD_GROWTH_TAIGA("music.overworld.old_growth_taiga"),
@@ -2899,6 +2915,8 @@ public enum Sound {
     MUSIC_OVERWORLD_STONY_PEAKS("music.overworld.stony_peaks"),
 
     MUSIC_OVERWORLD_SULFUR_CAVES("music.overworld.sulfur_caves"),
+
+    MUSIC_OVERWORLD_SWAMP_MUSIC("music.overworld.swamp_music"),
 
     NOTE_BANJO("note.banjo"),
 
