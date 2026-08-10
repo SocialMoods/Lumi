@@ -7,7 +7,6 @@ import cn.nukkit.entity.data.skin.Skin;
 import cn.nukkit.entity.data.profession.Profession;
 import cn.nukkit.entity.data.property.EntityProperty;
 import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.level.LevelInitEvent;
 import cn.nukkit.event.level.LevelLoadEvent;
 import cn.nukkit.event.server.PlayerDataSerializeEvent;
@@ -906,7 +905,7 @@ public class Server {
     public void updatePlayerListData(UUID uuid, long entityId, String name, Skin skin, String xboxUserId, Player[] players) {
         Player player = this.getOnlinePlayers().get(uuid);
 
-        if (player == null || player.isShowPlayerList()) {
+        if (player == null || player.isShowInPlayerList()) {
             PlayerListPacket pk = new PlayerListPacket();
             pk.type = PlayerListPacket.TYPE_ADD;
             pk.entries = new PlayerListPacket.Entry[]{new PlayerListPacket.Entry(uuid, entityId, name, skin, xboxUserId)};
@@ -944,7 +943,7 @@ public class Server {
 
     public void sendFullPlayerListData(Player player) {
         PlayerListPacket.Entry[] array = this.playerList.values().stream()
-                .filter(Player::isShowPlayerList)
+                .filter(Player::isShowInPlayerList)
                 .map(p -> new PlayerListPacket.Entry(
                         p.getLoginUuid(),
                         p.getId(),
