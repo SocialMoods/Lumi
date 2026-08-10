@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.utils.TextFormat;
 import lombok.ToString;
 
 /**
@@ -9,6 +10,9 @@ import lombok.ToString;
 public class BossEventPacket extends DataPacket {
 
     public static final byte NETWORK_ID = ProtocolInfo.BOSS_EVENT_PACKET;
+
+    /** Maximum title length defined by the protocol schema, measured in code points. */
+    private static final int MAX_TITLE_CHARS = 256;
 
     /** Shows the bossbar to the player. */
     public static final int TYPE_SHOW = 0;
@@ -54,8 +58,8 @@ public class BossEventPacket extends DataPacket {
         if (this.protocol >= ProtocolInfo.v1_26_30) {
             this.playerEid = this.getEntityUniqueId();
             this.type = this.getByte();
-            this.title = this.getString();
-            this.filteredTitle = this.getString();
+            this.title = this.getString(MAX_TITLE_CHARS);
+            this.filteredTitle = this.getString(MAX_TITLE_CHARS);
             this.healthPercent = this.getLFloat();
             this.color = this.getByte() & 0xff;
             this.overlay = this.getByte() & 0xff;
@@ -68,9 +72,9 @@ public class BossEventPacket extends DataPacket {
                     this.playerEid = this.getEntityUniqueId();
                     break;
                 case TYPE_SHOW:
-                    this.title = this.getString();
+                    this.title = this.getString(MAX_TITLE_CHARS);
                     if (this.protocol >= ProtocolInfo.v1_21_60) {
-                        this.filteredTitle = this.getString();
+                        this.filteredTitle = this.getString(MAX_TITLE_CHARS);
                     }
                     this.healthPercent = this.getLFloat();
                 case TYPE_UPDATE_PROPERTIES:
@@ -83,9 +87,9 @@ public class BossEventPacket extends DataPacket {
                     this.healthPercent = this.getLFloat();
                     break;
                 case TYPE_TITLE:
-                    this.title = this.getString();
+                    this.title = this.getString(MAX_TITLE_CHARS);
                     if (this.protocol >= ProtocolInfo.v1_21_60) {
-                        this.filteredTitle = this.getString();
+                        this.filteredTitle = this.getString(MAX_TITLE_CHARS);
                     }
                     break;
             }
@@ -95,6 +99,8 @@ public class BossEventPacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
+        this.title = TextFormat.clamp(this.title, MAX_TITLE_CHARS);
+        this.filteredTitle = TextFormat.clamp(this.filteredTitle, MAX_TITLE_CHARS);
         this.putEntityUniqueId(this.bossEid);
         if (this.protocol >= ProtocolInfo.v1_26_30) {
             this.putEntityUniqueId(this.playerEid);

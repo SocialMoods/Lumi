@@ -1330,6 +1330,20 @@ public class BinaryStream {
         return new String(this.getByteArray(), StandardCharsets.UTF_8);
     }
 
+    /**
+     * Reads a length-prefixed UTF-8 string and rejects values exceeding the code-point limit.
+     * A byte-level guard rejects oversized payloads before allocating them.
+     */
+    public String getString(int maxChars) {
+        byte[] raw = this.getByteArray(maxChars <= 0 ? 0 : maxChars * 4);
+        String value = new String(raw, StandardCharsets.UTF_8);
+        int length = Character.codePointCount(value, 0, value.length());
+        if (maxChars > 0 && length > maxChars) {
+            throw new IllegalArgumentException("String length " + length + " exceeds maximum " + maxChars);
+        }
+        return value;
+    }
+
     public void putString(String string) {
         byte[] b = string.getBytes(StandardCharsets.UTF_8);
         this.putByteArray(b);
