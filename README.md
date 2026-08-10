@@ -1,20 +1,20 @@
 <h1 align="center">
     ✨ Lumi
 </h1>
-<p align="center">A sunshine between dark Minecraft Bedrock clouds. Drop-in replacement for Nukkit</p>
+<p align="center">High-performance extensible Minecraft Bedrock server software</p>
 
 ## Introduction
-Lumi is a server software based on [Nukkit-MOT](https://github.com/MemoriesOfTime/Nukkit-MOT/) which was made to introduce many new features and improvements.
+Lumi is a server software which was made to introduce modern Minecraft new features and different improvements. Hard-forked from [Nukkit-MOT](https://github.com/MemoriesOfTime/Nukkit-MOT/).  
 
 ### What's new in Lumi?
-1. Support for 1.20.0 – 1.26.30 version (you can set the minimum protocol in the config)
+1. Support for 1.20.0 – 1.26.40 version (you can set the minimum protocol in the config)
 2. More vanilla features
 3. Custom Blocks support
 4. Custom Enchantments support
 5. Better AntiXray system
 6. Better API (effects, food, projectiles and etc.)
 7. Mixin support (changing any method) through [Ignite](https://github.com/KoshakMineDEV/ignite-lumi)
-8. Mobs support (with [MobPluginLumi](https://github.com/LuminiaDev/MobPluginLumi))
+8. Mobs support (with [MobPluginLumi](https://github.com/LuminiaDev/MobPluginLumi)), with WIP internal support for them
 
 ### How to install?
 1. Install java 21 or higher (recommended is Azul Zulu 21)
