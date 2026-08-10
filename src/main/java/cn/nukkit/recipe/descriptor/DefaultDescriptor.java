@@ -4,6 +4,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.RuntimeItemMapping;
 import cn.nukkit.item.RuntimeItems;
 import cn.nukkit.item.StringItem;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.utils.BinaryStream;
 
 public class DefaultDescriptor extends ItemDescriptor {
@@ -38,22 +39,34 @@ public class DefaultDescriptor extends ItemDescriptor {
 
             if (item.getId() == 0) {
                 if(stream != null) {
-                    stream.putByte((byte) 0); //ItemDescriptorType.INVALID
+                    if (protocol >= ProtocolInfo.v1_26_40) {
+                        stream.putUnsignedVarInt(0);
+                        stream.putVarInt(Short.MAX_VALUE);
+                    } else stream.putByte((byte) 0); //ItemDescriptorType.INVALID
                     stream.putVarInt(0); // item == null ? 0 : item.getCount()
                 }
                 return false;
             }
 
             if(stream != null) {
-                stream.putByte((byte) 1); //ItemDescriptorType.DEFAULT
-
-                stream.putLShort(runtimeId);
-                stream.putLShort(damage);
+                if (protocol >= ProtocolInfo.v1_26_40) {
+                    stream.putUnsignedVarInt(1);
+                    stream.putString("name");
+                    stream.putString(mapping.getNamespacedIdByNetworkId(runtimeId));
+                    stream.putVarInt(damage);
+                } else {
+                    stream.putByte((byte) 1); //ItemDescriptorType.DEFAULT
+                    stream.putLShort(runtimeId);
+                    stream.putLShort(damage);
+                }
                 stream.putVarInt(item.getCount());
             }
         } catch (IllegalArgumentException e) {
             if(stream != null) {
-                stream.putByte((byte) 0); //ItemDescriptorType.INVALID
+                if (protocol >= ProtocolInfo.v1_26_40) {
+                    stream.putUnsignedVarInt(0);
+                    stream.putVarInt(Short.MAX_VALUE);
+                } else stream.putByte((byte) 0); //ItemDescriptorType.INVALID
                 stream.putVarInt(0); // item == null ? 0 : item.getCount()
             }
             return false;

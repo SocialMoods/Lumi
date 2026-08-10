@@ -93,6 +93,10 @@ public class CraftingDataPacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
+        if (this.protocol >= ProtocolInfo.v1_26_40) {
+            this.encodeV2168();
+            return;
+        }
         this.putUnsignedVarInt(entries.size() + 1);
 
         for (Recipe recipe : entries) {
@@ -281,6 +285,139 @@ public class CraftingDataPacket extends DataPacket {
         this.putBoolean(cleanRecipes);
     }
 
+    private void encodeV2168() {
+        List<Recipe> shaped = new ArrayList<>();
+        List<Recipe> shapeless = new ArrayList<>();
+        List<Recipe> multi = new ArrayList<>();
+        List<Recipe> shulker = new ArrayList<>();
+        List<Recipe> shapelessChemistry = new ArrayList<>();
+        List<Recipe> shapedChemistry = new ArrayList<>();
+        List<Recipe> smithingTransform = new ArrayList<>();
+        for (Recipe recipe : entries) {
+            switch (recipe.getType()) {
+                case SHAPED -> shaped.add(recipe);
+                case MULTI -> multi.add(recipe);
+                case SHULKER_BOX -> shulker.add(recipe);
+                case SHAPELESS_CHEMISTRY -> shapelessChemistry.add(recipe);
+                case SHAPED_CHEMISTRY -> shapedChemistry.add(recipe);
+                case SMITHING_TRANSFORM -> smithingTransform.add(recipe);
+                case SMITHING_TRIM -> { }
+                default -> shapeless.add(recipe);
+            }
+        }
+        this.putUnsignedVarInt(shaped.size());
+        for (Recipe recipe : shaped) this.writeShapedRecipeV2168((ShapedRecipe) recipe);
+        this.putUnsignedVarInt(shapeless.size());
+        for (Recipe recipe : shapeless) {
+            if (recipe instanceof FurnaceRecipe furnace) this.writeFurnaceRecipeV2168(furnace);
+            else this.writeShapelessRecipeV2168((ShapelessRecipe) recipe);
+        }
+        this.putUnsignedVarInt(multi.size());
+        for (Recipe recipe : multi) {
+            MultiRecipe value = (MultiRecipe) recipe;
+            this.putUUID(value.getId());
+            this.putUnsignedVarInt(value.getNetworkId());
+        }
+        this.putUnsignedVarInt(shulker.size());
+        for (Recipe recipe : shulker) this.writeShapelessRecipeV2168((ShapelessRecipe) recipe);
+        this.putUnsignedVarInt(shapelessChemistry.size());
+        for (Recipe recipe : shapelessChemistry) this.writeShapelessRecipeV2168((ShapelessRecipe) recipe);
+        this.putUnsignedVarInt(shapedChemistry.size());
+        for (Recipe recipe : shapedChemistry) this.writeShapedRecipeV2168((ShapedRecipe) recipe);
+        this.putUnsignedVarInt(smithingTransform.size());
+        for (Recipe recipe : smithingTransform) {
+            SmithingRecipe smithing = (SmithingRecipe) recipe;
+            this.putString(smithing.getRecipeId());
+            new DefaultDescriptor(smithing.getTemplate()).putRecipe(this, protocol);
+            new DefaultDescriptor(smithing.getEquipment()).putRecipe(this, protocol);
+            new DefaultDescriptor(smithing.getIngredient()).putRecipe(this, protocol);
+            this.putSlot(protocol, smithing.getResult(), true);
+            this.putString(CRAFTING_TAG_SMITHING_TABLE);
+            this.putUnsignedVarInt(smithing.getNetworkId());
+        }
+        this.putUnsignedVarInt(1);
+        this.putString("minecraft:smithing_armor_trim");
+        new ItemTagDescriptor(ItemTags.TRIM_TEMPLATES, "minecraft:trim_templates").putRecipe(this, protocol);
+        new ItemTagDescriptor(ItemTags.TRIMMABLE_ARMORS, "minecraft:trimmable_armors").putRecipe(this, protocol);
+        new ItemTagDescriptor(ItemTags.TRIM_MATERIALS, "minecraft:trim_materials").putRecipe(this, protocol);
+        this.putString(CRAFTING_TAG_SMITHING_TABLE);
+        this.putUnsignedVarInt(1);
+        this.putUnsignedVarInt(this.brewingEntries.size());
+        for (BrewingRecipe recipe : brewingEntries) {
+            this.putVarInt(recipe.getInput().getNetworkId(protocol));
+            this.putVarInt(recipe.getInput().getDamage());
+            this.putVarInt(recipe.getIngredient().getNetworkId(protocol));
+            this.putVarInt(recipe.getIngredient().getDamage());
+            this.putVarInt(recipe.getResult().getNetworkId(protocol));
+            this.putVarInt(recipe.getResult().getDamage());
+        }
+        this.putUnsignedVarInt(this.containerEntries.size());
+        for (ContainerRecipe recipe : containerEntries) {
+            this.putVarInt(recipe.getInput().getNetworkId(protocol));
+            this.putVarInt(recipe.getIngredient().getNetworkId(protocol));
+            this.putVarInt(recipe.getResult().getNetworkId(protocol));
+        }
+        this.putUnsignedVarInt(0);
+        this.putBoolean(cleanRecipes);
+    }
+
+    private void writeShapedRecipeV2168(ShapedRecipe recipe) {
+        this.putString(recipe.getRecipeId());
+        this.putVarInt(recipe.getWidth());
+        this.putVarInt(recipe.getHeight());
+        this.putUnsignedVarInt(recipe.getWidth() * recipe.getHeight());
+        for (int z = 0; z < recipe.getHeight(); z++) for (int x = 0; x < recipe.getWidth(); x++) recipe.getIngredient(x, z).putRecipe(this, protocol);
+        List<Item> outputs = new ArrayList<>();
+        outputs.add(recipe.getResult());
+        outputs.addAll(recipe.getExtraResults());
+        this.putUnsignedVarInt(outputs.size());
+        for (Item output : outputs) this.putSlot(protocol, output, true);
+        this.putUUID(recipe.getId());
+        this.putString(CRAFTING_TAG_CRAFTING_TABLE);
+        this.putVarInt(recipe.getPriority());
+        this.putBoolean(recipe.isAssumeSymetry());
+        this.putBoolean(true);
+        this.writeRequirementV2168(recipe);
+        this.putUnsignedVarInt(recipe.getNetworkId());
+    }
+
+    private void writeShapelessRecipeV2168(ShapelessRecipe recipe) {
+        this.putString(recipe.getRecipeId());
+        this.putUnsignedVarInt(recipe.getIngredientList().size());
+        for (ItemDescriptor ingredient : recipe.getIngredientList()) ingredient.putRecipe(this, protocol);
+        this.putUnsignedVarInt(1);
+        this.putSlot(protocol, recipe.getResult(), true);
+        this.putUUID(recipe.getId());
+        this.putString(recipe instanceof StonecutterRecipe ? CRAFTING_TAG_STONECUTTER : CRAFTING_TAG_CRAFTING_TABLE);
+        this.putVarInt(recipe.getPriority());
+        boolean writeRequirement = !(recipe instanceof StonecutterRecipe);
+        this.putBoolean(writeRequirement);
+        if (writeRequirement) this.writeRequirementV2168(recipe);
+        this.putUnsignedVarInt(recipe.getNetworkId());
+    }
+
+    private void writeFurnaceRecipeV2168(FurnaceRecipe recipe) {
+        this.putString(recipe.getRecipeId());
+        this.putUnsignedVarInt(1);
+        recipe.getInput().putRecipe(this, protocol);
+        this.putUnsignedVarInt(1);
+        this.putSlot(protocol, recipe.getResult(), true);
+        this.putUUID(recipe.getId());
+        String tag = recipe instanceof BlastFurnaceRecipe ? CRAFTING_TAG_BLAST_FURNACE : recipe instanceof SmokerRecipe ? CRAFTING_TAG_SMOKER : CRAFTING_TAG_FURNACE;
+        this.putString(tag);
+        this.putVarInt(0);
+        this.putBoolean(false);
+        this.putUnsignedVarInt(recipe.getNetworkId());
+    }
+
+    private void writeRequirementV2168(CraftingRecipe recipe) {
+        RecipeUnlockingRequirement requirement = recipe.getRequirement();
+        RecipeUnlockingRequirement.UnlockingContext context = requirement.getContext();
+        this.putVarInt(context.ordinal());
+        boolean present = context == RecipeUnlockingRequirement.UnlockingContext.NONE;
+        this.putBoolean(present);
+        if (present) this.putArray(requirement.getIngredients(), ingredient -> new DefaultDescriptor(ingredient).putRecipe(this, protocol));
+    }
     @Override
     public byte pid() {
         return NETWORK_ID;

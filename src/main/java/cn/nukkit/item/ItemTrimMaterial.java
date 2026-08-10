@@ -1,12 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
-/**
- * @author glorydark
- * @date {2023/8/25} {12:13}
- */
 public interface ItemTrimMaterial {
-
-    ItemTrimMaterialType getMaterial();
+    TrimMaterial getMaterial();
 }

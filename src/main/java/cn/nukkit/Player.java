@@ -49,7 +49,6 @@ import cn.nukkit.inventory.transaction.*;
 import cn.nukkit.item.*;
 import cn.nukkit.item.customitem.CustomItemDefinition;
 import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.item.trim.TrimFactory;
 import cn.nukkit.lang.CommandOutputContainer;
 import cn.nukkit.lang.LangCode;
 import cn.nukkit.lang.TextContainer;
@@ -168,7 +167,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     // 后续创建的窗口应该从此数值开始
     public static final int MINIMUM_OTHER_WINDOW_ID = Utils.dynamic(10);
 
-    public static final int RESOURCE_PACK_CHUNK_SIZE = 8 * 1024; // 8KB
+    public static final int RESOURCE_PACK_CHUNK_SIZE = 100 * 1024; // 100 KB
 
     /**
      * Regular expression for validating player name. Allows only: Number nicknames, letter nicknames, number and letters nicknames, nicknames with underscores, nicknames with space in the middle
@@ -285,6 +284,11 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     public boolean showToOthers = true;
 
     /**
+     * Option shows player from player list
+     */
+    public boolean showInPlayerList = true;
+
+    /**
      * Player's client-side walk speed. Remember to call getAdventureSettings().update() if changed.
      */
     @Getter
@@ -347,6 +351,9 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     protected AsyncTask preLoginEventTask = null;
     protected boolean shouldLogin = false;
     protected boolean shouldPack = false;
+
+    protected final LinkedHashMap<UUID, PendingResourcePack> pendingResourcePacks = new LinkedHashMap<>();
+    private boolean resourcePackChunkSendScheduled;
 
     private List<UUID> availableEmotes = new ArrayList<>();
     private int lastEmote;
@@ -653,6 +660,20 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         this.hiddenPlayers.remove(player.getUniqueId());
         if (player.isOnline()) {
             player.spawnTo(this);
+        }
+    }
+
+    public boolean isShowInPlayerList() {
+        return showInPlayerList;
+    }
+
+    public void setShowInPlayerList(boolean showInPlayerList) {
+        this.showInPlayerList = showInPlayerList;
+
+        if(showInPlayerList) {
+            this.server.updatePlayerListData(this.getLoginUuid(), this.getId(), this.displayName, this.getSkin(), this.loginChainData.getXUID());
+        } else {
+            this.server.removePlayerListData(this.getLoginUuid());
         }
     }
 
@@ -2777,6 +2798,10 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             this.forceDataPacket(dimensionDataPacket, null);
         }
 
+        if (this.protocol >= ProtocolInfo.v1_26_20_26) {
+            this.forceDataPacket(new VoxelShapesPacket(), null);
+        }
+
         StartGamePacket startGamePacket = new StartGamePacket();
         startGamePacket.entityUniqueId = this.id;
         startGamePacket.entityRuntimeId = this.id;
@@ -2901,8 +2926,9 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
             // BDS sends armor trim templates and materials before the CraftingDataPacket
             TrimDataPacket trimDataPacket = new TrimDataPacket();
-            trimDataPacket.getMaterials().addAll(TrimFactory.trimMaterials);
-            trimDataPacket.getPatterns().addAll(TrimFactory.trimPatterns);
+            trimDataPacket.getMaterials().addAll(Registries.TRIM_MATERIAL.getAll());
+            trimDataPacket.getPatterns().addAll(Registries.TRIM_PATTERN.getAll());
+
             this.dataPacket(trimDataPacket);
             if (this.protocol < ProtocolInfo.v1_21_60) {
                 this.sendRecipeList();
@@ -2973,6 +2999,91 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             log.debug("Data packet processor not found for {}: {}", packet.getClass().getSimpleName(), packet);
         }
     }
+
+    protected void queueResourcePackChunk(ResourcePack resourcePack, int chunkIndex) {
+        PendingResourcePack pending = this.pendingResourcePacks.computeIfAbsent(resourcePack.getPackId(),
+                ignored -> new PendingResourcePack(resourcePack));
+        pending.request(chunkIndex);
+        this.scheduleNextResourcePackChunk();
+    }
+
+    private void scheduleNextResourcePackChunk() {
+        if (this.resourcePackChunkSendScheduled || this.pendingResourcePacks.isEmpty()) {
+            return;
+        }
+        this.resourcePackChunkSendScheduled = true;
+        this.server.getScheduler().scheduleTask(InternalPlugin.INSTANCE, this::sendNextResourcePackChunk);
+    }
+
+    private void sendNextResourcePackChunk() {
+        this.resourcePackChunkSendScheduled = false;
+        if (!this.connected) {
+            this.pendingResourcePacks.clear();
+            return;
+        }
+
+        Iterator<PendingResourcePack> iterator = this.pendingResourcePacks.values().iterator();
+        PendingResourcePack pending = null;
+        int chunkIndex = -1;
+        while (iterator.hasNext()) {
+            PendingResourcePack candidate = iterator.next();
+            chunkIndex = candidate.pollChunkIndex();
+            if (candidate.isEmpty()) {
+                iterator.remove();
+            }
+            if (chunkIndex >= 0) {
+                pending = candidate;
+                break;
+            }
+        }
+        if (pending == null) {
+            return;
+        }
+
+        ResourcePackChunkDataPacket dataPacket = new ResourcePackChunkDataPacket();
+        dataPacket.packId = pending.resourcePack.getPackId();
+        dataPacket.packVersion = pending.resourcePack.getPackVersion();
+        dataPacket.chunkIndex = chunkIndex;
+        dataPacket.progress = (long) RESOURCE_PACK_CHUNK_SIZE * chunkIndex;
+        dataPacket.data = pending.resourcePack.getPackChunk(RESOURCE_PACK_CHUNK_SIZE * chunkIndex, RESOURCE_PACK_CHUNK_SIZE);
+        this.dataPacket(dataPacket);
+
+        if (!this.pendingResourcePacks.isEmpty()) {
+            this.resourcePackChunkSendScheduled = true;
+            this.server.getScheduler().scheduleDelayedTask(InternalPlugin.INSTANCE, this::sendNextResourcePackChunk, 1);
+        }
+    }
+
+    /**
+     * Tracks pending chunks per pack to avoid overwhelming clients with burst delivery.
+     * <p>
+     * Adapted from PowerNukkitX (<a href="https://github.com/PowerNukkitX/PowerNukkitX">PowerNukkitX</a>)
+     */
+    public static final class PendingResourcePack {
+        private final ResourcePack resourcePack;
+        private final BitSet requestedChunks = new BitSet();
+
+        PendingResourcePack(ResourcePack resourcePack) {
+            this.resourcePack = resourcePack;
+        }
+
+        void request(int chunkIndex) {
+            this.requestedChunks.set(chunkIndex);
+        }
+
+        int pollChunkIndex() {
+            int chunkIndex = this.requestedChunks.nextSetBit(0);
+            if (chunkIndex >= 0) {
+                this.requestedChunks.clear(chunkIndex);
+            }
+            return chunkIndex;
+        }
+
+        boolean isEmpty() {
+            return this.requestedChunks.isEmpty();
+        }
+    }
+
 
     protected void onBlockBreakContinue(Vector3 pos, BlockFace face) {
         if (this.isBreakingBlock()) {

@@ -14,14 +14,12 @@ import cn.nukkit.block.data.BlockColor;
 
 public class BlockScaffolding extends BlockFallable {
 
-    private int meta = 0;
-
     public BlockScaffolding() {
         this(0);
     }
 
     public BlockScaffolding(int meta) {
-        this.meta = meta;
+        super(meta);
     }
 
     @Override
@@ -37,11 +35,6 @@ public class BlockScaffolding extends BlockFallable {
     @Override
     public String getName() {
         return "Scaffolding";
-    }
-
-    @Override
-    public void setDamage(int meta) {
-        this.meta = meta;
     }
 
     public int getStability() {
@@ -66,7 +59,7 @@ public class BlockScaffolding extends BlockFallable {
 
     @Override
     public double getHardness() {
-        return 0.5;
+        return 0;
     }
 
     @Override

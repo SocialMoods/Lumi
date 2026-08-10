@@ -75,6 +75,7 @@ public class Skin {
     private boolean trusted = true;
     private String geometryDataEngineVersion = "0.0.0";
     private boolean overridingPlayerAppearance = true;
+    private String profileHash = "";
 
     public boolean isValid() {
         return isValid(Server.getInstance().getSettings().player().doNotLimitSkinGeometry());
@@ -313,6 +314,14 @@ public class Skin {
         this.trusted = trusted;
     }
 
+    public String getProfileHash() {
+        return profileHash;
+    }
+
+    public void setProfileHash(String profileHash) {
+        this.profileHash = profileHash == null ? "" : profileHash;
+    }
+
     public String getSkinColor() {
         return skinColor;
     }
@@ -336,6 +345,9 @@ public class Skin {
 
     public String getFullSkinId() {
         if (this.fullSkinId == null) {
+            if (this == NO_PERSONA_SKIN) {
+                return this.getSkinId();
+            }
             this.fullSkinId = this.getSkinId() + this.getCapeId();
             this.noPlayFab = false; // Allow another attempt to generate it using the new id
         }
@@ -349,6 +361,9 @@ public class Skin {
 
     public String getPlayFabId() {
         if (this.noPlayFab) {
+            return "";
+        }
+        if (this == NO_PERSONA_SKIN) {
             return "";
         }
         if ((this.playFabId == null || this.playFabId.isEmpty())) {

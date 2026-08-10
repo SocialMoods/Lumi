@@ -1,6 +1,7 @@
 package cn.nukkit.recipe.descriptor;
 
 import cn.nukkit.item.material.tags.ItemTag;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.utils.BinaryStream;
 
 public class ItemTagDescriptor extends ItemDescriptor {
@@ -23,8 +24,15 @@ public class ItemTagDescriptor extends ItemDescriptor {
     @Override
     public boolean putRecipe(BinaryStream stream, int protocol) {
         if(stream != null) {
-            stream.putByte((byte) 3);
-            stream.putString(id);
+            if (protocol >= ProtocolInfo.v1_26_40) {
+                stream.putUnsignedVarInt(1);
+                stream.putString("item_tag");
+                stream.putString(id);
+                stream.putVarInt(Short.MAX_VALUE);
+            } else {
+                stream.putByte((byte) 3);
+                stream.putString(id);
+            }
             stream.putVarInt(1);
         }
         return true;

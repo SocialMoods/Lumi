@@ -26,6 +26,10 @@ public class MoveEntityDeltaPacket extends DataPacket {
     public double yawDelta = 0;
     public double headYawDelta = 0;
     public double pitchDelta = 0;
+    public boolean onGround;
+    public boolean forceMove;
+    public boolean forceMoveLocalEntity;
+    public boolean forceCompletion;
 
     @Override
     public byte pid() {
@@ -34,29 +38,71 @@ public class MoveEntityDeltaPacket extends DataPacket {
 
     @Override
     public void decode() {
-        this.getEntityRuntimeId();
-        this.flags = this.getLShort();
-        this.x = getCoordinate(FLAG_HAS_X);
-        this.y = getCoordinate(FLAG_HAS_Y);
-        this.z = getCoordinate(FLAG_HAS_Z);
-        this.pitchDelta = getRotation(FLAG_HAS_PITCH);
-        this.yawDelta = getRotation(FLAG_HAS_YAW);
-        this.headYawDelta = getRotation(FLAG_HAS_HEAD_YAW);
+        if (protocol >= ProtocolInfo.v1_26_40) {
+            this.eid = this.getEntityRuntimeId();
+            this.flags = 0;
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_X; this.x = this.getLFloat(); }
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_Y; this.y = this.getLFloat(); }
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_Z; this.z = this.getLFloat(); }
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_PITCH; this.pitchDelta = this.getByte() * 1.40625; }
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_YAW; this.yawDelta = this.getByte() * 1.40625; }
+            if (this.getBoolean()) { this.flags |= FLAG_HAS_HEAD_YAW; this.headYawDelta = this.getByte() * 1.40625; }
+            this.onGround = this.getBoolean();
+            if (this.onGround) this.flags |= FLAG_ON_GROUND;
+            this.forceMove = this.getBoolean();
+            this.forceMoveLocalEntity = this.getBoolean();
+            if (this.forceMoveLocalEntity) this.flags |= FLAG_FORCE_MOVE_LOCAL_ENTITY;
+            this.forceCompletion = this.getBoolean();
+            if (this.forceCompletion) this.flags |= FLAG_FORCE_COMPLETION;
+        } else {
+            this.eid = this.getEntityRuntimeId();
+            this.flags = this.getLShort();
+            this.x = getCoordinate(FLAG_HAS_X);
+            this.y = getCoordinate(FLAG_HAS_Y);
+            this.z = getCoordinate(FLAG_HAS_Z);
+            this.pitchDelta = getRotation(FLAG_HAS_PITCH);
+            this.yawDelta = getRotation(FLAG_HAS_YAW);
+            this.headYawDelta = getRotation(FLAG_HAS_HEAD_YAW);
+        }
     }
 
     @Override
     public void encode() {
         this.reset();
         this.putEntityRuntimeId(this.eid);
-        this.putLShort(this.flags);
-        putCoordinate(FLAG_HAS_X, this.x);
-        putCoordinate(FLAG_HAS_Y, this.y);
-        putCoordinate(FLAG_HAS_Z, this.z);
-        putRotation(FLAG_HAS_PITCH, this.pitchDelta);
-        putRotation(FLAG_HAS_YAW, this.yawDelta);
-        putRotation(FLAG_HAS_HEAD_YAW, this.headYawDelta);
+        if (protocol >= ProtocolInfo.v1_26_40) {
+            putOptionalCoordinate(FLAG_HAS_X, this.x);
+            putOptionalCoordinate(FLAG_HAS_Y, this.y);
+            putOptionalCoordinate(FLAG_HAS_Z, this.z);
+            putOptionalRotation(FLAG_HAS_PITCH, this.pitchDelta);
+            putOptionalRotation(FLAG_HAS_YAW, this.yawDelta);
+            putOptionalRotation(FLAG_HAS_HEAD_YAW, this.headYawDelta);
+            this.putBoolean((this.flags & FLAG_ON_GROUND) != 0 || this.onGround);
+            this.putBoolean(this.forceMove);
+            this.putBoolean((this.flags & FLAG_FORCE_MOVE_LOCAL_ENTITY) != 0 || this.forceMoveLocalEntity);
+            this.putBoolean((this.flags & FLAG_FORCE_COMPLETION) != 0 || this.forceCompletion);
+        } else {
+            this.putLShort(this.flags);
+            putCoordinate(FLAG_HAS_X, this.x);
+            putCoordinate(FLAG_HAS_Y, this.y);
+            putCoordinate(FLAG_HAS_Z, this.z);
+            putRotation(FLAG_HAS_PITCH, this.pitchDelta);
+            putRotation(FLAG_HAS_YAW, this.yawDelta);
+            putRotation(FLAG_HAS_HEAD_YAW, this.headYawDelta);
+        }
     }
 
+    private void putOptionalCoordinate(int flag, float value) {
+        boolean present = (this.flags & flag) != 0;
+        this.putBoolean(present);
+        if (present) this.putLFloat(value);
+    }
+
+    private void putOptionalRotation(int flag, double value) {
+        boolean present = (this.flags & flag) != 0;
+        this.putBoolean(present);
+        if (present) this.putByte((byte) (value / 1.40625));
+    }
     private float getCoordinate(int flag) {
         if ((flags & flag) != 0) {
             return this.getLFloat();

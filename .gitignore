@@ -1,6 +1,8 @@
 *.class
 .vscode
 .vscode/*
+.agents
+.agents/*
 target
 target/*
 build

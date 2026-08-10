@@ -50,7 +50,7 @@ public class BlockBreakEvent extends BlockEvent implements Cancellable {
         this.instaBreak = instaBreak;
         this.blockDrops = drops;
         this.fastBreak = fastBreak;
-        this.blockXP = block.getDropExp();
+        this.blockXP = block.getDropExp(item);
     }
 
     public Player getPlayer() {

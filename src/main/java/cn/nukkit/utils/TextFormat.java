@@ -245,6 +245,57 @@ public enum TextFormat {
     }
 
     /**
+     * Truncates a string to the given code-point limit without splitting surrogate pairs or
+     * leaving a dangling formatting-code prefix.
+     */
+    public static String clamp(String input, int maxChars) {
+        if (input == null) {
+            return null;
+        }
+        if (maxChars <= 0) {
+            return "";
+        }
+        int length = input.length();
+        if (length <= maxChars) {
+            return stripTrailingLoneEscape(input);
+        }
+
+        StringBuilder result = new StringBuilder(maxChars + 2);
+        int codePoints = 0;
+        for (int i = 0; i < length; ) {
+            char current = input.charAt(i);
+            int step;
+            int unitCodePoints;
+            if (current == ESCAPE && i < length - 1) {
+                step = 2;
+                unitCodePoints = 2;
+            } else if (Character.isHighSurrogate(current)
+                    && i < length - 1
+                    && Character.isLowSurrogate(input.charAt(i + 1))) {
+                step = 2;
+                unitCodePoints = 1;
+            } else {
+                step = 1;
+                unitCodePoints = 1;
+            }
+            if (codePoints + unitCodePoints > maxChars) {
+                break;
+            }
+            result.append(input, i, i + step);
+            codePoints += unitCodePoints;
+            i += step;
+        }
+        return stripTrailingLoneEscape(result.toString());
+    }
+
+    private static String stripTrailingLoneEscape(String value) {
+        if (value.isEmpty() || value.charAt(value.length() - 1) != ESCAPE) {
+            return value;
+        }
+        return value.substring(0, value.length() - 1);
+    }
+
+    /**
      * Translates a string using an alternate format code character into a
      * string that uses the internal TextFormat.ESCAPE format code
      * character. The alternate format code character will only be replaced if

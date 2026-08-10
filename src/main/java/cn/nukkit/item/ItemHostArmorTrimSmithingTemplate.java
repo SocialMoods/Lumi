@@ -1,7 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimPatternType;
-import cn.nukkit.network.protocol.ProtocolInfo;
+import cn.nukkit.item.trim.ItemTrimPatternTypes;
+import cn.nukkit.network.protocol.types.TrimPattern;
 
 /**
  * @author Glorydark
@@ -13,7 +13,7 @@ public class ItemHostArmorTrimSmithingTemplate extends StringItemBase implements
     }
 
     @Override
-    public ItemTrimPatternType getPattern() {
-        return ItemTrimPatternType.HOST_ARMOR_TRIM;
+    public TrimPattern getPattern() {
+        return ItemTrimPatternTypes.HOST_ARMOR_TRIM;
     }
 }

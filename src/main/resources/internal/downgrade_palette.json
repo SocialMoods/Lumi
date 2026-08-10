@@ -1,0 +1,59 @@
+{
+  "minecraft:polished_tuff_slab": {
+    "type": "save_meta",
+    "id": "minecraft:normal_stone_slab"
+  },
+
+  "minecraft:polished_tuff_double_slab": "minecraft:normal_stone_double_slab",
+  "minecraft:polished_tuff": "minecraft:stone",
+  "minecraft:polished_tuff_stairs": {
+    "type": "save_meta",
+    "id": "minecraft:normal_stone_stairs"
+  },
+  "minecraft:chiseled_tuff_bricks": "minecraft:stone",
+  "minecraft:tuff_brick_stairs": {
+    "type": "save_meta",
+    "id": "minecraft:stone_brick_stairs"
+  },
+
+  "minecraft:tuff_brick_wall": {
+    "type": "save_meta",
+    "id": "minecraft:stone_brick_wall"
+  },
+
+  "minecraft:pale_oak_wood": {
+    "id": "minecraft:dark_oak_wood",
+    "meta": 0
+  },
+  "minecraft:stripped_pale_oak_wood": {
+    "id": "minecraft:quartz_block",
+    "meta": 2
+  },
+  "minecraft:stripped_pale_oak_log": {
+    "id": "minecraft:stripped_birch_log",
+    "meta": 2
+  },
+
+  "minecraft:leaf_litter": "minecraft:tallgrass",
+  "minecraft:cactus_flower": {
+    "id": "minecraft:fern",
+    "meta": 2
+  },
+
+  "minecraft:closed_eyeblossom": "minecraft:oxeye_daisy",
+  "minecraft:open_eyeblossom": "minecraft:oxeye_daisy",
+  "minecraft:pale_moss_carpet": "minecraft:moss_carpet",
+  "minecraft:pale_moss_block": "minecraft:moss_block",
+  "minecraft:firefly_bush": "minecraft:tallgrass",
+  "minecraft:wildflowers": {
+    "type": "save_meta",
+    "id": "minecraft:pink_petals"
+  },
+  "minecraft:bush": "minecraft:tallgrass",
+  "minecraft:tall_dry_grass": "minecraft:deadbush",
+  "minecraft:short_dry_grass": "minecraft:deadbush",
+
+  "minecraft:pale_oak_log": "minecraft:dark_oak_log",
+  "minecraft:pale_oak_leaves": "minecraft:dark_oak_leaves",
+  "minecraft:pale_hanging_moss": "minecraft:cave_vines"
+}

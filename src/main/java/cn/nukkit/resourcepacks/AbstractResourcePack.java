@@ -68,6 +68,7 @@ public abstract class AbstractResourcePack implements ResourcePack {
         ResourcePackDataInfoPacket packet = new ResourcePackDataInfoPacket();
         packet.packId = this.getPackId();
         packet.maxChunkSize = Player.RESOURCE_PACK_CHUNK_SIZE;
+        packet.packVersion = this.getPackVersion();
         packet.chunkCount = MathHelper.ceil(this.getPackSize() / (float) Player.RESOURCE_PACK_CHUNK_SIZE);
         packet.compressedPackSize = this.getPackSize();
         packet.sha256 = this.getSha256();

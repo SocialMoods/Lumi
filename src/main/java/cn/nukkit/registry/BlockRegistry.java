@@ -641,8 +641,8 @@ public class BlockRegistry implements IRegistry<Integer, Block, Class<? extends 
         register(WAXED_OXIDIZED_COPPER, BlockCopperOxidizedWaxed.class); //701
         register(WAXED_OXIDIZED_CUT_COPPER, BlockCopperCutOxidizedWaxed.class); //702
         register(WAXED_OXIDIZED_CUT_COPPER_STAIRS, BlockStairsCutCopperOxidizedWaxed.class); //703
-        register(WAXED_OXIDIZED_CUT_COPPER_SLAB, BlockSlabOxidizedCutCopper.class); //704
-        register(WAXED_OXIDIZED_DOUBLE_CUT_COPPER_SLAB, BlockDoubleSlabOxidizedCutCopper.class); //705
+        register(WAXED_OXIDIZED_CUT_COPPER_SLAB, BlockSlabOxidizedCutCopperWaxed.class); //704
+        register(WAXED_OXIDIZED_DOUBLE_CUT_COPPER_SLAB, BlockDoubleSlabOxidizedCutCopperWaxed.class); //705
         register(RAW_IRON_BLOCK, BlockRawIron.class); //706
         register(RAW_COPPER_BLOCK, BlockRawCopper.class); //707
         register(RAW_GOLD_BLOCK, BlockRawGold.class); //708

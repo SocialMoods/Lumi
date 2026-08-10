@@ -1,7 +1,5 @@
 package cn.nukkit.item;
 
-import cn.nukkit.network.protocol.ProtocolInfo;
-
 public class ItemChestplateNetherite extends ItemArmor {
 
     public ItemChestplateNetherite() {
@@ -39,5 +37,10 @@ public class ItemChestplateNetherite extends ItemArmor {
     @Override
     public int getToughness() {
         return 2;
+    }
+
+    @Override
+    public boolean isLavaResistant() {
+        return true;
     }
 }

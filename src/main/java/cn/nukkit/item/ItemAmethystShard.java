@@ -1,7 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
-import cn.nukkit.network.protocol.ProtocolInfo;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 /**
  * @author MagicDroidX
@@ -14,7 +14,7 @@ public class ItemAmethystShard extends StringItemBase implements ItemTrimMateria
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_AMETHYST;
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_AMETHYST;
     }
 }

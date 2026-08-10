@@ -265,7 +265,9 @@ public class GameRules {
         INTEGER {
             @Override
             void write(int protocol, BinaryStream pk, Value value, boolean startGame) {
-                if (protocol >= ProtocolInfo.v1_21_110_26) {
+                if (protocol >= ProtocolInfo.v1_26_40) {
+                    pk.putLInt(value.getValueAsInteger());
+                } else if (protocol >= ProtocolInfo.v1_21_110_26) {
                     if (startGame) {
                         pk.putVarInt(value.getValueAsInteger());
                     } else {

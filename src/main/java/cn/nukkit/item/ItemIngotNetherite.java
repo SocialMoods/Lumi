@@ -1,7 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
-import cn.nukkit.network.protocol.ProtocolInfo;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 public class ItemIngotNetherite extends Item implements ItemTrimMaterial {
 
@@ -18,7 +18,12 @@ public class ItemIngotNetherite extends Item implements ItemTrimMaterial {
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_NETHERITE;
+    public boolean isLavaResistant() {
+        return true;
+    }
+
+    @Override
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_NETHERITE;
     }
 }

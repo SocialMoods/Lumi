@@ -16,4 +16,8 @@ public class ItemNetheriteNautilusArmor extends ItemNautilusArmor {
         return ItemTool.TIER_NETHERITE;
     }
 
+    @Override
+    public boolean isLavaResistant() {
+        return true;
+    }
 }

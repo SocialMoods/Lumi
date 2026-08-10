@@ -59,11 +59,12 @@ public class BlockSculkCatalyst extends BlockSolid {
                     this.toItem()
             };
         }
-        return new Item[0];
+        return Item.EMPTY_ARRAY;
     }
 
     @Override
-    public int getDropExp() {
+    public int getDropExp(Item item) {
+        if(item.hasEnchantment(Enchantment.ID_SILK_TOUCH)) return 0;
         return 5;
     }
 }

@@ -28,7 +28,9 @@ public class BlockEntityChiseledBookshelf extends BlockEntitySpawnable {
     @Override
     public void onBreak() {
         for (Item item : items) {
-            level.dropItem(this, item);
+            if (item != null) {
+                level.dropItem(this, item);
+            }
         }
     }
 

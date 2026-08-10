@@ -1061,6 +1061,10 @@ public class Item implements Cloneable, BlockID, ItemID, ProtocolInfo {
         return 0;
     }
 
+    public boolean isLavaResistant() {
+        return false;
+    }
+
     public boolean isUnbreakable() {
         if (!(this instanceof ItemDurable)) {
             return false;

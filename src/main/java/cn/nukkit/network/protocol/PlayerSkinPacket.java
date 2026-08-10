@@ -40,7 +40,7 @@ public class PlayerSkinPacket extends DataPacket {
             skin = getSkin(protocol);
             newSkinName = getString();
             oldSkinName = getString();
-            if (!feof()) {
+            if (protocol < ProtocolInfo.v1_26_40 && !feof()) {
                 skin.setTrusted(getBoolean());
             }
         }
@@ -65,7 +65,9 @@ public class PlayerSkinPacket extends DataPacket {
             putSkin(protocol, skin);
             putString(newSkinName);
             putString(oldSkinName);
-            putBoolean(skin.isTrusted());
+            if (protocol < ProtocolInfo.v1_26_40) {
+                putBoolean(skin.isTrusted());
+            }
         }
     }
 }

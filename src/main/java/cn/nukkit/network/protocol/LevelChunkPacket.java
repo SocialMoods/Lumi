@@ -47,19 +47,36 @@ public class LevelChunkPacket extends DataPacket {
         if (protocol >= ProtocolInfo.v1_20_60) {
             this.putVarInt(this.dimension);
         }
-        if (!this.requestSubChunks) {
+        if (this.protocol >= ProtocolInfo.v1_26_40) {
             this.putUnsignedVarInt(this.subChunkCount);
-        } else if (this.subChunkLimit < 0) {
-            this.putUnsignedVarInt(-1);
+            if (this.requestSubChunks) {
+                this.putBoolean(true);
+                this.putVarInt(this.subChunkLimit);
+            } else {
+                this.putBoolean(false);
+            }
+            this.putBoolean(this.cacheEnabled);
+            this.putUnsignedVarInt(this.blobIds == null ? 0 : this.blobIds.length);
+            if (this.blobIds != null) {
+                for (long blobId : this.blobIds) {
+                    this.putLLong(blobId);
+                }
+            }
         } else {
-            this.putUnsignedVarInt(-2);
-            this.putUnsignedVarInt(this.subChunkLimit);
-        }
-        this.putBoolean(cacheEnabled);
-        if (this.cacheEnabled) {
-            this.putUnsignedVarInt(blobIds.length);
-            for (long blobId : blobIds) {
-                this.putLLong(blobId);
+            if (!this.requestSubChunks) {
+                this.putUnsignedVarInt(this.subChunkCount);
+            } else if (this.subChunkLimit < 0) {
+                this.putUnsignedVarInt(-1);
+            } else {
+                this.putUnsignedVarInt(-2);
+                this.putUnsignedVarInt(this.subChunkLimit);
+            }
+            this.putBoolean(cacheEnabled);
+            if (this.cacheEnabled) {
+                this.putUnsignedVarInt(blobIds.length);
+                for (long blobId : blobIds) {
+                    this.putLLong(blobId);
+                }
             }
         }
         this.putByteArray(this.data);

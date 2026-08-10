@@ -339,8 +339,10 @@ public class CustomItemDefinition {
          */
         public SimpleBuilder tag(String... tags) {
             Arrays.stream(tags).forEach(Identifier::assertValid);
-            var list = this.nbt.getCompound("components").getList("item_tags", StringTag.class);
-            if (list == null) {
+            ListTag<StringTag> list;
+            if (this.nbt.getCompound("components").contains("item_tags")) {
+                list = this.nbt.getCompound("components").getList("item_tags", StringTag.class);
+            } else {
                 list = new ListTag<>("item_tags");
                 this.nbt.getCompound("components").putList(list);
             }

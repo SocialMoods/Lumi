@@ -17,6 +17,17 @@ public class SetScorePacket extends DataPacket {
         return ProtocolInfo.SET_SCORE_PACKET;
     }
 
+    private static final String[] V2168_TYPE_NAMES = {"remove", "changeplayer", "changeentity", "changefakeplayer"};
+
+    private static int v2168TypeOrdinal(Action action, ScorerType type) {
+        if (action == Action.REMOVE) return 0;
+        return switch (type) {
+            case PLAYER -> 1;
+            case ENTITY -> 2;
+            case FAKE -> 3;
+            default -> throw new IllegalArgumentException("Invalid score info received");
+        };
+    }
     @Override
     public void decode() {
         //only server -> client
@@ -25,9 +36,35 @@ public class SetScorePacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
+        if (this.protocol >= ProtocolInfo.v1_26_40) {
+            this.putUnsignedVarInt(this.infos.size());
+            for (ScoreInfo info : this.infos) {
+                int typeOrdinal = v2168TypeOrdinal(this.action, info.type);
+                this.putUnsignedVarInt(typeOrdinal);
+                this.putString(V2168_TYPE_NAMES[typeOrdinal]);
+                this.putVarLong(info.scoreboardId);
+                switch (typeOrdinal) {
+                    case 0 -> {
+                        boolean present = info.objectiveId != null && !info.objectiveId.isEmpty();
+                        this.putBoolean(present);
+                        if (present) this.putString(info.objectiveId);
+                    }
+                    case 1, 2 -> {
+                        this.putString(info.objectiveId == null || info.objectiveId.isEmpty() ? " " : info.objectiveId);
+                        this.putLInt(info.score);
+                        this.putVarLong(info.entityId);
+                    }
+                    case 3 -> {
+                        this.putString(info.objectiveId == null || info.objectiveId.isEmpty() ? " " : info.objectiveId);
+                        this.putLInt(info.score);
+                        this.putString(info.name == null || info.name.isEmpty() ? " " : info.name);
+                    }
+                }
+            }
+            return;
+        }
         this.putByte((byte) this.action.ordinal());
         this.putUnsignedVarInt(this.infos.size());
-
         for (ScoreInfo info : this.infos) {
             this.putVarLong(info.scoreboardId);
             this.putString(info.objectiveId);
@@ -42,7 +79,6 @@ public class SetScorePacket extends DataPacket {
             }
         }
     }
-
     public enum Action {
         SET,
         REMOVE

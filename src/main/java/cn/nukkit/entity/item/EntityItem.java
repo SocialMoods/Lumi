@@ -117,9 +117,9 @@ public class EntityItem extends Entity {
 
         this.item = NBTIO.getItemHelper(this.namedTag.getCompound("Item"));
 
-        int id = this.item.getId();
-        if (id >= Item.NETHERITE_INGOT && id <= Item.NETHERITE_SCRAP) {
-            this.fireProof = true; // Netherite items are fireproof
+
+        if (item.isLavaResistant()) {
+            this.fireProof = true;
             this.floatsInLava = true;
         }
 

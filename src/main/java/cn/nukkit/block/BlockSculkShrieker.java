@@ -58,7 +58,8 @@ public class BlockSculkShrieker extends BlockTransparent {
     }
 
     @Override
-    public int getDropExp() {
+    public int getDropExp(Item item) {
+        if(item.hasEnchantment(Enchantment.ID_SILK_TOUCH)) return 0;
         return 5;
     }
 

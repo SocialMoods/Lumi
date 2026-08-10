@@ -17,4 +17,6 @@ public class Registries {
     public static final BlockEntityRegistry BLOCK_ENTITY = new BlockEntityRegistry();
     public static final EntityRegistry ENTITY = new EntityRegistry();
     public static final RecipeRegistry RECIPE = new RecipeRegistry();
+    public static final TrimMaterialRegistry TRIM_MATERIAL = new TrimMaterialRegistry();
+    public static final TrimPatternRegistry TRIM_PATTERN = new TrimPatternRegistry();
 }

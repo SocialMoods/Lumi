@@ -1,6 +1,7 @@
 package cn.nukkit.item;
 
-import cn.nukkit.item.trim.ItemTrimMaterialType;
+import cn.nukkit.item.trim.ItemTrimMaterialTypes;
+import cn.nukkit.network.protocol.types.TrimMaterial;
 
 /**
  * @author MagicDroidX
@@ -21,7 +22,7 @@ public class ItemIngotGold extends Item implements ItemTrimMaterial {
     }
 
     @Override
-    public ItemTrimMaterialType getMaterial() {
-        return ItemTrimMaterialType.MATERIAL_GOLD;
+    public TrimMaterial getMaterial() {
+        return ItemTrimMaterialTypes.MATERIAL_GOLD;
     }
 }
