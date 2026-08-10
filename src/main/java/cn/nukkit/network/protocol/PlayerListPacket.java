@@ -90,7 +90,7 @@ public class PlayerListPacket extends DataPacket {
         public Skin skin;
         public String xboxUserId = "";
         public String platformChatId = "";
-        public int buildPlatform = -1;
+        public int buildPlatform = 1;
         public boolean isTeacher;
         public boolean isHost;
         public boolean isSubClient;
