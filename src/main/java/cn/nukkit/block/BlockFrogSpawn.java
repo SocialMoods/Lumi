@@ -2,6 +2,7 @@ package cn.nukkit.block;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.math.BlockFace;
 
 public class BlockFrogSpawn extends BlockFlowable {
@@ -25,11 +26,12 @@ public class BlockFrogSpawn extends BlockFlowable {
 
     @Override
     public Item[] getDrops(Item item) {
-        return new Item[0];
+        return Item.EMPTY_ARRAY;
     }
 
     @Override
-    public int getDropExp() {
+    public int getDropExp(Item item) {
+        if(item.hasEnchantment(Enchantment.ID_SILK_TOUCH)) return 0;
         return 1;
     }
 

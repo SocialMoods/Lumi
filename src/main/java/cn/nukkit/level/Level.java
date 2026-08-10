@@ -2469,7 +2469,7 @@ public class Level implements ChunkManager, Metadatable {
         }
         Block target = this.getBlock(vector);
         Item[] drops;
-        int dropExp = target.getDropExp();
+        int dropExp = target.getDropExp(item);
 
         if (item == null) {
             item = new ItemBlock(Block.get(BlockID.AIR), 0, 0);

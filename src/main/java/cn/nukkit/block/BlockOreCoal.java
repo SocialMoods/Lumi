@@ -70,7 +70,8 @@ public class BlockOreCoal extends BlockSolid {
     }
 
     @Override
-    public int getDropExp() {
+    public int getDropExp(Item item) {
+        if(item.hasEnchantment(Enchantment.ID_SILK_TOUCH)) return 0;
         return Utils.rand(0, 2);
     }
 

@@ -1227,7 +1227,7 @@ public abstract class Block extends Position implements Metadatable, Cloneable, 
         return this.getFloorX() + ":" + this.getFloorY() + ':' + this.getFloorZ();
     }
 
-    public int getDropExp() {
+    public int getDropExp(Item item) {
         return 0;
     }
 
