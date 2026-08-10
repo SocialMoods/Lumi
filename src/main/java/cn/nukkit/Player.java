@@ -671,7 +671,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         this.showInPlayerList = showInPlayerList;
 
         if(showInPlayerList) {
-            this.server.updatePlayerListData(this.getLoginUuid(), this.getId(), this.displayName, this.getSkin(), this.loginChainData.getXUID());
+            this.server.updatePlayerListData(this.getUniqueId(), this.getId(), this.displayName, this.getSkin(), this.loginChainData.getXUID());
         } else {
             this.server.removePlayerListData(this.getUniqueId());
         }
