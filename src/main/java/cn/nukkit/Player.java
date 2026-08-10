@@ -284,6 +284,11 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     public boolean showToOthers = true;
 
     /**
+     * Option shows player from player list
+     */
+    public boolean showPlayerList = true;
+
+    /**
      * Player's client-side walk speed. Remember to call getAdventureSettings().update() if changed.
      */
     @Getter
@@ -655,6 +660,20 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         this.hiddenPlayers.remove(player.getUniqueId());
         if (player.isOnline()) {
             player.spawnTo(this);
+        }
+    }
+
+    public boolean isShowPlayerList() {
+        return showPlayerList;
+    }
+
+    public void setShowPlayerList(boolean showPlayerList) {
+        this.showPlayerList = showPlayerList;
+
+        if(showPlayerList) {
+            this.server.updatePlayerListData(this.getLoginUuid(), this.getId(), this.displayName, this.getSkin(), this.loginChainData.getXUID());
+        } else {
+            this.server.removePlayerListData(this.getUniqueId());
         }
     }
 

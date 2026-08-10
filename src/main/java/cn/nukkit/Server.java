@@ -904,10 +904,14 @@ public class Server {
     }
 
     public void updatePlayerListData(UUID uuid, long entityId, String name, Skin skin, String xboxUserId, Player[] players) {
-        PlayerListPacket pk = new PlayerListPacket();
-        pk.type = PlayerListPacket.TYPE_ADD;
-        pk.entries = new PlayerListPacket.Entry[]{new PlayerListPacket.Entry(uuid, entityId, name, skin, xboxUserId)};
-        this.batchPackets(players, new DataPacket[]{pk}); // This is sent "directly" so it always gets thru before possible TYPE_REMOVE packet for NPCs etc.
+        Player player = this.getOnlinePlayers().get(uuid);
+
+        if (player == null || player.isShowPlayerList()) {
+            PlayerListPacket pk = new PlayerListPacket();
+            pk.type = PlayerListPacket.TYPE_ADD;
+            pk.entries = new PlayerListPacket.Entry[]{new PlayerListPacket.Entry(uuid, entityId, name, skin, xboxUserId)};
+            this.batchPackets(players, new DataPacket[]{pk}); // This is sent "directly" so it always gets thru before possible TYPE_REMOVE packet for NPCs etc.
+        }
     }
 
     public void updatePlayerListData(UUID uuid, long entityId, String name, Skin skin, String xboxUserId, Collection<Player> players) {
@@ -940,6 +944,7 @@ public class Server {
 
     public void sendFullPlayerListData(Player player) {
         PlayerListPacket.Entry[] array = this.playerList.values().stream()
+                .filter(Player::isShowPlayerList)
                 .map(p -> new PlayerListPacket.Entry(
                         p.getLoginUuid(),
                         p.getId(),
