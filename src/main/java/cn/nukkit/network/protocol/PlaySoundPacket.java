@@ -18,6 +18,11 @@ public class PlaySoundPacket extends DataPacket {
      */
     public Long serverSoundHandle;
 
+    /**
+     * @since v2168 v1_26_40
+     */
+    public long loopCount;
+
     @Override
     public byte pid() {
         return NETWORK_ID;
@@ -34,7 +39,10 @@ public class PlaySoundPacket extends DataPacket {
         this.putBlockVector3(this.x << 3, this.y << 3, this.z << 3);
         this.putLFloat(this.volume);
         this.putLFloat(this.pitch);
-        if (protocol >= ProtocolInfo.v1_26_20_26) {
+        if (protocol >= ProtocolInfo.v1_26_40) {
+            this.putUnsignedVarInt(this.loopCount);
+            this.putOptionalNull(this.serverSoundHandle, this::putLLong);
+        } else if (protocol >= ProtocolInfo.v1_26_20_26) {
             this.putOptionalNull(this.serverSoundHandle, this::putLLong);
         }
     }

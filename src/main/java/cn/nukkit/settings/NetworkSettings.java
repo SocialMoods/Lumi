@@ -31,7 +31,8 @@ public class NetworkSettings extends OkaeriConfig {
     private boolean enableRakSendCookie = true;
 
     @CustomKey("rak-packet-limit")
-    private int rakPacketLimit = 120;
+    @Comment("Max RakNet packets per 10ms per IP")
+    private int rakPacketLimit = 2000;
 
     @CustomKey("timeout-milliseconds")
     private int timeoutMilliseconds = 25000;

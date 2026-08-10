@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 @ToString
 public class DimensionDataPacket extends DataPacket {
@@ -40,7 +41,8 @@ public class DimensionDataPacket extends DataPacket {
                 dimensionData.getMaxHeight() + 1,
                 dimensionData.getMinHeight(),
                 getGeneratorType(dimension),
-                3 //force 3 because currently we don't support anything except overworld
+                3, //force 3 because currently we don't support anything except overworld
+                new UUID(0, 0)
         );
     }
 
@@ -69,6 +71,9 @@ public class DimensionDataPacket extends DataPacket {
             this.putVarInt(definition.getGeneratorType());
             if(protocol >= ProtocolInfo.v1_26_20_26) {
                 this.putVarInt(definition.getDimensionType());
+                if (protocol >= ProtocolInfo.v1_26_40) {
+                    this.putUUID(definition.getPackId());
+                }
             }
         }
     }

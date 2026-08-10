@@ -121,6 +121,9 @@ public class Binary {
 
             stream.putUnsignedVarInt(id);
             stream.putUnsignedVarInt(type);
+            if (protocol >= ProtocolInfo.v1_26_40) {
+                stream.putByte((byte) type);
+            }
 
             switch (d.getType()) {
                 case Entity.DATA_TYPE_BYTE:

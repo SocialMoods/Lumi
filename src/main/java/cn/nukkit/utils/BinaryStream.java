@@ -5,6 +5,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.data.skin.PersonaPiece;
 import cn.nukkit.entity.data.skin.PersonaPieceTint;
+import cn.nukkit.entity.data.skin.PersonaPieceType;
 import cn.nukkit.entity.data.skin.Skin;
 import cn.nukkit.entity.data.skin.SkinAnimation;
 import cn.nukkit.item.*;
@@ -336,12 +337,22 @@ public class BinaryStream {
         this.putImage(skin.getSkinData());
 
         List<SkinAnimation> animations = skin.getAnimations();
-        this.putLInt(animations.size());
+        if (protocol >= ProtocolInfo.v1_26_40) {
+            this.putUnsignedVarInt(animations.size());
+        } else {
+            this.putLInt(animations.size());
+        }
         for (SkinAnimation animation : animations) {
             this.putImage(animation.image);
-            this.putLInt(animation.type);
-            this.putLFloat(animation.frames);
-            this.putLInt(animation.expression);
+            if (protocol >= ProtocolInfo.v1_26_40) {
+                this.putUnsignedVarInt(animation.type);
+                this.putLFloat(animation.frames);
+                this.putUnsignedVarInt(animation.expression);
+            } else {
+                this.putLInt(animation.type);
+                this.putLFloat(animation.frames);
+                this.putLInt(animation.expression);
+            }
         }
 
         this.putImage(skin.getCapeData());
@@ -350,27 +361,52 @@ public class BinaryStream {
         this.putString(skin.getAnimationData());
         this.putString(skin.getCapeId());
         this.putString(skin.getFullSkinId());
-        this.putString(skin.getArmSize());
-        this.putString(skin.getSkinColor());
+        boolean v2168 = protocol >= ProtocolInfo.v1_26_40;
+        if (v2168) {
+            this.putByte((byte) ("wide".equalsIgnoreCase(skin.getArmSize()) ? 1 : 0));
+            this.putLInt(skinColorToInt(skin.getSkinColor()));
+        } else {
+            this.putString(skin.getArmSize());
+            this.putString(skin.getSkinColor());
+        }
 
         List<PersonaPiece> pieces = skin.getPersonaPieces();
-        this.putLInt(pieces.size());
+        if (v2168) {
+            this.putUnsignedVarInt(pieces.size());
+        } else {
+            this.putLInt(pieces.size());
+        }
         for (PersonaPiece piece : pieces) {
             this.putString(piece.id);
-            this.putString(piece.type);
-            this.putString(piece.packId);
+            if (v2168) {
+                this.putLInt(piece.type.ordinal());
+                this.putUUID(piece.packId);
+            } else {
+                this.putString(piece.type.getSerializeName());
+                this.putString(piece.packId.toString());
+            }
             this.putBoolean(piece.isDefault);
             this.putString(piece.productId);
         }
 
         List<PersonaPieceTint> tints = skin.getTintColors();
-        this.putLInt(tints.size());
+        if (v2168) {
+            this.putUnsignedVarInt(tints.size());
+        } else {
+            this.putLInt(tints.size());
+        }
         for (PersonaPieceTint tint : tints) {
-            this.putString(tint.pieceType);
-            List<String> colors = tint.colors;
-            this.putLInt(colors.size());
-            for (String color : colors) {
-                this.putString(color);
+            this.putString(tint.pieceType.getSerializeName());
+            if (v2168) {
+                for (int i = 0; i < 4; i++) {
+                    this.putLInt(i < tint.colors.size() ? skinColorToInt(tint.colors.get(i)) : 0);
+                }
+            } else {
+                List<String> colors = tint.colors;
+                this.putLInt(colors.size());
+                for (String color : colors) {
+                    this.putString(color);
+                }
             }
         }
 
@@ -379,12 +415,44 @@ public class BinaryStream {
         this.putBoolean(skin.isCapeOnClassic());
         this.putBoolean(skin.isPrimaryUser());
         this.putBoolean(skin.isOverridingPlayerAppearance());
+        if (v2168) {
+            this.putString(Boolean.toString(skin.isTrusted()));
+            this.putString(skin.getProfileHash());
+        }
     }
 
     public void putImage(SerializedImage image) {
         this.putLInt(image.width);
         this.putLInt(image.height);
         this.putByteArray(image.data);
+    }
+
+    // v2168 skin field-type conversion helpers
+    private static int skinColorToInt(String color) {
+        // Accept hexadecimal RGB/RGBA colors and small numeric values; malformed values become zero.
+        if (color == null || color.isEmpty()) {
+            return 0;
+        }
+        String hex = color.startsWith("#") ? color.substring(1) : color;
+        try {
+            int rgba;
+            if (hex.length() <= 4) {
+                // Preserve small numeric color values used by some persona payloads.
+                return Integer.parseInt(color.startsWith("#") ? hex : color);
+            }
+            if (hex.length() == 6) {
+                rgba = (int) (Long.parseLong(hex, 16) | 0xFF000000L);
+            } else {
+                rgba = (int) Long.parseLong(hex, 16);
+            }
+            return rgba;
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
+    }
+
+    private static String intToSkinColor(int argb) {
+        return String.format("#%08X", argb);
     }
 
     public SerializedImage getImage() {
@@ -413,12 +481,21 @@ public class BinaryStream {
         skin.setSkinResourcePatch(this.getString());
         skin.setSkinData(this.getImage(Skin.SKIN_PERSONA_SIZE));
 
-        int animationCount = this.getLInt();
+        int animationCount = protocol >= ProtocolInfo.v1_26_40 ? (int) this.getUnsignedVarInt() : this.getLInt();
         for (int i = 0; i < Math.min(animationCount, 128); i++) {
             SerializedImage image = this.getImage(Skin.SKIN_128_128_SIZE);
-            int type = this.getLInt();
-            float frames = this.getLFloat();
-            int expression = this.getLInt();
+            int type;
+            float frames;
+            int expression;
+            if (protocol >= ProtocolInfo.v1_26_40) {
+                type = (int) this.getUnsignedVarInt();
+                frames = this.getLFloat();
+                expression = (int) this.getUnsignedVarInt();
+            } else {
+                type = this.getLInt();
+                frames = this.getLFloat();
+                expression = this.getLInt();
+            }
             skin.getAnimations().add(new SkinAnimation(image, type, frames, expression));
         }
 
@@ -428,26 +505,45 @@ public class BinaryStream {
         skin.setAnimationData(this.getString());
         skin.setCapeId(this.getString());
         skin.setFullSkinId(this.getString());
-        skin.setArmSize(this.getString());
-        skin.setSkinColor(this.getString());
+        boolean v2168 = protocol >= ProtocolInfo.v1_26_40;
+        if (v2168) {
+            skin.setArmSize(this.getByte() != 0 ? "wide" : "slim");
+            skin.setSkinColor(intToSkinColor(this.getLInt()));
+        } else {
+            skin.setArmSize(this.getString());
+            skin.setSkinColor(this.getString());
+        }
 
-        int piecesLength = this.getLInt();
+        int piecesLength = v2168 ? (int) this.getUnsignedVarInt() : this.getLInt();
         for (int i = 0; i < Math.min(piecesLength, 128); i++) {
             String pieceId = this.getString();
-            String pieceType = this.getString();
-            String packId = this.getString();
+            String pieceType;
+            String packId;
+            if (v2168) {
+                pieceType = PersonaPieceType.fromOrdinal(this.getLInt()).getSerializeName();
+                packId = this.getUUID().toString();
+            } else {
+                pieceType = this.getString();
+                packId = this.getString();
+            }
             boolean isDefault = this.getBoolean();
             String productId = this.getString();
             skin.getPersonaPieces().add(new PersonaPiece(pieceId, pieceType, packId, isDefault, productId));
         }
 
-        int tintsLength = this.getLInt();
+        int tintsLength = v2168 ? (int) this.getUnsignedVarInt() : this.getLInt();
         for (int i = 0; i < Math.min(tintsLength, 128); i++) {
             String pieceType = this.getString();
             List<String> colors = new ArrayList<>();
-            int colorsLength = this.getLInt();
-            for (int i2 = 0; i2 < Math.min(colorsLength, 128); i2++) {
-                colors.add(this.getString());
+            if (v2168) {
+                for (int i2 = 0; i2 < 4; i2++) {
+                    colors.add(intToSkinColor(this.getLInt()));
+                }
+            } else {
+                int colorsLength = this.getLInt();
+                for (int i2 = 0; i2 < Math.min(colorsLength, 128); i2++) {
+                    colors.add(this.getString());
+                }
             }
             skin.getTintColors().add(new PersonaPieceTint(pieceType, colors));
         }
@@ -457,6 +553,10 @@ public class BinaryStream {
         skin.setCapeOnClassic(this.getBoolean());
         skin.setPrimaryUser(this.getBoolean());
         skin.setOverridingPlayerAppearance(this.getBoolean());
+        if (v2168) {
+            skin.setTrusted(Boolean.parseBoolean(this.getString()));
+            skin.setProfileHash(this.getString());
+        }
         return skin;
     }
 
@@ -471,6 +571,9 @@ public class BinaryStream {
     }
 
     public Item getSlot(int protocolId) {
+        if (protocolId >= ProtocolInfo.v1_26_40) {
+            return this.getNetworkItemStackDescriptor(protocolId, false);
+        }
         int runtimeId = this.getVarInt();
         if (runtimeId == 0) {
             return Item.get(Item.AIR, 0, 0);
@@ -503,11 +606,13 @@ public class BinaryStream {
             id = null;
         }
 
+        int stackNetId = 0;
         if (this.getBoolean()) { // hasNetId
-            this.getVarInt(); // netId
+            stackNetId = this.getVarInt();
         }
 
-        this.getVarInt();// blockRuntimeId
+        this.getVarInt(); // blockRuntimeId
+
         //TODO 在1.21.30会得到错误数据
 
         BinaryStream stream = new BinaryStream(this.getByteArray());
@@ -643,6 +748,10 @@ public class BinaryStream {
     }
 
     public void putSlot(int protocolId, Item item, boolean instanceItem) {
+        if (protocolId >= ProtocolInfo.v1_26_40) {
+            this.putNetworkItemStackDescriptor(protocolId, item, instanceItem);
+            return;
+        }
         if (item == null || item.getId() == Item.AIR) {
             this.putByte((byte) 0);
             return;
@@ -782,6 +891,48 @@ public class BinaryStream {
         }
     }
 
+    private Item readItemInstanceDescriptorV2168() {
+        int descriptorType = (int) this.getUnsignedVarInt();
+        this.getByte(); // duplicated descriptor type
+        String identifier = null;
+        int damage = 0;
+        if (descriptorType != 0) {
+            identifier = this.getString();
+            damage = this.getVarInt();
+        }
+        int count = this.getLShort();
+        this.getUnsignedVarInt(); // blockRuntimeId
+        byte[] userData = this.getByteArray();
+        if (identifier == null) {
+            return Item.AIR_ITEM.clone();
+        }
+        Item item = Item.fromString(identifier);
+        if (item == null) {
+            return Item.AIR_ITEM.clone();
+        }
+        item.setDamage(damage);
+        item.setCount(count);
+        if (userData.length > 0) {
+            BinaryStream stream = new BinaryStream(userData);
+            try {
+                int nbtSize = (short) stream.getLShort();
+                CompoundTag tag = null;
+                if (nbtSize > 0) {
+                    tag = readItemUserDataNbt(stream);
+                } else if (nbtSize == -1) {
+                    int tagCount = stream.getByte();
+                    if (tagCount != 1) throw new IllegalArgumentException("Expected 1 tag but got " + tagCount);
+                    tag = readItemUserDataNbt(stream);
+                }
+                if (tag != null && !tag.isEmpty()) {
+                    item.setCompoundTag(NBTIO.write(tag, ByteOrder.LITTLE_ENDIAN));
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Unable to read item instance user data", e);
+            }
+        }
+        return item;
+    }
     public Item getRecipeIngredient(int protocolId) {
         int runtimeId = this.getVarInt();
         if (runtimeId == 0) {
@@ -842,26 +993,37 @@ public class BinaryStream {
     }
 
     public void putNetworkItemStackDescriptor(int protocolId, Item item) {
+        this.putNetworkItemStackDescriptor(protocolId, item, false);
+    }
+
+    public void putNetworkItemStackDescriptor(int protocolId, Item item, boolean instanceItem) {
         if (protocolId < ProtocolInfo.v1_26_20_26) {
-            this.putSlot(protocolId, item);
+            this.putSlot(protocolId, item, instanceItem);
             return;
+        }
+
+
+        if (item == null) {
+            item = Item.AIR_ITEM.clone();
         }
 
         RuntimeItemMapping mapping = RuntimeItems.getMapping(protocolId);
         boolean isErrorItem = false;
         boolean isStringItem = item instanceof StringItem;
-        try {
-            if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
-                throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
-            } else {
-                mapping.toRuntime(item.getId(), item.getDamage());
+        if (item.getId() != Item.AIR) {
+            try {
+                if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
+                    throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
+                } else {
+                    mapping.toRuntime(item.getId(), item.getDamage());
+                }
+            } catch (Exception e) {
+                Server.getInstance().getLogger().debug("Unknown Item", e);
+                isErrorItem = true;
             }
-        } catch (Exception e) {
-            Server.getInstance().getLogger().debug("Unknown Item", e);
-            isErrorItem = true;
         }
 
-        if (!item.isSupportedOn(protocolId) || isErrorItem) {
+        if (item.getId() != Item.AIR && (!item.isSupportedOn(protocolId) || isErrorItem)) {
             Item originItem = item;
             String downgradedIdentifier = RuntimeItems.downgradeIdentifier(item.getIdentifier(), protocolId);
             if(downgradedIdentifier != null) {
@@ -889,40 +1051,54 @@ public class BinaryStream {
         boolean isBlock = item instanceof ItemBlock;
         boolean isDurable = item instanceof ItemDurable;
 
-        int runtimeId;
+        int runtimeId = 0;
         int damage = 0;
-        if (isStringItem && !isErrorItem) {
-            runtimeId = mapping.getNetworkId(item);
-            damage = item.getDamage();
-        } else {
-            RuntimeEntry runtimeEntry = mapping.toRuntime(id, meta);
-            runtimeId = runtimeEntry.getRuntimeId();
-            damage = isBlock || isDurable || runtimeEntry.isHasDamage() ? 0 : meta;
+        if (id != Item.AIR) {
+            if (isStringItem && !isErrorItem) {
+                runtimeId = mapping.getNetworkId(item);
+                damage = item.getDamage();
+            } else {
+                RuntimeEntry runtimeEntry = mapping.toRuntime(id, meta);
+                runtimeId = runtimeEntry.getRuntimeId();
+                damage = isBlock || isDurable || runtimeEntry.isHasDamage() ? 0 : meta;
+            }
         }
 
-        this.putLShort(runtimeId);
+        if (instanceItem) {
+            this.putVarInt(runtimeId);
+        } else {
+            this.putLShort(runtimeId);
+        }
         this.putLShort(item.getCount());
         this.putUnsignedVarInt(damage);
 
-        boolean hasNetId = id != Item.AIR;
-        this.putBoolean(hasNetId); // hasNetId
-        if (hasNetId) {
-            this.putUnsignedVarInt(0); // netIdVariant ItemStackNetId
-            this.putVarInt(1); // netId 1 = Item is present
+        if (!instanceItem) {
+            boolean hasNetId = id != Item.AIR;
+            this.putBoolean(hasNetId);
+            if (hasNetId) {
+                if (protocolId < ProtocolInfo.v1_26_40) {
+                    this.putUnsignedVarInt(0); // ItemStackNetId variant
+                }
+                this.putVarInt(1); // Lumi does not expose stack net IDs on Item
+            }
         }
 
         Block block = isBlock && id != Item.AIR ? item.getBlockUnsafe() : null;
         int blockRuntimeId = block == null ? 0 : GlobalBlockPalette.getOrCreateRuntimeId(protocolId, block.getId(), block.getDamage());
-        this.putUnsignedVarInt(blockRuntimeId);
+        if (instanceItem) {
+            this.putVarInt(blockRuntimeId);
+        } else {
+            this.putUnsignedVarInt(blockRuntimeId);
+        }
 
         if (id == Item.AIR) {
-            this.putUnsignedVarInt(0); // No user date
+            this.putUnsignedVarInt(0); // No user data
             return;
         }
 
         try {
             BinaryStream stream = new BinaryStream();
-            if (isDurable || block != null && block.getDamage() > 0) {
+            if (!instanceItem && (isDurable || block != null && block.getDamage() > 0)) {
                 byte[] nbt = item.getCompoundTag();
                 CompoundTag tag;
                 if (nbt == null || nbt.length == 0) {
@@ -972,13 +1148,17 @@ public class BinaryStream {
     }
 
     public Item getNetworkItemStackDescriptor(int protocolId) {
+        return this.getNetworkItemStackDescriptor(protocolId, false);
+    }
+
+    public Item getNetworkItemStackDescriptor(int protocolId, boolean instanceItem) {
         if (protocolId < ProtocolInfo.v1_26_20_26) {
             return this.getSlot(protocolId);
         }
 
         Integer id = null;
         String stringId = null;
-        short runtimeId = (short) this.getLShort(); // signed short
+        int runtimeId = instanceItem ? this.getVarInt() : (short) this.getLShort();
         int count = this.getLShort();
         int damage = (int) this.getUnsignedVarInt();
 
@@ -1009,12 +1189,15 @@ public class BinaryStream {
             id = 0;
         }
 
-        if (this.getBoolean()) { // hasNetId
-            this.getUnsignedVarInt(); // netIdVariant
-            this.getVarInt(); // netId
+        int stackNetId = 0;
+        if (!instanceItem && this.getBoolean()) { // hasNetId
+            if (protocolId < ProtocolInfo.v1_26_40) {
+                this.getUnsignedVarInt(); // netIdVariant
+            }
+            stackNetId = this.getVarInt();
         }
 
-        int blockRuntimeId = (int) this.getUnsignedVarInt();
+        int blockRuntimeId = instanceItem ? this.getVarInt() : (int) this.getUnsignedVarInt();
 
         byte[] nbt = new byte[0];
         String[] canPlace = null;
@@ -1530,8 +1713,16 @@ public class BinaryStream {
 
     public ItemStackRequest readItemStackRequest(int protocol) {
         int requestId = getVarInt();
+        boolean v2168 = protocol >= ProtocolInfo.v1_26_40;
         ItemStackRequestAction[] actions = getArray(ItemStackRequestAction.class, (s) -> {
-            ItemStackRequestActionType itemStackRequestActionType = ItemStackRequestActionType.fromId(s.getByte());
+            int typeId = v2168 ? (int) s.getUnsignedVarInt() : s.getByte();
+            ItemStackRequestActionType itemStackRequestActionType = ItemStackRequestActionType.fromId(typeId, protocol);
+            if (itemStackRequestActionType == null) {
+                throw new UnsupportedOperationException("Unhandled stack request action type id " + typeId + " for protocol " + protocol);
+            }
+            if (v2168) {
+                s.getByte(); // duplicated action type
+            }
             return readRequestActionData(protocol, itemStackRequestActionType);
         });
         String[] filteredStrings = getArray(String.class, BinaryStream::getString);
@@ -1543,43 +1734,61 @@ public class BinaryStream {
 
     protected ItemStackRequestAction readRequestActionData(int protocol, ItemStackRequestActionType type) {
         return switch (type) {
-            case CRAFT_REPAIR_AND_DISENCHANT -> new CraftGrindstoneAction((int) getUnsignedVarInt(), getVarInt());
-            case CRAFT_LOOM -> new CraftLoomAction(getString());
-            case CRAFT_RECIPE_AUTO -> new AutoCraftRecipeAction(
-                    (int) getUnsignedVarInt(), getByte(), Collections.emptyList()
-            );
+            case CRAFT_REPAIR_AND_DISENCHANT -> {
+                int recipeId = protocol >= ProtocolInfo.v1_26_40 ? getLInt() : (int) getUnsignedVarInt();
+                if (protocol >= ProtocolInfo.v1_26_40) getByte(); // numberOfRequestedCrafts
+                yield new CraftGrindstoneAction(recipeId, getVarInt());
+            }
+            case CRAFT_LOOM -> {
+                String pattern = getString();
+                if (protocol >= ProtocolInfo.v1_26_40) getByte(); // numberOfRequestedCrafts
+                yield new CraftLoomAction(pattern);
+            }
+            case CRAFT_RECIPE_AUTO -> {
+                int recipeId = (int) getUnsignedVarInt();
+                if (protocol >= ProtocolInfo.v1_26_40) getByte(); // numberOfRequestedCrafts
+                int timesCrafted = getByte() & 0xff;
+                if (protocol >= ProtocolInfo.v1_26_40) {
+                    int ingredientCount = (int) getUnsignedVarInt();
+                    for (int i = 0; i < ingredientCount; i++) skipIngredientDescriptorV2168();
+                }
+                yield new AutoCraftRecipeAction(recipeId, timesCrafted, Collections.emptyList());
+            }
             case CRAFT_RESULTS_DEPRECATED -> new CraftResultsDeprecatedAction(
-                    getArray(Item.class, (s) -> s.getSlot(protocol)),
+                    getArray(Item.class, s -> protocol >= ProtocolInfo.v1_26_40
+                            ? s.readItemInstanceDescriptorV2168()
+                            : s.getSlot(protocol)),
                     getByte()
             );
-            case MINE_BLOCK -> new MineBlockAction(getVarInt(), getVarInt(), getVarInt());
+            case MINE_BLOCK -> new MineBlockAction(getVarInt(), getVarInt(),
+                    protocol >= ProtocolInfo.v1_26_40 ? getLInt() : getVarInt());
             case CRAFT_RECIPE_OPTIONAL -> new CraftRecipeOptionalAction((int) getUnsignedVarInt(), getLInt());
             case TAKE -> new TakeAction(
                     getByte(),
-                    readStackRequestSlotInfo(),
-                    readStackRequestSlotInfo()
+                    readStackRequestSlotInfo(protocol),
+                    readStackRequestSlotInfo(protocol)
             );
             case PLACE -> new PlaceAction(
                     getByte(),
-                    readStackRequestSlotInfo(),
-                    readStackRequestSlotInfo()
+                    readStackRequestSlotInfo(protocol),
+                    readStackRequestSlotInfo(protocol)
             );
             case SWAP -> new SwapAction(
-                    readStackRequestSlotInfo(),
-                    readStackRequestSlotInfo()
+                    readStackRequestSlotInfo(protocol),
+                    readStackRequestSlotInfo(protocol)
             );
             case DROP -> new DropAction(
                     getByte(),
-                    readStackRequestSlotInfo(),
+                    readStackRequestSlotInfo(protocol),
                     getBoolean()
             );
             case DESTROY -> new DestroyAction(
                     getByte(),
-                    readStackRequestSlotInfo()
+                    readStackRequestSlotInfo(protocol)
             );
             case CONSUME -> new ConsumeAction(
                     getByte(),
-                    readStackRequestSlotInfo()
+                    readStackRequestSlotInfo(protocol)
             );
             case CREATE -> new CreateAction(
                     getByte()
@@ -1589,22 +1798,44 @@ public class BinaryStream {
                     getVarInt(),
                     getVarInt()
             );
-            case CRAFT_RECIPE -> new CraftRecipeAction(
-                    (int) getUnsignedVarInt()
-            );
-            case CRAFT_CREATIVE -> new CraftCreativeAction(
-                    (int) getUnsignedVarInt()
-            );
+            case CRAFT_RECIPE -> {
+                int recipeId = (int) getUnsignedVarInt();
+                if (protocol >= ProtocolInfo.v1_26_40) getByte();
+                yield new CraftRecipeAction(recipeId);
+            }
+            case CRAFT_CREATIVE -> {
+                int creativeId = (int) getUnsignedVarInt();
+                if (protocol >= ProtocolInfo.v1_26_40) getByte();
+                yield new CraftCreativeAction(creativeId);
+            }
             case CRAFT_NON_IMPLEMENTED_DEPRECATED -> new CraftNonImplementedAction();
             default -> throw new UnsupportedOperationException("Unhandled stack request action type: " + type);
         };
     }
 
-    private ItemStackRequestSlotData readStackRequestSlotInfo() {
+    private ItemStackRequestSlotData readStackRequestSlotInfo(int protocol) {
         return new ItemStackRequestSlotData(
                 ContainerSlotType.fromId(getByte()),
                 getByte(),
-                getVarInt()
+                protocol >= ProtocolInfo.v1_26_40 ? getLInt() : getVarInt()
         );
+    }
+
+    private void skipIngredientDescriptorV2168() {
+        int descriptorType = (int) getUnsignedVarInt();
+        getByte(); // duplicated descriptor type
+        switch (descriptorType) {
+            case 0 -> { }
+            case 1, 3 -> {
+                getString();
+                if (descriptorType == 1) getVarInt();
+            }
+            case 2 -> {
+                getString();
+                getLShort();
+            }
+            default -> throw new UnsupportedOperationException("Unhandled v2168 ingredient descriptor " + descriptorType);
+        }
+        getLShort(); // count
     }
 }

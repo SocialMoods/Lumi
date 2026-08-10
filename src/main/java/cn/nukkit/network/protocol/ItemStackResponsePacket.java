@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.network.protocol.types.inventory.FullContainerName;
 import cn.nukkit.network.protocol.types.inventory.itemstack.response.ItemStackResponse;
 import cn.nukkit.network.protocol.types.inventory.itemstack.response.ItemStackResponseStatus;
 import lombok.NoArgsConstructor;
@@ -19,26 +20,42 @@ public class ItemStackResponsePacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
-        putArray(entries, (r) -> {
-            putByte((byte) r.getResult().ordinal());
-            putVarInt(r.getRequestId());
-            if (r.getResult() != ItemStackResponseStatus.OK) return;
-            putArray(r.getContainers(), (container) -> {
-                putByte((byte) container.getContainer().getId());
-                putArray(container.getItems(), (item) -> {
-                    putByte((byte) item.getSlot());
-                    putByte((byte) item.getHotbarSlot());
-                    putByte((byte) item.getCount());
-                    putVarInt(item.getStackNetworkId());
-                    putString(item.getCustomName());
-                    if (this.protocol >= ProtocolInfo.v1_21_50)
-                        putString("");
-                    putVarInt(item.getDurabilityCorrection());
+        this.putArray(entries, response -> {
+            this.putByte((byte) response.getResult().ordinal());
+            this.putVarInt(response.getRequestId());
+            if (this.protocol >= ProtocolInfo.v1_26_40) {
+                this.putBoolean(true);
+                boolean present = !response.getContainers().isEmpty();
+                this.putBoolean(present);
+                if (!present) return;
+            } else if (response.getResult() != ItemStackResponseStatus.OK) {
+                return;
+            }
+            this.putArray(response.getContainers(), container -> {
+                if (this.protocol >= ProtocolInfo.v1_26_40) {
+                    this.writeFullContainerName(new FullContainerName(container.getContainer(), null));
+                } else {
+                    this.putByte((byte) container.getContainer().getId());
+                }
+                this.putArray(container.getItems(), item -> {
+                    this.putByte((byte) item.getSlot());
+                    this.putByte((byte) item.getHotbarSlot());
+                    this.putByte((byte) item.getCount());
+                    if (this.protocol >= ProtocolInfo.v1_26_40) {
+                        this.putBoolean(true);
+                        boolean present = item.getStackNetworkId() != 0;
+                        this.putBoolean(present);
+                        if (present) this.putVarInt(item.getStackNetworkId());
+                    } else {
+                        this.putVarInt(item.getStackNetworkId());
+                    }
+                    this.putString(item.getCustomName());
+                    if (this.protocol >= ProtocolInfo.v1_21_50) this.putString("");
+                    this.putVarInt(item.getDurabilityCorrection());
                 });
             });
         });
     }
-
     @Override
     public void decode() {
         throw new UnsupportedOperationException();//client bound

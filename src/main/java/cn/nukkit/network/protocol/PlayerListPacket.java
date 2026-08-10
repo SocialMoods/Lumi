@@ -28,6 +28,29 @@ public class PlayerListPacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
+        if (this.protocol >= ProtocolInfo.v1_26_40) {
+            this.putUnsignedVarInt(this.entries.length);
+            for (Entry entry : this.entries) {
+                this.putUnsignedVarInt(this.type == TYPE_ADD ? 1 : 0);
+                this.putByte(this.type);
+                if (this.type == TYPE_ADD) {
+                    this.putUUID(entry.uuid);
+                    this.putEntityUniqueId(entry.entityId);
+                    this.putString(entry.name);
+                    this.putString(entry.xboxUserId);
+                    this.putString(entry.platformChatId);
+                    this.putLInt(entry.buildPlatform);
+                    this.putSkin(protocol, entry.skin);
+                    this.putBoolean(entry.isTeacher);
+                    this.putBoolean(entry.isHost);
+                    this.putBoolean(entry.isSubClient);
+                    this.putLInt(entry.color);
+                } else {
+                    this.putUUID(entry.uuid);
+                }
+            }
+            return;
+        }
         this.putByte(this.type);
         this.putUnsignedVarInt(this.entries.length);
         switch (type) {
@@ -44,22 +67,15 @@ public class PlayerListPacket extends DataPacket {
                     this.putBoolean(entry.isHost);
                     if (protocol >= ProtocolInfo.v1_20_60) {
                         this.putBoolean(entry.isSubClient);
-                        if (protocol >= ProtocolInfo.v1_21_80) {
-                            this.putLInt(entry.color);
-                        }
+                        if (protocol >= ProtocolInfo.v1_21_80) this.putLInt(entry.color);
                     }
                 }
-                for (Entry entry : this.entries) { // WTF Mojang
-                    this.putBoolean(entry.skin != null && entry.skin.isTrusted());
-                }
+                for (Entry entry : this.entries) this.putBoolean(entry.skin != null && entry.skin.isTrusted());
                 break;
             case TYPE_REMOVE:
-                for (Entry entry : this.entries) {
-                    this.putUUID(entry.uuid);
-                }
+                for (Entry entry : this.entries) this.putUUID(entry.uuid);
         }
     }
-
     @Override
     public byte pid() {
         return NETWORK_ID;

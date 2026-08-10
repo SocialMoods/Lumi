@@ -512,6 +512,7 @@ public class Network {
                 .registerPacket(ProtocolInfo.REQUEST_NETWORK_SETTINGS_PACKET, RequestNetworkSettingsPacket.class, RequestNetworkSettingsPacket::new)
                 .registerPacket(ProtocolInfo.UPDATE_CLIENT_INPUT_LOCKS, UpdateClientInputLocksPacket.class, UpdateClientInputLocksPacket::new)
                 .registerPacket(ProtocolInfo.CAMERA_PRESETS_PACKET, CameraPresetsPacket.class, CameraPresetsPacket::new)
+                .registerPacket(ProtocolInfo.SUB_CHUNK_PACKET, SubChunkPacket.class, SubChunkPacket::new)
 
                 .registerPacket(ProtocolInfo.CAMERA_INSTRUCTION_PACKET, CameraInstructionPacket.class, CameraInstructionPacket::new)
                 .registerPacket(ProtocolInfo.TRIM_DATA_PACKET, TrimDataPacket.class, TrimDataPacket::new)
