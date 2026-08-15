@@ -67,6 +67,7 @@ public class BlockEntityJukebox extends BlockEntitySpawnable {
                     case ItemNamespaceId.MUSIC_DISC_PRECIPICE -> LevelSoundEventPacket.SOUND_RECORD_PRECIPICE;
                     case ItemNamespaceId.MUSIC_DISC_LAVA_CHICKEN -> LevelSoundEventPacket.SOUND_RECORD_LAVA_CHICKEN;
                     case ItemNamespaceId.MUSIC_DISC_TEARS -> LevelSoundEventPacket.SOUND_RECORD_TEARS;
+                    case ItemNamespaceId.MUSIC_DISC_BOUNCE -> LevelSoundEventPacket.SOUND_RECORD_BOUNCE;
                     default ->
                             throw new IllegalStateException("Sound is not implemented for item: " + this.recordItem.getNamespaceId());
                 };
