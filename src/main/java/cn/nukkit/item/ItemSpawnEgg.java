@@ -111,8 +111,13 @@ public class ItemSpawnEgg extends Item {
             nbt.putString("CustomName", this.getCustomName());
         }
 
-        CreatureSpawnEvent ev = new CreatureSpawnEvent(Registries.ENTITY.getNetworkId(this.getEntityIdentifier()), block, nbt, CreatureSpawnEvent.SpawnReason.SPAWN_EGG, player);
-        if (!ev.call()) {
+        try {
+            CreatureSpawnEvent ev = new CreatureSpawnEvent(Registries.ENTITY.getNetworkId(this.getEntityIdentifier()), block, nbt, CreatureSpawnEvent.SpawnReason.SPAWN_EGG, player);
+            if (!ev.call()) {
+                return false;
+            }
+        } catch (Exception e) {
+            player.sendActionBar("Entity is not implemented");
             return false;
         }
 
