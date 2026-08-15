@@ -152,6 +152,12 @@ public class LoginPacket extends DataPacket {
         JsonObject skinToken = ClientChainData.decodeToken(new String(this.get(size), StandardCharsets.UTF_8));
         if (skinToken == null) throw new RuntimeException("Invalid null skin token");
 
+        /// HACK: spoof the protocol with a fake one to fix Mojang's stupidity.
+        if (this.protocol_ == ProtocolInfo.v1_26_40 &&
+                skinToken.has("GameVersion") && Utils.isAtLeastVersion(skinToken.get("GameVersion").getAsString(), 1, 26, 44)) {
+            this.protocol_ = ProtocolInfo.v1_26_44;
+        }
+
         if (skinToken.has("ClientRandomId")) {
             this.clientId = skinToken.get("ClientRandomId").getAsLong();
         }
