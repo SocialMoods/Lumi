@@ -480,8 +480,27 @@ public class Utils {
             case ProtocolInfo.v1_26_20_26, ProtocolInfo.v1_26_20 -> "1.26.20";
             case ProtocolInfo.v1_26_30 -> "1.26.30";
             case ProtocolInfo.v1_26_40 -> "1.26.40";
+            case ProtocolInfo.v1_26_44 -> "1.26.44";
             default -> throw new IllegalStateException("Invalid protocol: " + protocol);
         };
+    }
+
+    /**
+     * Numerically compares a client version string (e.g. "1.26.44.3") against the given version;
+     * returns false when it cannot be parsed.
+     */
+    public static boolean isAtLeastVersion(String version, int major, int minor, int patch) {
+        String[] parts = version.split("\\.");
+        if (parts.length < 3) {
+            return false;
+        }
+        try {
+            return Integer.parseInt(parts[0]) > major
+                    || (Integer.parseInt(parts[0]) == major && Integer.parseInt(parts[1]) > minor)
+                    || (Integer.parseInt(parts[0]) == major && Integer.parseInt(parts[1]) == minor && Integer.parseInt(parts[2]) >= patch);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**

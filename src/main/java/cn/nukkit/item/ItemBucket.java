@@ -40,7 +40,8 @@ public class ItemBucket extends Item {
     public static final int POWDER_SNOW_BUCKET = 11;
     public static final int AXOLOTL_BUCKET = 12;
     public static final int TADPOLE_BUCKET = 13;
-    public static final int UNDEFINED_BUCKET = 14;
+    public static final int SULFUR_CUBE_BUCKET = 14;
+    public static final int UNDEFINED_BUCKET = 15;
 
     public ItemBucket() {
         this(0, 1);
@@ -66,6 +67,7 @@ public class ItemBucket extends Item {
             case POWDER_SNOW_BUCKET -> "Powder Snow Bucket";
             case AXOLOTL_BUCKET -> "Bucket of Axolotl";
             case TADPOLE_BUCKET -> "Bucket of Tadpoles";
+            case SULFUR_CUBE_BUCKET -> "Bucket of Sulfur Cube";
             default -> "Bucket";
         };
     }

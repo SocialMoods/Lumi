@@ -201,6 +201,7 @@ public class ItemRegistry implements ItemNamespaceId, IRegistry<String, Item, Su
         register(GREEN_HARNESS, ItemGreenHarness::new);
         register(RED_HARNESS, ItemRedHarness::new);
         register(BLACK_HARNESS, ItemBlackHarness::new);
+        register(MUSIC_DISC_BOUNCE, ItemRecordBounce::new);
     }
 
     @Override
