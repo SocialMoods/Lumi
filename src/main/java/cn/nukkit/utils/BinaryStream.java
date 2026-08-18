@@ -695,6 +695,21 @@ public class BinaryStream {
                     }
                     return item;
                 }
+            } else if (compoundTag != null && compoundTag.contains(MV_ORIGIN_ID) && compoundTag.contains(MV_ORIGIN_META)) {
+                int originID = compoundTag.getInt(MV_ORIGIN_ID);
+                int originMeta = compoundTag.getInt(MV_ORIGIN_META);
+                Item item;
+                if (originID == ItemID.STRING_IDENTIFIED_ITEM && compoundTag.contains(MV_ORIGIN_NAMESPACE)) {
+                    item = Item.fromString(compoundTag.getString(MV_ORIGIN_NAMESPACE));
+                    item.setDamage(originMeta);
+                    item.setCount(cnt);
+                } else {
+                    item = Item.get(originID, originMeta, cnt);
+                }
+                if (compoundTag.contains(MV_ORIGIN_NBT)) {
+                    item.setNamedTag(compoundTag.getCompound(MV_ORIGIN_NBT));
+                }
+                return item;
             }
         } catch (IOException e) {
             throw new IllegalStateException("Unable to read item user data", e);
@@ -790,16 +805,6 @@ public class BinaryStream {
                 item = mappingItem;
             }
 
-            try {
-                if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
-                    throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
-                } else {
-                    mapping.toRuntime(item.getId(), item.getDamage());
-                }
-            } catch (Exception e) {
-                item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
-            }
-
             item.setCount(originItem.getCount());
             CompoundTag compoundTag = originItem.getNamedTag();
             if (compoundTag != null) {
@@ -809,6 +814,20 @@ public class BinaryStream {
             item.setNamedTag(item.getNamedTag().putInt(MV_ORIGIN_ID, originItem.getId()).putInt(MV_ORIGIN_META, originItem.getDamage()));
             if (isStringItem) {
                 item.setNamedTag(item.getNamedTag().putString(MV_ORIGIN_NAMESPACE, originItem.getNamespaceId(protocolId)));
+            }
+
+            isErrorItem = false;
+            isStringItem = item instanceof StringItem;
+
+            try {
+                if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
+                    throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
+                } else {
+                    mapping.toRuntime(item.getId(), item.getDamage());
+                }
+            } catch (Exception e) {
+                item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
+                isErrorItem = true;
             }
         }
 
@@ -1035,6 +1054,7 @@ public class BinaryStream {
                 item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
             }
 
+            item.setCount(originItem.getCount());
             CompoundTag compoundTag = originItem.getNamedTag();
             if (compoundTag != null) {
                 item.setNamedTag(new CompoundTag().putCompound(MV_ORIGIN_NBT, compoundTag));
@@ -1044,6 +1064,21 @@ public class BinaryStream {
             if (isStringItem) {
                 item.setNamedTag(item.getNamedTag().putString(MV_ORIGIN_NAMESPACE, originItem.getNamespaceId(protocolId)));
             }
+
+            isErrorItem = false;
+            isStringItem = item instanceof StringItem;
+
+            try {
+                if (isStringItem && mapping.getNetworkIdByNamespaceId(item.getNamespaceId()).isEmpty()) {
+                    throw new IllegalArgumentException("Unknown StringItem : NamespaceId=" + item.getNamespaceId() + " protocol=" + protocolId);
+                } else {
+                    mapping.toRuntime(item.getId(), item.getDamage());
+                }
+            } catch (Exception e) {
+                item = Item.get(Item.INFO_UPDATE, 0, originItem.getCount());
+                isErrorItem = true;
+            }
+
         }
 
         int id = item.getId();
@@ -1256,11 +1291,20 @@ public class BinaryStream {
                 }
 
                 if (compoundTag != null && compoundTag.contains(MV_ORIGIN_ID) && compoundTag.contains(MV_ORIGIN_META)) {
-                    Item mvItem = Item.get(compoundTag.getInt(MV_ORIGIN_ID), compoundTag.getInt(MV_ORIGIN_META), count);
-                    if (compoundTag.contains(MV_ORIGIN_NBT)) {
-                        mvItem.setNamedTag(compoundTag.getCompound(MV_ORIGIN_NBT));
+                    int originID = compoundTag.getInt(MV_ORIGIN_ID);
+                    int originMeta = compoundTag.getInt(MV_ORIGIN_META);
+                    Item item;
+                    if (originID == ItemID.STRING_IDENTIFIED_ITEM && compoundTag.contains(MV_ORIGIN_NAMESPACE)) {
+                        item = Item.fromString(compoundTag.getString(MV_ORIGIN_NAMESPACE));
+                        item.setDamage(originMeta);
+                        item.setCount(count);
+                    } else {
+                        item = Item.get(originID, originMeta, count);
                     }
-                    return mvItem;
+                    if (compoundTag.contains(MV_ORIGIN_NBT)) {
+                        item.setNamedTag(compoundTag.getCompound(MV_ORIGIN_NBT));
+                    }
+                    return item;
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("Unable to read item user data", e);

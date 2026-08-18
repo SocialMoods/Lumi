@@ -18,6 +18,11 @@ public class ItemRecordBounce extends ItemRecord implements StringItem {
     }
 
     @Override
+    public String getNamespaceId(int protocol) {
+        return getNamespaceId();
+    }
+
+    @Override
     public boolean isSupportedOn(int protocolId) {
         return protocolId >= ProtocolInfo.v1_26_30;
     }
