@@ -455,13 +455,11 @@ public class Vector3 implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Vector3)) {
+        if (!(obj instanceof Vector3 other)) {
             return false;
+        } else {
+            return this.x == other.x && this.y == other.y && this.z == other.z;
         }
-
-        Vector3 other = (Vector3) obj;
-
-        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 
     @Override

@@ -126,6 +126,15 @@ public class Vector2 {
         return new Vector2(0, 0);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Vector2 other)) {
+            return false;
+        } else {
+            return this.x == other.x && this.y == other.y;
+        }
+    }
+
     public double dot(Vector2 v) {
         return this.x * v.x + this.y * v.y;
     }

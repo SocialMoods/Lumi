@@ -14,6 +14,7 @@ import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.types.inventory.creative.CreativeItemCategory;
 import cn.nukkit.utils.Identifier;
+import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
@@ -259,6 +260,17 @@ public class CustomItemDefinition {
             this.nbt.getCompound("components")
                     .getCompound("item_properties")
                     .putBoolean("allow_off_hand", allowOffHand);
+            return this;
+        }
+
+        public SimpleBuilder useModifiers(float movementModifier, float useDurationSeconds) {
+            Preconditions.checkArgument(movementModifier > 0.0F && movementModifier <= 1.0F, "movementModifier must be in (0,1]");
+            Preconditions.checkArgument(useDurationSeconds >= 0.0F, "useDurationSeconds must be >= 0");
+            this.nbt.getCompound("components")
+                    .putCompound("minecraft:use_modifiers", new CompoundTag()
+                            .putFloat("movement_modifier", movementModifier)
+                            .putFloat("use_duration", useDurationSeconds))
+                    .getCompound("item_properties").putInt("use_duration", (int)(useDurationSeconds*20));
             return this;
         }
 
