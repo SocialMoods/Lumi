@@ -1175,6 +1175,7 @@ public class BlockRegistry implements IRegistry<Integer, Block, Class<? extends 
 
                             CustomBlockUtil.CustomBlockState state;
                             try {
+                                System.out.println(meta);
                                 state = CustomBlockUtil.createBlockState(identifier, (id << Block.DATA_BITS) | meta, properties, customBlock);
                             } catch (InvalidBlockPropertyMetaException e) {
                                 //log.error(e);
