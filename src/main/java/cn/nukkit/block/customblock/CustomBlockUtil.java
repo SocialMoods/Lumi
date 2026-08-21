@@ -14,7 +14,6 @@ import cn.nukkit.level.format.leveldb.BlockStateMapping;
 import cn.nukkit.level.format.leveldb.LevelDBConstants;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.registry.Registries;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -32,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Slf4j
@@ -48,26 +48,40 @@ public class CustomBlockUtil {
         return CustomBlockUtil.getVanillaPalettesPath().resolve("vanilla_palette_" + protocol + ".nbt");
     }
 
+    private static Serializable getDefaultValue(BlockProperties properties, String name) {
+        AtomicReference<Serializable> value = new AtomicReference<>();
+        properties.getBlockProperty(name).forEach(serializable -> {
+            if(value.get() == null) value.set(serializable);
+        });
+        return value.get();
+    }
+
     private static void generateVariants(BlockProperties properties, String[] states, List<Map<String, Serializable>> variants, Map<String, Serializable> temp, int offset) {
         if (states.length - offset >= 0) {
             final String currentState = states[states.length - offset];
 
             properties.getBlockProperty(currentState).forEach((value) -> {
                 temp.put(currentState, value);
-                if (!variants.contains(temp)) {
-                    variants.add(new HashMap<>(temp));
+
+                for(Map<String, Serializable> checkState : variants) {
+                    if(checkState.toString().equals(temp.toString())) {
+                        generateVariants(properties, states, variants, temp, offset + 1);
+                        return;
+                    }
                 }
+
+                variants.add(new HashMap<>(temp));
                 generateVariants(properties, states, variants, temp, offset + 1);
             });
 
-            temp.put(currentState, 0); //default value
+            temp.put(currentState, getDefaultValue(properties, currentState));
         }
     }
 
     public static List<Map<String, Serializable>> generateVariants(BlockProperties properties, String[] states) {
         final Map<String, Serializable> temp = new HashMap<>();
         for (String state : states) {
-            temp.put(state, 0); // default value
+            temp.put(state, getDefaultValue(properties, state)); // default value
         }
 
         final List<Map<String, Serializable>> variants = new ArrayList<>();

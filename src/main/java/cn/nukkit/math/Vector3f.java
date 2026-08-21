@@ -358,13 +358,11 @@ public class Vector3f implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Vector3f)) {
+        if (!(obj instanceof Vector3f other)) {
             return false;
+        } else {
+            return this.x == other.x && this.y == other.y && this.z == other.z;
         }
-
-        Vector3f other = (Vector3f) obj;
-
-        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 
     public int rawHashCode() {
