@@ -48,7 +48,7 @@ public class SetScorePacket extends DataPacket {
                         boolean present = info.objectiveId != null && !info.objectiveId.isEmpty();
                         this.putBoolean(present);
                         if (present) {
-                            if (this.protocol >= ProtocolInfo.v1_26_44) {
+                            if (this.protocol == ProtocolInfo.v1_26_44) {
                                 this.putBoolean(true);
                             }
                             this.putString(info.objectiveId);
