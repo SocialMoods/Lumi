@@ -2494,6 +2494,10 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 noShieldTicks = NO_SHIELD_DELAY;
                 hasUpdated = true;
             }
+
+            if (this.getInventory().getItemInHand() instanceof ItemSpear spear) {
+                spear.attackInView(this, true);
+            }
         } else {
             if (noShieldTicks > 0) {
                 noShieldTicks -= tickDiff;
